@@ -2,7 +2,7 @@
 	-fx-font-size: 20px;
 	-fx-font-family: Akrobat;
 	-fx-font-weight: bold;
-	-fx-text-fill: #000000;
+	-fx-text-fill: #fff;
 }
 
 #Border {
@@ -22,12 +22,15 @@
 }
 
 #LoginBox {
-	-fx-background-color: #FFFFFF;
 	-fx-background-image: url("E&Elogo.png");
 	-fx-background-repeat: no-repeat;
-	-fx-background-position: center top;
+	-fx-background-position: left top;
+	-fx-background-size: 250px 175px
 }
 
+
+#Box {
+}
 .ComboBox {
 	-fx-font-size: 16px;
 	-fx-font-family: Akrobat;

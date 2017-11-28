@@ -2,6 +2,8 @@ package controller;
 
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Database;
+import model.Item;
 import model.User;
 
 public class MainController extends Controller {
@@ -34,13 +36,18 @@ public class MainController extends Controller {
 	public void setScene(int requestCode, int view) {
 		switch(requestCode) {
 			case Code.LC_CODE: scene.setRoot(lc.getView(view));
+				lc.attach();
 				break;
 			case Code.CVC_CODE: scene.setRoot(cvc.getView(view));
+				cvc.attach();
+				lc.detach();
+				Database.getInstance().query("select * from " + Item.TABLE + ";"); //tentative place
 				break;
 			case Code.MVC_CODE: scene.setRoot(mvc.getView(view));
+				mvc.attach();
+				lc.detach();
 				break;
 		}
-		//resetStage();
 	}
 	
 	public void passUser(int requestCode, User user){

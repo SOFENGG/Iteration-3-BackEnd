@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Database;
 import model.Item;
 import model.User;
 import util.Query;
@@ -39,6 +40,17 @@ public class ManagerViewController {
 	
 	public void changeControl (int requestCode, int view) {
 		mc.setScene(requestCode, view);
+	}
+	
+	public void attach(){
+		/*
+		 * attach all manager related views here
+		 */
+		mv.attach();
+	}
+	
+	public void detach(){
+		mv.detach();
 	}
 	
 	public void setUser(User user){

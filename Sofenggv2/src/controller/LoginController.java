@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Database;
 import model.User;
 import util.Query;
 import view.AlertBox;
@@ -35,6 +36,20 @@ public class LoginController {
 	
 	public void changeControl (int controllerCode, int view) {
 		mc.setScene (controllerCode, view);
+	}
+	
+	public void attach(){
+		/*
+		 * attach all login related views here
+		 */
+		Database.getInstance().attach(lv);
+	}
+	
+	public void detach(){
+		/*
+		 * detach all login related views here
+		 */
+		Database.getInstance().detach(lv);
 	}
 	
 	//login view services

@@ -11,6 +11,16 @@ public class ManagerView extends BorderPane implements View{
 	public ManagerView (ManagerViewController mvc) {
 		this.mvc = mvc;
 	}
+	
+	public void attach(){
+		//do all attaching of views here
+		
+	}
+	
+	public void detach(){
+		//do all detaching of views here
+		
+	}
 
 	@Override
 	public void update() {

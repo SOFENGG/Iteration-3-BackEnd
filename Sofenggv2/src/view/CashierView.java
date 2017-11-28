@@ -28,11 +28,21 @@ public class CashierView extends BorderPane implements View{
 	private void initCenter() {
 		iv = new InventoryView (cvc);
 	}
-
+	
+	public void attach(){
+		//put all attaching of views here
+		Database.getInstance().attach(iv);
+	}
+	
+	public void detach(){
+		//put all detaching of vies here
+		Database.getInstance().detach(iv);
+	}
+	
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 }

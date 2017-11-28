@@ -60,6 +60,21 @@ public class CashierViewController {
 	public void changeControl (int requestCode, int view) {
 		mc.setScene(requestCode, view);
 	}
+	
+	public void attach(){
+		/*
+		 * attaches all cashier related views to the model
+		 */
+		//note I made an attach method in CashierView because CashierView contains multiple Views
+		cv.attach();
+	}
+	
+	public void detach(){
+		/*
+		 * detaches all cashier related views in the model
+		 */
+		cv.detach();
+	}
 	 
 	public void setUser(User cashier){
 		this.cashier = cashier;

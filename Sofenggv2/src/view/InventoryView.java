@@ -1,5 +1,6 @@
 package view;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 import model.Database;
+import model.Item;
 
 public class InventoryView extends ScrollPane implements View {
 
@@ -33,8 +35,6 @@ public class InventoryView extends ScrollPane implements View {
 	public InventoryView (CashierViewController cvc) {
 		super ();
 		
-		Database.getInstance().attach(this);
-		
 		this.cvc = cvc;
 		
 		initIV ();
@@ -44,18 +44,18 @@ public class InventoryView extends ScrollPane implements View {
 		setHbarPolicy (ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		setVbarPolicy (ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		//setId ("Border");
-		setContent (tableView);
 		
 		tableView = new TableView();
 		//tableView.setId("TableView");
 		col = new ArrayList<TableColumn>();
 		data = FXCollections.observableArrayList();
+
+		setContent (tableView);
 	}
 
 	@Override
 	public void update() {
-		//rs = Database.getInstance().getRS();
-		
+		rs = Database.getInstance().getRS();
 		if (rs == null)
 			return;
 		
@@ -101,15 +101,14 @@ public class InventoryView extends ScrollPane implements View {
 							break;
 						case Types.BIGINT: s = Integer.toString(rs.getInt(i));
 							break;
+						case Types.DECIMAL: s = (rs.getBigDecimal(i)).doubleValue() + "";
+							break;
 					}
 					row.add (s);
 				}
 				
 				data.add(row);
-				//System.out.println ("Row " + row + " added");
-				
 			}
-			//Database.getInstance().queryClose();
 			tableView.setItems (data);
 			
 		} catch (SQLException e) {
