@@ -1,21 +1,28 @@
 package view;
 
 import controller.LoginController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 
-public class LoginView extends BorderPane implements View{
+public class LoginView extends StackPane implements View{
 	private LoginController lc;
+	
+	private MediaPlayer player, music;
+	private MediaView mediaView, mediaViewMusic;
+	
+	private VBox imgBox;
 	
 	private VBox loginBox;
 	private HBox usernameBox;
@@ -34,15 +41,44 @@ public class LoginView extends BorderPane implements View{
 		setMaxSize (Double.MAX_VALUE, Double.MAX_VALUE);
 			
 		initLoginView();
+		initMedia();
+		initMusic();
 		initHandlers();
 		
-		setCenter (loginBox);
+		//setCenter (loginBox);
+		getChildren().addAll(mediaViewMusic, mediaView, imgBox, loginBox);
+	}
+
+	private void initMedia() {
+		player = new MediaPlayer( new Media(getClass().getResource("/video.mp4").toExternalForm()));
+		mediaView = new MediaView(player);
+		DoubleProperty mvw = mediaView.fitWidthProperty();
+		DoubleProperty mvh = mediaView.fitHeightProperty();
+		//mvw.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
+		mvh.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
+		//mediaView.setPreserveRatio(true);
+		player.setCycleCount(MediaPlayer.INDEFINITE);
+        player.setAutoPlay(true);
+        player.play();
+	}
+	
+	private void initMusic() {
+		music = new MediaPlayer( new Media(getClass().getResource("/legion.mp3").toExternalForm()));
+		mediaViewMusic = new MediaView(music);
+		music.setCycleCount(MediaPlayer.INDEFINITE);
+        music.setAutoPlay(true);
+        music.play();
 	}
 
 	private void initLoginView() {
+		imgBox = new VBox ();
+		imgBox.setAlignment(Pos.CENTER);
+		imgBox.setId("LoginBox");
+		
 		loginBox = new VBox (20);
 		loginBox.setAlignment (Pos.CENTER);
 		loginBox.setId("LoginBox");
+		loginBox.setPadding(new Insets(300, 0, 0, 0));
 		
 			usernameBox = new HBox (10);
 			usernameBox.setAlignment (Pos.CENTER);
@@ -78,6 +114,7 @@ public class LoginView extends BorderPane implements View{
 	private void initHandlers() {
 		login.setOnAction(e ->  {
 			lc.logIn(usernameField.getText(), passwordField.getText());
+			player.stop();
 		});
 		
 	}
