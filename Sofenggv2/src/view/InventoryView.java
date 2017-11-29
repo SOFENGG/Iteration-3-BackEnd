@@ -21,7 +21,8 @@ import model.Database;
 import model.Item;
 
 public class InventoryView extends ScrollPane implements View {
-
+	public static final String KEY = "inventory";
+	
 	private CashierViewController cvc;
 	
 	private TableView tableView;

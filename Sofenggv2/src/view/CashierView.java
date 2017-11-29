@@ -14,8 +14,6 @@ public class CashierView extends BorderPane implements View{
 		super ();
 		this.cvc = cvc;
 		
-		Database.getInstance().attach(this);
-		
 		initPane ();
 	}
 
@@ -31,12 +29,12 @@ public class CashierView extends BorderPane implements View{
 	
 	public void attach(){
 		//put all attaching of views here
-		Database.getInstance().attach(iv);
+		Database.getInstance().attach(InventoryView.KEY, iv);
 	}
 	
 	public void detach(){
 		//put all detaching of vies here
-		Database.getInstance().detach(iv);
+		Database.getInstance().detach(InventoryView.KEY);
 	}
 	
 	@Override

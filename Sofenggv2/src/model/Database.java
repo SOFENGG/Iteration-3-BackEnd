@@ -37,11 +37,11 @@ public class Database extends Model{
 	}
 	
 	//returns the queried rows
-	public ResultSet query(String query){
+	public ResultSet query(String[] keys, String query){
 		try {
 			s = con.createStatement();
 			rs = s.executeQuery(query);
-			notifyViews();
+			notifyViews(keys);
 			return rs;
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import javafx.scene.layout.Pane;
@@ -60,18 +61,13 @@ public class ManagerViewController {
 	//manager view services
 	
 	//no filter/search
-	public ArrayList<Item> allItems(){
-		ArrayList<Item> items = Query.getInstance().itemQuery("select * from items;");
-		return items;
+	public ResultSet allItems(){
+		return Database.getInstance().query(new String[] {}, "select * from items;");
 	}
 	
 	//search
-	public ArrayList<Item> searchItems(String search){
-		ArrayList<Item> items = Query.getInstance().itemQuery("select * from items where concat(name, description, category, manufacturer) like '%" + search + "%';");
-		if (items.size() == 0)
-			//no matches
-			return null;
-		return items;
+	public ResultSet searchItems(String search){
+		return Database.getInstance().query(new String[] {}, "select * from items where concat(name, description, category, manufacturer) like '%" + search + "%';");
 	}
 	
 }

@@ -11,7 +11,7 @@ public class CommonQuery {
 	//<-- search functions -->
 	
 	//no filter/search
-	public static ArrayList<Item> allItems(){
+	/*public static ArrayList<Item> allItems(){
 		ArrayList<Item> items = Query.getInstance().itemQuery("select * from "+Item.TABLE+";");
 		return items; 
 	}
@@ -68,5 +68,5 @@ public class CommonQuery {
 	public static ArrayList<Worker> getWorkerWithName(String name){
 		ArrayList<Worker> worker = Query.getInstance().workerQuery("select * from " + Worker.TABLE + " where " + Worker.COLUMN_NAME + " like '%" + name + "%';");
 		return worker;
-	}
+	}*/
 }

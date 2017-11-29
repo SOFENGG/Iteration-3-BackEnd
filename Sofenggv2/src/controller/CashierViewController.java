@@ -22,6 +22,7 @@ import model.User;
 import util.CommonQuery;
 import util.Query;
 import view.CashierView;
+import view.InventoryView;
 
 public class CashierViewController {
 
@@ -95,20 +96,29 @@ public class CashierViewController {
 	}
 	
 	//cashier view services
+	public void getAllItems() {
+		Database.getInstance().query(new String[] {InventoryView.KEY},
+				"select " + Item.COLUMN_ITEM_CODE + ", " + Item.COLUMN_NAME + " from items");
+	}
+	
+	public void searchItem(String search) {
+		Database.getInstance().query(new String[] {InventoryView.KEY},
+				"select * from "+Item.TABLE+" where concat("+Item.COLUMN_NAME+", "+Item.COLUMN_DESCRIPTION+", "+Item.COLUMN_CATEGORY+", "+Item.COLUMN_MANUFACTURER+") like '%" + search + "%';");
+	}
 	
 	//manager access -> called when action requires manager password
 	public boolean managerAccess(String managerPassword){
 		boolean accessGranted = false;
 		
-		if(Query.getInstance().userQuery("select * from " + User.TABLE + " where "+ User.COLUMN_PASSWORD + " = '"+ managerPassword + "' and " + User.COLUMN_USER_LEVEL + " = " + User.MANAGER_LEVEL + ";").size() > 0){
+		/*if(Query.getInstance().userQuery("select * from " + User.TABLE + " where "+ User.COLUMN_PASSWORD + " = '"+ managerPassword + "' and " + User.COLUMN_USER_LEVEL + " = " + User.MANAGER_LEVEL + ";").size() > 0){
 			accessGranted = true;
-		}
+		}*/
 		
 		return accessGranted;
 	}
 	
 	public void setCustomer(int accountId){
-		customer = CommonQuery.getCustomerWithId(accountId);
+		//customer = CommonQuery.getCustomerWithId(accountId);
 	}
 	
 	public void removeCustomer(){
@@ -271,7 +281,8 @@ public class CashierViewController {
 		Calendar cal = Calendar.getInstance();
 		Date today = new Date(cal.getTime().getTime());
 		BigDecimal totalPrice = BigDecimal.valueOf(0);
-		int transactionId = Query.getInstance().getTransactionCount() + 1;
+		//int transactionId = Query.getInstance().getTransactionCount() + 1;
+		int transactionId = 1;
 		
 		for(CartItem ci : cartItems){
 			try {

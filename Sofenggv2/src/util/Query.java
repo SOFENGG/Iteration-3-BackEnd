@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import model.*;
 
 public class Query {
-	private static Query instance = new Query();
+	/*private static Query instance = new Query();
 	
 	private Query(){
 		
@@ -138,5 +138,5 @@ public class Query {
 			e.printStackTrace();
 		}
 		return workers;
-	}
+	}*/
 }

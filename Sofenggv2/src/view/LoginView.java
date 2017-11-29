@@ -19,6 +19,7 @@ import model.Database;
 import model.Item;
 
 public class LoginView extends StackPane implements View{
+	public static final String KEY = "login";
 	private LoginController lc;
 	
 	private MediaPlayer player, music;
@@ -60,16 +61,16 @@ public class LoginView extends StackPane implements View{
 		mvh.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
 		//mediaView.setPreserveRatio(true);
 		player.setCycleCount(MediaPlayer.INDEFINITE);
-        //player.setAutoPlay(true);
-        //player.play();
+        player.setAutoPlay(true);
+        player.play();
 	}
 	
 	private void initMusic() {
 		music = new MediaPlayer( new Media(getClass().getResource("/legion.mp3").toExternalForm()));
 		mediaViewMusic = new MediaView(music);
 		music.setCycleCount(MediaPlayer.INDEFINITE);
-        //music.setAutoPlay(true);
-        //music.play();
+        music.setAutoPlay(true);
+        music.play();
 	}
 
 	private void initLoginView() {

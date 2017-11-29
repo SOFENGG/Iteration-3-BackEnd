@@ -41,7 +41,7 @@ public class MainController extends Controller {
 			case Code.CVC_CODE: scene.setRoot(cvc.getView(view));
 				cvc.attach();
 				lc.detach();
-				Database.getInstance().query("select * from " + Item.TABLE + ";"); //tentative place
+				cvc.getAllItems();
 				break;
 			case Code.MVC_CODE: scene.setRoot(mvc.getView(view));
 				mvc.attach();
