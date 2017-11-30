@@ -88,6 +88,10 @@ public class Database extends Model{
 		}
 	}
 	
+	public void updateViews(String[] keys){
+		notifyViews(keys);
+	}
+	
 	public Connection getConnection(){
 		return con;
 	}
@@ -95,4 +99,5 @@ public class Database extends Model{
 	public ResultSet getRS(){
 		return rs;
 	}
+	
 }

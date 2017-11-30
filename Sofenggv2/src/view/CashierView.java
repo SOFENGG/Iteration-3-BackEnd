@@ -1,5 +1,7 @@
 package view;
 
+import java.math.BigDecimal;
+
 import controller.CashierViewController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -162,6 +164,7 @@ public class CashierView extends BorderPane implements View{
 				filterComboBox.getStyleClass().add("ComboBox");
 				filterComboBox.getItems().add("Item Code");
 				filterComboBox.getItems().add("Description");
+				filterComboBox.getItems().add("Service");
 				
 				filterComboBox.getSelectionModel ().selectFirst ();
 				
@@ -238,16 +241,42 @@ public class CashierView extends BorderPane implements View{
 			else
 				setLeft(null);
 		});
+		
+		filterComboBox.setOnAction(e -> {
+			switch(filterComboBox.getValue()){
+				case "Item Code": 
+				case "Description": cvc.getAllItems();
+					break;
+				case "Service": cvc.getAllServices();
+					break;
+			}
+			searchTextField.setText("");
+		});
+		
+		searchButton.setOnAction(e -> {
+			switch(filterComboBox.getValue()){
+				case "Item Code": cvc.searchItemByCode(searchTextField.getText());
+					break;
+				case "Description": cvc.searchItem(searchTextField.getText());
+					break;
+				case "Service": cvc.searchService(searchTextField.getText());
+					break;
+			}
+			
+			cvc.addToCart("0", "white wheel", BigDecimal.valueOf(25), 1);
+		});
 	}
 	
 	public void attach(){
 		//put all attaching of views here
 		Database.getInstance().attach(InventoryView.KEY, iv);
+		Database.getInstance().attach(CartView.KEY, cv);
 	}
 	
 	public void detach(){
 		//put all detaching of vies here
 		Database.getInstance().detach(InventoryView.KEY);
+		Database.getInstance().detach(CartView.KEY);
 	}
 	
 	@Override

@@ -16,11 +16,13 @@ import model.Customer;
 import model.Database;
 import model.Item;
 import model.ItemLog;
+import model.Service;
 import model.ServiceLog;
 import model.Transaction;
 import model.User;
 import util.CommonQuery;
 import util.Query;
+import view.CartView;
 import view.CashierView;
 import view.InventoryView;
 
@@ -96,14 +98,53 @@ public class CashierViewController {
 	}
 	
 	//cashier view services
+	
+	//items
 	public void getAllItems() {
 		Database.getInstance().query(new String[] {InventoryView.KEY},
-				"select " + Item.COLUMN_ITEM_CODE + ", " + Item.COLUMN_NAME + " from items");
+				"select " + Item.COLUMN_ITEM_CODE + ", "
+							+ "(" + Item.COLUMN_STOCK + " - " + Item.COLUMN_RESERVED + ") as stock, " 
+							+ Item.COLUMN_NAME + ", "
+							+ Item.COLUMN_DESCRIPTION + ", "
+							+ Item.COLUMN_CATEGORY + ", "
+							+ Item.COLUMN_MANUFACTURER + ", "
+							+ Item.COLUMN_DATE_PURCHASE + ", "
+							+ Item.COLUMN_PRICE_CUSTOMER + " from " + Item.TABLE);
 	}
 	
 	public void searchItem(String search) {
 		Database.getInstance().query(new String[] {InventoryView.KEY},
-				"select * from "+Item.TABLE+" where concat("+Item.COLUMN_NAME+", "+Item.COLUMN_DESCRIPTION+", "+Item.COLUMN_CATEGORY+", "+Item.COLUMN_MANUFACTURER+") like '%" + search + "%';");
+				"select " + Item.COLUMN_ITEM_CODE + ", "
+						+ "(" + Item.COLUMN_STOCK + " - " + Item.COLUMN_RESERVED + ") as stock, " 
+						+ Item.COLUMN_NAME + ", "
+						+ Item.COLUMN_DESCRIPTION + ", "
+						+ Item.COLUMN_CATEGORY + ", "
+						+ Item.COLUMN_MANUFACTURER + ", "
+						+ Item.COLUMN_DATE_PURCHASE + ", "
+						+ Item.COLUMN_PRICE_CUSTOMER + " from "+Item.TABLE+" where concat("+Item.COLUMN_NAME+", "+Item.COLUMN_DESCRIPTION+", "+Item.COLUMN_CATEGORY+", "+Item.COLUMN_MANUFACTURER+") like '%" + search + "%';");
+	}
+	
+	public void searchItemByCode(String code){
+		Database.getInstance().query(new String[] {InventoryView.KEY},
+				"select " + Item.COLUMN_ITEM_CODE + ", "
+						+ "(" + Item.COLUMN_STOCK + " - " + Item.COLUMN_RESERVED + ") as stock, " 
+						+ Item.COLUMN_NAME + ", "
+						+ Item.COLUMN_DESCRIPTION + ", "
+						+ Item.COLUMN_CATEGORY + ", "
+						+ Item.COLUMN_MANUFACTURER + ", "
+						+ Item.COLUMN_DATE_PURCHASE + ", "
+						+ Item.COLUMN_PRICE_CUSTOMER + " from "+Item.TABLE+" where "+Item.COLUMN_ITEM_CODE+" = '"+code+"';");
+	}
+	
+	//services
+	public void getAllServices(){
+		Database.getInstance().query(new String[] {InventoryView.KEY},
+				"select * from " + Service.TABLE);
+	}
+	
+	public void searchService(String search){
+		Database.getInstance().query(new String[] {InventoryView.KEY},
+				"select * from "+Service.TABLE+" where concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '%" + search + "%';");
 	}
 	
 	//manager access -> called when action requires manager password
@@ -173,6 +214,7 @@ public class CashierViewController {
 		String updateReserved = "update " + Item.TABLE + 
 						" set " + Item.COLUMN_RESERVED + " =  " + Item.COLUMN_RESERVED + " + ? " + 
 						" where " + Item.COLUMN_ITEM_CODE + " = ? and " + Item.COLUMN_STOCK + " - " + Item.COLUMN_RESERVED + "  >= ? ;";
+		
 		boolean found = false;
 		try {
 			PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(updateReserved);
@@ -193,6 +235,10 @@ public class CashierViewController {
 		}
 		if(!found)
 			cartItems.add(new CartItem(itemCode, name, price, quantity));
+		
+		//updates all the views needed
+		Database.getInstance().notifyViews(new String[]{CartView.KEY});
+		
 		return true;
 	}
 	
@@ -212,6 +258,9 @@ public class CashierViewController {
 			}
 		}
 		cartItems.clear();
+		
+		//updates all the views needed
+		Database.getInstance().notifyViews(new String[]{CartView.KEY});
 	}
 	
 	public void removeCartItem(String itemCode, int quantity){
@@ -239,6 +288,9 @@ public class CashierViewController {
 			cartItems.remove(ci);
 		else
 			ci.setQuantity(ci.getQuantity() - quantity);
+		
+		//updates all the views needed
+		Database.getInstance().notifyViews(new String[]{CartView.KEY});
 	}
 	
 	//hold/unhold cart methods - anj

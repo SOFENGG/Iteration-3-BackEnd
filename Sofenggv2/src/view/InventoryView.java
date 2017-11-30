@@ -56,64 +56,66 @@ public class InventoryView extends ScrollPane implements View {
 
 	@Override
 	public void update() {
-		rs = Database.getInstance().getRS();
-		if (rs == null)
-			return;
-		
-		if (!tableView.getColumns ().isEmpty ()){
-			for(int i = 0; i < col.size(); i++){
-				tableView.getColumns ().removeAll (col.get(i));
-			}
-			col.clear();
-		}
-		
-		if (!tableView.getItems ().isEmpty ()){
-			tableView.getItems ().removeAll (row);
-			data.clear();
-		}
-		
-		try {
-			for (int i = 0; i < rs.getMetaData ().getColumnCount (); i++) {
-				final int j = i;
-				TableColumn c = new TableColumn (rs.getMetaData ().getColumnName (i + 1));
-				c.setCellValueFactory (new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>> () {
-					public ObservableValue<String> call (CellDataFeatures<ObservableList, String> param) {
-							return new SimpleStringProperty (param.getValue ().get (j).toString ());
-					}
-				});
-				
-				col.add(c);
-				tableView.getColumns ().addAll (c);
-				//System.out.println ("Column " + i + " added");
+		if(rs != Database.getInstance().getRS()){
+			rs = Database.getInstance().getRS();
+			if (rs == null)
+				return;
+			
+			if (!tableView.getColumns ().isEmpty ()){
+				for(int i = 0; i < col.size(); i++){
+					tableView.getColumns ().removeAll (col.get(i));
+				}
+				col.clear();
 			}
 			
-			while (rs.next()) {
-				row = FXCollections.observableArrayList ();
-				
-				for (int i = 1; i <= rs.getMetaData ().getColumnCount (); i++) {
-					String s = "";
-					switch(rs.getMetaData().getColumnType(i)){
-						case Types.INTEGER: s = Integer.toString(rs.getInt(i));
-							break;
-						case Types.DATE: Date d = rs.getDate(i);
-							s = d.toString();
-							break;
-						case Types.VARCHAR: s = rs.getString(i);
-							break;
-						case Types.BIGINT: s = Integer.toString(rs.getInt(i));
-							break;
-						case Types.DECIMAL: s = (rs.getBigDecimal(i)).doubleValue() + "";
-							break;
-					}
-					row.add (s);
+			if (!tableView.getItems ().isEmpty ()){
+				tableView.getItems ().removeAll (row);
+				data.clear();
+			}
+			
+			try {
+				for (int i = 0; i < rs.getMetaData ().getColumnCount (); i++) {
+					final int j = i;
+					TableColumn c = new TableColumn (rs.getMetaData ().getColumnName (i + 1));
+					c.setCellValueFactory (new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>> () {
+						public ObservableValue<String> call (CellDataFeatures<ObservableList, String> param) {
+								return new SimpleStringProperty (param.getValue ().get (j).toString ());
+						}
+					});
+					
+					col.add(c);
+					tableView.getColumns ().addAll (c);
+					//System.out.println ("Column " + i + " added");
 				}
 				
-				data.add(row);
+				while (rs.next()) {
+					row = FXCollections.observableArrayList ();
+					
+					for (int i = 1; i <= rs.getMetaData ().getColumnCount (); i++) {
+						String s = "";
+						switch(rs.getMetaData().getColumnType(i)){
+							case Types.INTEGER: s = Integer.toString(rs.getInt(i));
+								break;
+							case Types.DATE: Date d = rs.getDate(i);
+								s = d.toString();
+								break;
+							case Types.VARCHAR: s = rs.getString(i);
+								break;
+							case Types.BIGINT: s = Integer.toString(rs.getInt(i));
+								break;
+							case Types.DECIMAL: s = (rs.getBigDecimal(i)).doubleValue() + "";
+								break;
+						}
+						row.add (s);
+					}
+					
+					data.add(row);
+				}
+				tableView.setItems (data);
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			tableView.setItems (data);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 
