@@ -5,6 +5,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import model.Database;
 
 public class CartViewTabPane extends TabPane implements View {
 
@@ -53,6 +54,15 @@ public class CartViewTabPane extends TabPane implements View {
 	}
 	
 	private void initHanders() {
+	
+	}
+	
+	public void attach(){
+		Database.getInstance().attach(CartView.KEY, cartViewOngoing);
+	}
+	
+	public void detach(){
+		Database.getInstance().detach(CartView.KEY);
 	}
 	
 	@Override

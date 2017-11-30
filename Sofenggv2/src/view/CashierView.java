@@ -45,7 +45,7 @@ public class CashierView extends BorderPane implements View{
 		private InventoryView iv;
 			
 	private VBox rightVBox;
-		private CartViewTabPane cvtb;
+		private CartViewTabPane cvtp;
 		private HBox checkoutHBox;
 			private HBox checkoutLeftHBox;
 				private Label totalLabel;
@@ -216,9 +216,9 @@ public class CashierView extends BorderPane implements View{
 			
 			cartOptionsHBox.getChildren ().addAll (holdButton, overridePriceButton, clearCartButton);
 			
-			cvtb = new CartViewTabPane (cvc);
+			cvtp = new CartViewTabPane (cvc);
 			
-		rightVBox.getChildren ().addAll (cvtb, cartOptionsHBox, checkoutHBox);
+		rightVBox.getChildren ().addAll (cvtp, cartOptionsHBox, checkoutHBox);
 		
 		HBox.setHgrow (checkoutHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutLeftHBox, Priority.ALWAYS);
@@ -263,13 +263,13 @@ public class CashierView extends BorderPane implements View{
 	public void attach(){
 		//put all attaching of views here
 		Database.getInstance().attach(InventoryView.KEY, iv);
-		//Database.getInstance().attach(CartView.KEY, cv);
+		cvtp.attach();
 	}
 	
 	public void detach(){
 		//put all detaching of vies here
 		Database.getInstance().detach(InventoryView.KEY);
-		//Database.getInstance().detach(CartView.KEY);
+		cvtp.detach();
 	}
 	
 	@Override
