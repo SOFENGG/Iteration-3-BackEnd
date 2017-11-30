@@ -2,7 +2,7 @@
 	-fx-font-size: 20px;
 	-fx-font-family: Akrobat;
 	-fx-font-weight: bold;
-	-fx-text-fill: #fff;
+	-fx-text-fill: #000;
 }
 
 #Border {
@@ -10,15 +10,27 @@
 }
 
 #TopHbox {
+	-fx-border-color: black;
 	-fx-background-color: #FFFFFF;
-	-fx-padding: 20;
+	-fx-padding: 10;
+}
+
+#LeftVbox {
+	fx-border-color: black;
+	-fx-background-color: #FFFFFF;
+	-fx-padding: 10;
 }
 
 #CenterVbox {
+	-fx-border-color: black;
 	-fx-background-color: #FFFFFF;
-	-fx-border-color: transparent; 
-	-fx-padding: 20;
-	-fx-alignment: center;
+	-fx-padding: 10;
+}
+
+#RightVbox {
+	-fx-border-color: black;
+	-fx-background-color: #FFFFFF;
+	-fx-padding: 10;
 }
 
 #LoginBox {
@@ -28,6 +40,39 @@
 	-fx-background-size: 250px 175px
 }
 
+#SearchButton {
+	-fx-background-image: url("search-icon.png");
+    -fx-background-size: 32px 32px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #00e500;
+    -fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
+}
+
+.MenuButton {
+	-fx-background-image: url("menu.png");
+    -fx-background-size: 32px 32px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #00e500;
+    -fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
+}
+
+.HelpButton {
+	-fx-background-image: url("help.png");
+    -fx-background-size: 32px 32px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #00e500;
+    -fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
+}
+
+.MenuButton:selected,
+.HelpButton:selected {
+		-fx-opacity: 1.0;
+		-fx-background-color: #009900;
+		-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
+}
 
 #Box {
 }
