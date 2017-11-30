@@ -118,6 +118,7 @@ public class LoginView extends StackPane implements View{
 		login.setOnAction(e ->  {
 			lc.logIn(usernameField.getText(), passwordField.getText());
 			player.stop();
+			music.stop();
 		});
 		
 	}

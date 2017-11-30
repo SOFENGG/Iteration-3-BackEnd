@@ -32,11 +32,10 @@ public class CashierView extends BorderPane implements View{
 			private ToggleButton helpButton;
 		
 	private VBox leftVBox;
-		private ToggleGroup toggleGroup;
-			private ToggleButton returnItem;
-			private ToggleButton serviceWorker;
-			private ToggleButton endOfDay;
-			private ToggleButton logout;
+			private Button returnItem;
+			private Button serviceWorker;
+			private Button endOfDay;
+			private Button logout;
 	
 	private VBox centerVBox;
 		private HBox searchHBox;
@@ -46,7 +45,7 @@ public class CashierView extends BorderPane implements View{
 		private InventoryView iv;
 			
 	private VBox rightVBox;
-		private CartView cv;
+		private CartViewTabPane cvtb;
 		private HBox checkoutHBox;
 			private HBox checkoutLeftHBox;
 				private Label totalLabel;
@@ -73,7 +72,7 @@ public class CashierView extends BorderPane implements View{
 		initRight();
 		
 		setTop(topHBox);
-		setLeft(leftVBox);
+		//setLeft(leftVBox);
 		setCenter(centerVBox);
 		setRight(rightVBox);
 	}
@@ -126,28 +125,22 @@ public class CashierView extends BorderPane implements View{
 	private void initLeft() {
 		leftVBox = new VBox (20);
 		leftVBox.setId("LeftVbox");
-		
-			toggleGroup = new ToggleGroup ();
 			
-				returnItem = new ToggleButton ("Return Item");
+				returnItem = new Button ("Return Item");
 				returnItem.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				returnItem.getStyleClass().add("Button");
-				returnItem.setToggleGroup(toggleGroup);
+				returnItem.getStyleClass().add("LeftButton");
 				
-				serviceWorker = new ToggleButton ("Service Worker");
+				serviceWorker = new Button ("Service Worker");
 				serviceWorker.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				serviceWorker.getStyleClass().add("Button");
-				serviceWorker.setToggleGroup(toggleGroup);
+				serviceWorker.getStyleClass().add("LeftButton");
 				
-				endOfDay = new ToggleButton ("End of Day");
+				endOfDay = new Button ("End of Day");
 				endOfDay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				endOfDay.getStyleClass().add("Button");
-				endOfDay.setToggleGroup(toggleGroup);
+				endOfDay.getStyleClass().add("LeftButton");
 				
-				logout = new ToggleButton ("Logout");
+				logout = new Button ("Logout");
 				logout.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-				logout.getStyleClass().add("Button");
-				logout.setToggleGroup(toggleGroup);
+				logout.getStyleClass().add("LeftButton");
 				
 		leftVBox.getChildren().addAll(returnItem, serviceWorker, endOfDay, logout);
 		
@@ -172,7 +165,7 @@ public class CashierView extends BorderPane implements View{
 				searchTextField.setId ("TextField");
 				
 				searchButton = new Button ();
-				searchButton.setId("SearchButton");
+				searchButton.getStyleClass ().add("SearchButton");
 				searchButton.setMinSize(40, 40);
 				
 			searchHBox.getChildren().addAll(filterComboBox, searchTextField, searchButton);
@@ -223,9 +216,9 @@ public class CashierView extends BorderPane implements View{
 			
 			cartOptionsHBox.getChildren ().addAll (holdButton, overridePriceButton, clearCartButton);
 			
-			cv = new CartView (cvc);
+			cvtb = new CartViewTabPane (cvc);
 			
-		rightVBox.getChildren ().addAll (checkoutHBox, cv, cartOptionsHBox);
+		rightVBox.getChildren ().addAll (cvtb, cartOptionsHBox, checkoutHBox);
 		
 		HBox.setHgrow (checkoutHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutLeftHBox, Priority.ALWAYS);
@@ -270,13 +263,13 @@ public class CashierView extends BorderPane implements View{
 	public void attach(){
 		//put all attaching of views here
 		Database.getInstance().attach(InventoryView.KEY, iv);
-		Database.getInstance().attach(CartView.KEY, cv);
+		//Database.getInstance().attach(CartView.KEY, cv);
 	}
 	
 	public void detach(){
 		//put all detaching of vies here
 		Database.getInstance().detach(InventoryView.KEY);
-		Database.getInstance().detach(CartView.KEY);
+		//Database.getInstance().detach(CartView.KEY);
 	}
 	
 	@Override

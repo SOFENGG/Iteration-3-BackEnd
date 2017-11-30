@@ -39,11 +39,13 @@ public class MainController extends Controller {
 				lc.attach();
 				break;
 			case Code.CVC_CODE: scene.setRoot(cvc.getView(view));
+				mainStage.sizeToScene();
 				cvc.attach();
 				lc.detach();
 				cvc.getAllItems();
 				break;
 			case Code.MVC_CODE: scene.setRoot(mvc.getView(view));
+				mainStage.sizeToScene();
 				mvc.attach();
 				lc.detach();
 				break;
