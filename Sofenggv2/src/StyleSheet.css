@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
 
 #DefaultLabel {
 	-fx-font-size: 20px;
@@ -12,14 +12,13 @@
 }
 
 #TopHbox {
-	-fx-border-color: black;
+	-fx-border-color: #6C7A89;
 	-fx-background-color: #BDC3C7;
 	-fx-padding: 10;
 }
 
 #LeftVbox {
 	-fx-background-color: #6C7A89;
-	-fx-padding: 10;
 }
 
 #CenterVbox {
@@ -110,7 +109,7 @@
 }
 
 #TextField {
-	-fx-font-size: 20px;
+	-fx-font-size: 16px;
 	-fx-font-family: "Source Sans Pro", sand-serif;
 	-fx-font-weight: normal;
 	-fx-background-color: #FFFFFF;
@@ -121,13 +120,14 @@
 
 .LeftButton {
 	-fx-font-size: 16px;
-	-fx-padding: 15px 25px 15px 25px;
+	-fx-padding: 15px 30px 15px 30px;
 	-fx-font-family: "Source Sans Pro", sand-serif;
 	-fx-font-weight: bold;
-	-fx-background-color: #98A1AC;
+	-fx-background-color: #6C7A89;
 	-fx-text-fill: #FFFFFF;
 	-fx-cursor: hand;
-	-fx-effect: dropshadow(three-pass-box, #1E2022, 4, 0, 0, 2);
+	-fx-border-radius: 0px;
+	-fx-border-color: #88909A;
 }
 
 .LeftButton:hover {
@@ -138,6 +138,33 @@
 .LeftButton:pressed {
 	-fx-opacity: 0.8;
 	-fx-background-color: #798089;
+	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
+}
+
+.CartButton {	
+	-fx-background-image: url("cart.png");
+    -fx-background-size: 32px 32px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #D4D8D8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
+}
+
+.CartButton:hover {
+	-fx-opacity: 0.6;
+	-fx-background-color: #98A1AC;
+}
+
+.CartButton:pressed {
+	-fx-opacity: 0.8;
+	-fx-background-color: #8994A0;
+	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
+}
+
+.CartButton:selected {
+	-fx-opacity: 1.0;
+	-fx-background-color: #7A8794;
 	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
 }
 
@@ -168,6 +195,61 @@
 	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
 }
 
+.CheckoutButton {
+	-fx-font-size: 16px;
+	-fx-padding: 5px 25px 5px 25px;
+	-fx-font-family: "Source Sans Pro", sand-serif;
+	-fx-font-weight: bold;
+	-fx-background-color: #03a678;
+	-fx-text-fill: #ffffff;
+	-fx-cursor: hand;
+	-fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
+}
+
+.CheckoutButton:hover {
+	-fx-opacity: 0.6;
+	-fx-background-color: #02956C;
+}
+
+.CheckoutButton:pressed {
+	-fx-opacity: 0.8;
+	-fx-background-color: #028460;
+	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
+}
+
+.CheckoutButton:selected {
+	-fx-opacity: 1.0;
+	-fx-background-color: #027454;
+	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
+}
+
+.ClearButton {
+	-fx-font-size: 16px;
+	-fx-padding: 5px 25px 5px 25px;
+	-fx-font-family: "Source Sans Pro", sand-serif;
+	-fx-font-weight: bold;
+	-fx-background-color: #C0392B;
+	-fx-text-fill: #ffffff;
+	-fx-cursor: hand;
+	-fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
+}
+
+.ClearButton:hover {
+	-fx-opacity: 0.6;
+	-fx-background-color: #AC3426;
+}
+
+.ClearButton:pressed {
+	-fx-opacity: 0.8;
+	-fx-background-color: #992E22;
+	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
+}
+
+.ClearButton:selected {
+	-fx-opacity: 1.0;
+	-fx-background-color: #86281E;
+	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
+}
 
 .Button {
 	-fx-font-size: 16px;
@@ -175,7 +257,7 @@
 	-fx-font-family: "Source Sans Pro", sand-serif;
 	-fx-font-weight: bold;
 	-fx-background-color: #D4D8D8;
-	-fx-text-fill: #FFFFFF;
+	-fx-text-fill: #000000;
 	-fx-cursor: hand;
 	-fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
 }

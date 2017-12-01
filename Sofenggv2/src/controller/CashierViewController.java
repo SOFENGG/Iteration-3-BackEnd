@@ -237,7 +237,7 @@ public class CashierViewController {
 			cartItems.add(new CartItem(itemCode, name, price, quantity));
 		
 		//updates all the views needed
-		Database.getInstance().notifyViews(new String[]{CartView.KEY});
+		Database.getInstance().notifyViews(new String[]{CartView.KEY, CashierView.KEY});
 		
 		return true;
 	}

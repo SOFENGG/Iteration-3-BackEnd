@@ -12,10 +12,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TableRow;
 import javafx.util.Callback;
 import model.Database;
 import model.Item;
@@ -39,6 +42,7 @@ public class InventoryView extends ScrollPane implements View {
 		this.cvc = cvc;
 		
 		initIV ();
+		initHandlers ();
 	}
 	
 	private void initIV() {
@@ -52,6 +56,15 @@ public class InventoryView extends ScrollPane implements View {
 		data = FXCollections.observableArrayList();
 
 		setContent (tableView);
+	}
+	
+	private void initHandlers() {
+		// TODO Auto-generated method stub
+		tableView.setOnMousePressed(e -> {
+			if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
+				System.out.println(tableView.getSelectionModel().getSelectedItem());
+			}
+		});
 	}
 
 	@Override

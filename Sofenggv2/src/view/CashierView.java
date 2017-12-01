@@ -16,9 +16,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import model.CartItem;
 import model.Database;
 
 public class CashierView extends BorderPane implements View{
+	public static final String KEY = "cashierview";
 	
 	private CashierViewController cvc;
 	
@@ -42,6 +44,7 @@ public class CashierView extends BorderPane implements View{
 			private ComboBox<String> filterComboBox;
 			private TextField searchTextField;
 			private Button searchButton;
+			private Button cartButton;
 		private InventoryView iv;
 			
 	private VBox rightVBox;
@@ -52,9 +55,12 @@ public class CashierView extends BorderPane implements View{
 			private HBox checkoutRightHBox;
 				private Button checkoutButton;
 		private HBox cartOptionsHBox;
-			private Button holdButton;
-			private Button overridePriceButton;
-			private Button clearCartButton;
+			private HBox holdHBox;
+				private Button holdButton;
+			private HBox overrideHBox;
+				private Button overridePriceButton;
+			private HBox clearHBox;
+				private Button clearCartButton;
 			
 	public CashierView (CashierViewController cvc) {
 		super ();
@@ -82,7 +88,7 @@ public class CashierView extends BorderPane implements View{
 		topHBox.setId("TopHbox");
 		
 		menuHBox = new HBox ();
-		menuHBox.setSpacing (50);
+		//menuHBox.setSpacing (50);
 		menuHBox.setAlignment (Pos.CENTER_LEFT);
 		
 			menuButton = new ToggleButton ();
@@ -123,7 +129,7 @@ public class CashierView extends BorderPane implements View{
 	}
 	
 	private void initLeft() {
-		leftVBox = new VBox (20);
+		leftVBox = new VBox ();
 		leftVBox.setId("LeftVbox");
 			
 				returnItem = new Button ("Return Item");
@@ -152,6 +158,7 @@ public class CashierView extends BorderPane implements View{
 		centerVBox.setId("CenterVbox");
 		
 			searchHBox = new HBox (20);
+			searchHBox.setAlignment(Pos.CENTER);
 			
 				filterComboBox = new ComboBox<String> ();
 				filterComboBox.getStyleClass().add("ComboBox");
@@ -167,8 +174,12 @@ public class CashierView extends BorderPane implements View{
 				searchButton = new Button ();
 				searchButton.getStyleClass ().add("SearchButton");
 				searchButton.setMinSize(40, 40);
-				
-			searchHBox.getChildren().addAll(filterComboBox, searchTextField, searchButton);
+			
+				cartButton = new Button ();
+				cartButton.getStyleClass ().add("CartButton");
+				cartButton.setMinSize(40, 40);
+					
+			searchHBox.getChildren().addAll(filterComboBox, searchTextField, searchButton, cartButton);
 		
 			iv = new InventoryView (cvc);
 			
@@ -196,25 +207,34 @@ public class CashierView extends BorderPane implements View{
 				checkoutRightHBox.setAlignment(Pos.CENTER_RIGHT);
 				
 					checkoutButton = new Button ("Checkout");
-					checkoutButton.getStyleClass().add("Button");
+					checkoutButton.getStyleClass().add("CheckoutButton");
 				
 				checkoutRightHBox.getChildren().addAll(checkoutButton);
 				
 			checkoutHBox.getChildren ().addAll (checkoutLeftHBox, checkoutRightHBox);
 			
-			cartOptionsHBox = new HBox (5);
+			cartOptionsHBox = new HBox ();
 			cartOptionsHBox.setAlignment(Pos.BOTTOM_CENTER);
 			
-				holdButton = new Button ("Hold");
-				holdButton.getStyleClass().add("Button");
+				holdHBox = new HBox ();
+				holdHBox.setAlignment(Pos.CENTER_LEFT);
+					holdButton = new Button ("Hold");
+					holdButton.getStyleClass().add("Button");
+				holdHBox.getChildren().addAll(holdButton);
 				
-				overridePriceButton = new Button ("Override Price");
-				overridePriceButton.getStyleClass().add("Button");
+				overrideHBox = new HBox ();
+				overrideHBox.setAlignment(Pos.CENTER);
+					overridePriceButton = new Button ("Override Price");
+					overridePriceButton.getStyleClass().add("Button");
+				overrideHBox.getChildren().addAll(overridePriceButton);
 				
-				clearCartButton = new Button ("Clear Cart");
-				clearCartButton.getStyleClass().add("Button");
+				clearHBox = new HBox ();
+				clearHBox.setAlignment(Pos.CENTER_RIGHT);
+					clearCartButton = new Button ("Clear Cart");
+					clearCartButton.getStyleClass().add("ClearButton");
+				clearHBox.getChildren().addAll(clearCartButton);
 			
-			cartOptionsHBox.getChildren ().addAll (holdButton, overridePriceButton, clearCartButton);
+			cartOptionsHBox.getChildren ().addAll (holdHBox, overrideHBox, clearHBox);
 			
 			cvtp = new CartViewTabPane (cvc);
 			
@@ -223,7 +243,10 @@ public class CashierView extends BorderPane implements View{
 		HBox.setHgrow (checkoutHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutLeftHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutRightHBox, Priority.ALWAYS);
-		HBox.setHgrow (cartOptionsHBox, Priority.ALWAYS);
+		//HBox.setHgrow (cartOptionsHBox, Priority.ALWAYS);
+		HBox.setHgrow (holdHBox, Priority.ALWAYS);
+		HBox.setHgrow (overrideHBox, Priority.ALWAYS);
+		HBox.setHgrow (clearHBox, Priority.ALWAYS);
 		VBox.setVgrow (rightVBox, Priority.ALWAYS);
 	}
 	
@@ -256,26 +279,33 @@ public class CashierView extends BorderPane implements View{
 					break;
 			}
 			
-			cvc.addToCart("0", "white wheel", BigDecimal.valueOf(25), 1);
+			//cvc.addToCart("0", "white wheel", BigDecimal.valueOf(25), 1);
 		});
 	}
 	
 	public void attach(){
 		//put all attaching of views here
+		Database.getInstance().attach(KEY, this);
 		Database.getInstance().attach(InventoryView.KEY, iv);
 		cvtp.attach();
 	}
 	
 	public void detach(){
 		//put all detaching of vies here
+		Database.getInstance().detach(KEY);
 		Database.getInstance().detach(InventoryView.KEY);
 		cvtp.detach();
 	}
 	
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		BigDecimal totalPrice = BigDecimal.valueOf(0);
 		
+		for (CartItem item : cvc.getCartItems()) {
+			totalPrice = totalPrice.add(item.getPriceSold().multiply(BigDecimal.valueOf(item.getQuantity())));
+		}
+		
+		totalLabel.setText("Total: " + totalPrice.toString() + "php");
 	}
 	
 }
