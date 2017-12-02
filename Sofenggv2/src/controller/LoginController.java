@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import model.Database;
 import model.User;
 import util.Query;
-import view.AlertBox;
+import view.AlertBoxPopup;
 import view.InventoryView;
 import view.LoginView;
 
@@ -83,7 +83,7 @@ public class LoginController {
 			}
 			System.out.println("LOGGED IN");
 		}else {
-			new AlertBox("Authentication Error", "Wrong Password/Username");
+			new AlertBoxPopup("Authentication Error", "Wrong Password/Username");
 		}
 	}
 

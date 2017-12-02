@@ -12,13 +12,10 @@ public class CartViewTabPane extends TabPane implements View {
 	private CashierViewController cvc;
 	
 	private CartView cartViewOngoing;
-	//private HoldView cartViewHold;
+	private HoldView cartViewHold;
 	
 	private Tab ongoingTab;
 	private Tab holdTab;
-	private ToggleGroup toggleGroup;
-		private ToggleButton retailButton;
-		private ToggleButton wholeSaleButton;
 		
 	public CartViewTabPane (CashierViewController cvc) {
 		super();
@@ -40,7 +37,7 @@ public class CartViewTabPane extends TabPane implements View {
 	
 	private void initCartViews() {
 		cartViewOngoing = new CartView (cvc);
-		//cartViewHold = new HoldView (cvc);
+		cartViewHold = new HoldView (cvc);
 	}
 
 	private void initTabs() {
@@ -50,7 +47,7 @@ public class CartViewTabPane extends TabPane implements View {
 		
 		holdTab = new Tab ("Hold");
 		holdTab.getStyleClass().add("Tab");
-		//holdTab.setContent(cartViewHold);
+		holdTab.setContent(cartViewHold);
 	}
 	
 	private void initHanders() {

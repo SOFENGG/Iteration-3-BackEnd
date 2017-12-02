@@ -69,8 +69,8 @@ public class LoginView extends StackPane implements View{
 		music = new MediaPlayer( new Media(getClass().getResource("/legion.mp3").toExternalForm()));
 		mediaViewMusic = new MediaView(music);
 		music.setCycleCount(MediaPlayer.INDEFINITE);
-        music.setAutoPlay(true);
-        music.play();
+        //music.setAutoPlay(true);
+        //music.play();
 	}
 
 	private void initLoginView() {
@@ -109,7 +109,7 @@ public class LoginView extends StackPane implements View{
 			
 			login = new Button ();
 			login.setText("Login");
-			login.getStyleClass ().add ("Button");
+			login.getStyleClass ().add ("GreenButton");
 			
 		loginBox.getChildren ().addAll (usernameBox, passwordBox, login);
 	}

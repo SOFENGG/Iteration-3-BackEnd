@@ -49,19 +49,24 @@ public class CashierView extends BorderPane implements View{
 		private InventoryView iv;
 			
 	private VBox rightVBox;
+		private HBox saleHBox;
+			private ToggleGroup toggleGroup;
+				private ToggleButton retailButton;
+				private ToggleButton wholeSaleButton;
 		private CartViewTabPane cvtp;
 		private HBox checkoutHBox;
 			private HBox checkoutLeftHBox;
 				private Label totalLabel;
 			private HBox checkoutRightHBox;
+				private Button clearCartButton;
 				private Button checkoutButton;
 		private HBox cartOptionsHBox;
 			private HBox holdHBox;
 				private Button holdButton;
 			private HBox overrideHBox;
 				private Button overridePriceButton;
-			private HBox clearHBox;
-				private Button clearCartButton;
+			private HBox clearItemHBox;
+				private Button clearItemButton;
 			
 	public CashierView (CashierViewController cvc) {
 		super ();
@@ -190,8 +195,24 @@ public class CashierView extends BorderPane implements View{
 	}
 
 	private void initRight() {
-		rightVBox = new VBox (20);
+		rightVBox = new VBox (15);
 		rightVBox.setId("RightVbox");
+		
+			saleHBox = new HBox ();
+			saleHBox.setAlignment(Pos.CENTER);
+				
+				toggleGroup = new ToggleGroup ();
+				
+				retailButton = new ToggleButton ("Retail Sale");
+				retailButton.getStyleClass().add("ToggleButton");
+				retailButton.setToggleGroup(toggleGroup);
+				retailButton.setSelected(true);
+				
+				wholeSaleButton = new ToggleButton ("Whole Sale");
+				wholeSaleButton.getStyleClass().add("ToggleButton");
+				wholeSaleButton.setToggleGroup(toggleGroup);
+			
+			saleHBox.getChildren().addAll(retailButton, wholeSaleButton);
 		
 			checkoutHBox = new HBox ();
 			checkoutHBox.setAlignment(Pos.TOP_CENTER);
@@ -204,13 +225,16 @@ public class CashierView extends BorderPane implements View{
 				
 				checkoutLeftHBox.getChildren().addAll(totalLabel);
 				
-				checkoutRightHBox = new HBox ();
+				checkoutRightHBox = new HBox (10);
 				checkoutRightHBox.setAlignment(Pos.CENTER_RIGHT);
 				
-					checkoutButton = new Button ("Checkout");
-					checkoutButton.getStyleClass().add("CheckoutButton");
+					clearCartButton = new Button ("Clear Cart");
+					clearCartButton.getStyleClass().add("RedButton");
 				
-				checkoutRightHBox.getChildren().addAll(checkoutButton);
+					checkoutButton = new Button ("Checkout");
+					checkoutButton.getStyleClass().add("GreenButton");
+				
+				checkoutRightHBox.getChildren().addAll(clearCartButton, checkoutButton);
 				
 			checkoutHBox.getChildren ().addAll (checkoutLeftHBox, checkoutRightHBox);
 			
@@ -229,25 +253,25 @@ public class CashierView extends BorderPane implements View{
 					overridePriceButton.getStyleClass().add("Button");
 				overrideHBox.getChildren().addAll(overridePriceButton);
 				
-				clearHBox = new HBox ();
-				clearHBox.setAlignment(Pos.CENTER_RIGHT);
-					clearCartButton = new Button ("Clear Cart");
-					clearCartButton.getStyleClass().add("ClearButton");
-				clearHBox.getChildren().addAll(clearCartButton);
-			
-			cartOptionsHBox.getChildren ().addAll (holdHBox, overrideHBox, clearHBox);
+				clearItemHBox = new HBox ();
+				clearItemHBox.setAlignment(Pos.CENTER_RIGHT);
+					clearItemButton = new Button ("Clear Item");
+					clearItemButton.getStyleClass().add("Button");
+				clearItemHBox.getChildren().addAll(clearItemButton);
+						
+			cartOptionsHBox.getChildren ().addAll (holdHBox, overrideHBox, clearItemHBox);
 			
 			cvtp = new CartViewTabPane (cvc);
 			
-		rightVBox.getChildren ().addAll (cvtp, cartOptionsHBox, checkoutHBox);
+		rightVBox.getChildren ().addAll (saleHBox, cvtp, cartOptionsHBox, checkoutHBox);
 		
+		HBox.setHgrow (saleHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutLeftHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutRightHBox, Priority.ALWAYS);
-		//HBox.setHgrow (cartOptionsHBox, Priority.ALWAYS);
 		HBox.setHgrow (holdHBox, Priority.ALWAYS);
 		HBox.setHgrow (overrideHBox, Priority.ALWAYS);
-		HBox.setHgrow (clearHBox, Priority.ALWAYS);
+		HBox.setHgrow (clearItemHBox, Priority.ALWAYS);
 		VBox.setVgrow (rightVBox, Priority.ALWAYS);
 	}
 	
@@ -287,9 +311,7 @@ public class CashierView extends BorderPane implements View{
 			ObservableList<String> row = iv.getSelectedItem();
 			if(row != null){
 				
-				/*
-				 *	put pop up here to get quantity
-				 */
+				new CartPopup (cvc, row);
 				
 				int quantity = 1;
 				
@@ -302,21 +324,15 @@ public class CashierView extends BorderPane implements View{
 		
 		//left
 		returnItem.setOnAction(e -> {
-			/*
-			 *  pop up here
-			 */
+			new ReturnItemPopup (cvc);
 		});
 		
 		serviceWorker.setOnAction(e -> {
-			/*
-			 * pop up here
-			 */
+			new ServiceWorkerPopup (cvc);
 		});
 		
 		endOfDay.setOnAction(e -> {
-			/*
-			 * pop up here
-			 */
+			new EndOfDayPopup (cvc);
 		});
 		
 		logout.setOnAction(e -> {
@@ -324,14 +340,24 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		//right
+		retailButton.setOnAction(e -> {
+			retailButton.setSelected(true);
+		});
+		
+		wholeSaleButton.setOnAction(e -> {
+			wholeSaleButton.setSelected(true);
+		});
+		
+		clearItemButton.setOnAction(e -> {
+			
+		});
+		
 		clearCartButton.setOnAction(e -> {
 			cvc.clearCart();
 		});
 		
 		checkoutButton.setOnAction(e -> {
-			/*
-			 *  pop up here to get isloan
-			 */
+			new CheckoutPopup (cvc);
 			boolean isloan = false;
 			String transactionType = "retail";
 			
@@ -339,9 +365,7 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		overridePriceButton.setOnAction(e -> {
-			/*
-			 * add pop up here to input price
-			 */
+			new OverridePricePopup(cvc);
 			double inputPrice = 20;
 			BigDecimal newPrice = BigDecimal.valueOf(inputPrice);
 			
