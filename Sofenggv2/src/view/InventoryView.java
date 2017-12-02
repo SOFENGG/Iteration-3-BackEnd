@@ -25,6 +25,10 @@ import model.Item;
 
 public class InventoryView extends ScrollPane implements View {
 	public static final String KEY = "inventory";
+	//column indexes
+	public static int ITEM_CODE;
+	public static int NAME;
+	public static int PRICE;
 	
 	private CashierViewController cvc;
 	
@@ -60,11 +64,15 @@ public class InventoryView extends ScrollPane implements View {
 	
 	private void initHandlers() {
 		// TODO Auto-generated method stub
-		tableView.setOnMousePressed(e -> {
+		/*tableView.setOnMousePressed(e -> {
 			if (e.isPrimaryButtonDown() && e.getClickCount() == 2) {
 				System.out.println(tableView.getSelectionModel().getSelectedItem());
 			}
-		});
+		});*/
+	}
+	
+	public ObservableList<String> getSelectedItem(){
+		return (ObservableList<String>) tableView.getSelectionModel().getSelectedItem();
 	}
 
 	@Override
@@ -98,7 +106,15 @@ public class InventoryView extends ScrollPane implements View {
 					
 					col.add(c);
 					tableView.getColumns ().addAll (c);
-					//System.out.println ("Column " + i + " added");
+					
+					if(rs.getMetaData ().getColumnName (i + 1).equals(Item.COLUMN_ITEM_CODE)){
+						ITEM_CODE = i;
+					}else if(rs.getMetaData ().getColumnName (i + 1).equals(Item.COLUMN_NAME)){
+						NAME = i;
+					}else if(rs.getMetaData ().getColumnName (i + 1).equals(Item.COLUMN_PRICE_CUSTOMER)){
+						PRICE = i;
+					}
+					
 				}
 				
 				while (rs.next()) {

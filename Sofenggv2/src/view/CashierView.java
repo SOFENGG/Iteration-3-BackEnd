@@ -3,6 +3,7 @@ package view;
 import java.math.BigDecimal;
 
 import controller.CashierViewController;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -258,6 +259,8 @@ public class CashierView extends BorderPane implements View{
 				setLeft(null);
 		});
 		
+		
+		//center
 		filterComboBox.setOnAction(e -> {
 			switch(filterComboBox.getValue()){
 				case "Item Code": 
@@ -278,9 +281,78 @@ public class CashierView extends BorderPane implements View{
 				case "Service": cvc.searchService(searchTextField.getText());
 					break;
 			}
-			
-			//cvc.addToCart("0", "white wheel", BigDecimal.valueOf(25), 1);
 		});
+		
+		cartButton.setOnAction(e -> {
+			ObservableList<String> row = iv.getSelectedItem();
+			if(row != null){
+				
+				/*
+				 *	put pop up here to get quantity
+				 */
+				
+				int quantity = 1;
+				
+				cvc.addToCart(row.get(InventoryView.ITEM_CODE),
+						row.get(InventoryView.NAME),
+						BigDecimal.valueOf(Double.parseDouble(row.get(InventoryView.PRICE))),
+						quantity);
+			}	
+		});
+		
+		//left
+		returnItem.setOnAction(e -> {
+			/*
+			 *  pop up here
+			 */
+		});
+		
+		serviceWorker.setOnAction(e -> {
+			/*
+			 * pop up here
+			 */
+		});
+		
+		endOfDay.setOnAction(e -> {
+			/*
+			 * pop up here
+			 */
+		});
+		
+		logout.setOnAction(e -> {
+			cvc.logout();
+		});
+		
+		//right
+		clearCartButton.setOnAction(e -> {
+			cvc.clearCart();
+		});
+		
+		checkoutButton.setOnAction(e -> {
+			/*
+			 *  pop up here to get isloan
+			 */
+			boolean isloan = false;
+			String transactionType = "retail";
+			
+			cvc.buyItems(transactionType, isloan);
+		});
+		
+		overridePriceButton.setOnAction(e -> {
+			/*
+			 * add pop up here to input price
+			 */
+			double inputPrice = 20;
+			BigDecimal newPrice = BigDecimal.valueOf(inputPrice);
+			
+			cvc.overridePrice(cvtp.getOngoingCartView().getSelectedItem().get(CartView.ITEM_CODE),
+					newPrice);
+		});
+		
+		holdButton.setOnAction(e -> {
+			
+		});
+		
 	}
 	
 	public void attach(){

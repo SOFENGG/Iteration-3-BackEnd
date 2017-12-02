@@ -70,5 +70,9 @@ public class CartViewTabPane extends TabPane implements View {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public CartView getOngoingCartView(){
+		return cartViewOngoing;
+	}
 
 }

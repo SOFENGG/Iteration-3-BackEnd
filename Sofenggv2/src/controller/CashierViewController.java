@@ -108,7 +108,6 @@ public class CashierViewController {
 							+ Item.COLUMN_DESCRIPTION + ", "
 							+ Item.COLUMN_CATEGORY + ", "
 							+ Item.COLUMN_MANUFACTURER + ", "
-							+ Item.COLUMN_DATE_PURCHASE + ", "
 							+ Item.COLUMN_PRICE_CUSTOMER + " from " + Item.TABLE);
 	}
 	
@@ -120,7 +119,6 @@ public class CashierViewController {
 						+ Item.COLUMN_DESCRIPTION + ", "
 						+ Item.COLUMN_CATEGORY + ", "
 						+ Item.COLUMN_MANUFACTURER + ", "
-						+ Item.COLUMN_DATE_PURCHASE + ", "
 						+ Item.COLUMN_PRICE_CUSTOMER + " from "+Item.TABLE+" where concat("+Item.COLUMN_NAME+", "+Item.COLUMN_DESCRIPTION+", "+Item.COLUMN_CATEGORY+", "+Item.COLUMN_MANUFACTURER+") like '%" + search + "%';");
 	}
 	
@@ -132,7 +130,6 @@ public class CashierViewController {
 						+ Item.COLUMN_DESCRIPTION + ", "
 						+ Item.COLUMN_CATEGORY + ", "
 						+ Item.COLUMN_MANUFACTURER + ", "
-						+ Item.COLUMN_DATE_PURCHASE + ", "
 						+ Item.COLUMN_PRICE_CUSTOMER + " from "+Item.TABLE+" where "+Item.COLUMN_ITEM_CODE+" = '"+code+"';");
 	}
 	
@@ -183,8 +180,15 @@ public class CashierViewController {
 	}
 	
 	//override price
-	public void overridePrice(CartItem c, BigDecimal newPrice){
-		c.setPriceSold(newPrice);
+	public void overridePrice(String itemCode, BigDecimal newPrice){
+		for(CartItem item : cartItems){
+			if(item.getItemCode().equals(itemCode)){
+				item.setPriceSold(newPrice);
+				break;
+			}
+		}
+		
+		Database.getInstance().updateViews(new String[]{CartView.KEY, CashierView.KEY});
 	}
 	
 	//insert servicelog
@@ -228,7 +232,7 @@ public class CashierViewController {
 		}
 		
 		for(CartItem item : cartItems){
-			if(item.getItemCode() == itemCode){
+			if(item.getItemCode().equals(itemCode)){
 				item.setQuantity(item.getQuantity() + quantity);
 				found = true;
 			}
@@ -333,8 +337,19 @@ public class CashierViewController {
 		Calendar cal = Calendar.getInstance();
 		Date today = new Date(cal.getTime().getTime());
 		BigDecimal totalPrice = BigDecimal.valueOf(0);
-		//int transactionId = Query.getInstance().getTransactionCount() + 1;
-		int transactionId = 1;
+		
+		String transactionCount = "select * from " + Transaction.TABLE;
+		ResultSet rs = Database.getInstance().query(new String[]{}, transactionCount);
+		
+		int transactionId = 0;
+		
+		try{
+			rs.last();
+			transactionId = rs.getRow();
+			rs.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 		
 		for(CartItem ci : cartItems){
 			try {
@@ -383,6 +398,7 @@ public class CashierViewController {
 		}
 		
 		cartItems.clear();
+		Database.getInstance().updateViews(new String[]{CashierView.KEY, CartView.KEY});
 	}
 	
 }

@@ -18,6 +18,12 @@ import model.CartItem;
 
 public class CartView extends ScrollPane implements View  {
 	public static final String KEY = "cart";
+	//column indexes
+	public static final int ITEM_CODE = 0;
+	public static final int NAME = 1;
+	public static final int QUANTITY = 2;
+	public static final int UNIT_PRICE = 3;
+	public static final int TOTAL_PRICE = 4;
 	
 	private CashierViewController cvc;
 	
@@ -50,11 +56,15 @@ public class CartView extends ScrollPane implements View  {
 		setContent (tableView);
 		
 		//add columns
-		addTableColumn("item_code", 0);
-		addTableColumn("name", 1);
-		addTableColumn("quantity", 2);
-		addTableColumn("unit price", 3);
-		addTableColumn("total price", 4);
+		addTableColumn("item_code", ITEM_CODE);
+		addTableColumn("name", NAME);
+		addTableColumn("quantity", QUANTITY);
+		addTableColumn("unit price", UNIT_PRICE);
+		addTableColumn("total price", TOTAL_PRICE);
+	}
+	
+	public ObservableList<String> getSelectedItem(){
+		return (ObservableList<String>) tableView.getSelectionModel().getSelectedItem();
 	}
 
 	@Override
@@ -71,18 +81,18 @@ public class CartView extends ScrollPane implements View  {
 			data.clear();
 		}
 		
-		addTableColumn("item_code", 0);
-		addTableColumn("name", 1);
-		addTableColumn("quantity", 2);
-		addTableColumn("unit price", 3);
-		addTableColumn("total price", 4);
+		addTableColumn("item_code", ITEM_CODE);
+		addTableColumn("name", NAME);
+		addTableColumn("quantity", QUANTITY);
+		addTableColumn("unit price", UNIT_PRICE);
+		addTableColumn("total price", TOTAL_PRICE);
 		
 		for(CartItem item : cvc.getCartItems()){
 			row = FXCollections.observableArrayList ();
 			row.add(item.getItemCode());
 			row.add(item.getName());
 			row.add(item.getQuantity()+"");
-			row.add(item.getOriginalPrice().toString());
+			row.add(item.getPriceSold().toString());
 			row.add(item.getPriceSold().multiply(BigDecimal.valueOf(item.getQuantity())).toString());
 			data.add(row);
 		}
