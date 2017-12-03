@@ -20,11 +20,15 @@ import model.Service;
 import model.ServiceLog;
 import model.Transaction;
 import model.User;
+import model.Worker;
 import util.CommonQuery;
 import util.Query;
 import view.CartView;
 import view.CashierView;
+import view.CustomerView;
+import view.HoldView;
 import view.InventoryView;
+import view.ServiceWorkerView;
 
 public class CashierViewController {
 
@@ -32,7 +36,6 @@ public class CashierViewController {
 	private CashierView cv;
 	
 	private User cashier;
-	private Customer customer;
 	
 	private ArrayList<CartItem> cartItems;
 	private ArrayList<Cart> cartBuffer;
@@ -89,19 +92,44 @@ public class CashierViewController {
 		changeControl(Code.LC_CODE, Code.LOGIN_VIEW);
 	}
 	
-	public Customer getCustomer(){
-		return customer;
-	}
-	
 	public ArrayList<CartItem> getCartItems(){
 		return cartItems;
 	}
 	
 	//cashier view services
+	//customers
+	public void getAllCustomers(){
+		Database.getInstance().query(new String[]{CustomerView.KEY},
+				"select * from " + Customer.TABLE);
+	}
+	
+	public void searchCustomer(int accountId){
+		String sql = "";
+		sql = "select * from " + Customer.TABLE +
+				" where " + Customer.COLUMN_ACCOUNT_ID + " = " + accountId + ";";
+		Database.getInstance().query(new String[]{CustomerView.KEY},
+				sql);
+	}
+	
+	public void searchCustomerName(String search){
+		String sql = "";
+		sql = "select * from " + Customer.TABLE +
+				" where " + Customer.COLUMN_NAME + " like '" + search + "%';";
+		Database.getInstance().query(new String[]{CustomerView.KEY},
+				sql);
+	}
+
+	public void searchCustomerAddress(String search){
+		String sql = "";
+		sql = "select * from " + Customer.TABLE +
+				" where " + Customer.COLUMN_ADDRESS + " like '%" + search + "%';";
+		Database.getInstance().query(new String[]{CustomerView.KEY},
+				sql);
+	}
 	
 	//items
-	public void getAllItems() {
-		Database.getInstance().query(new String[] {InventoryView.KEY},
+	public void getAllItems(String[] keys) {
+		Database.getInstance().query(keys,
 				"select " + Item.COLUMN_ITEM_CODE + ", "
 							+ "(" + Item.COLUMN_STOCK + " - " + Item.COLUMN_RESERVED + ") as stock, " 
 							+ Item.COLUMN_NAME + ", "
@@ -111,8 +139,8 @@ public class CashierViewController {
 							+ Item.COLUMN_PRICE_CUSTOMER + " from " + Item.TABLE);
 	}
 	
-	public void searchItem(String search) {
-		Database.getInstance().query(new String[] {InventoryView.KEY},
+	public void searchItem(String[] keys, String search) {
+		Database.getInstance().query(keys,
 				"select " + Item.COLUMN_ITEM_CODE + ", "
 						+ "(" + Item.COLUMN_STOCK + " - " + Item.COLUMN_RESERVED + ") as stock, " 
 						+ Item.COLUMN_NAME + ", "
@@ -122,8 +150,8 @@ public class CashierViewController {
 						+ Item.COLUMN_PRICE_CUSTOMER + " from "+Item.TABLE+" where concat("+Item.COLUMN_NAME+", "+Item.COLUMN_DESCRIPTION+", "+Item.COLUMN_CATEGORY+", "+Item.COLUMN_MANUFACTURER+") like '%" + search + "%';");
 	}
 	
-	public void searchItemByCode(String code){
-		Database.getInstance().query(new String[] {InventoryView.KEY},
+	public void searchItemByCode(String[] keys, String code){
+		Database.getInstance().query(keys,
 				"select " + Item.COLUMN_ITEM_CODE + ", "
 						+ "(" + Item.COLUMN_STOCK + " - " + Item.COLUMN_RESERVED + ") as stock, " 
 						+ Item.COLUMN_NAME + ", "
@@ -144,6 +172,23 @@ public class CashierViewController {
 				"select * from "+Service.TABLE+" where concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '%" + search + "%';");
 	}
 	
+	public void getAllSerivceWorkers(){
+		Database.getInstance().query(new String[]{ServiceWorkerView.KEY},
+				"select * from " + Worker.TABLE);
+	}
+	
+	public void getServiceWorkerWithID(int id){
+		Database.getInstance().query(new String[]{ServiceWorkerView.KEY},
+				"select * from " + Worker.TABLE +
+				" where " + Worker.COLUMN_WORKER_ID + " = " + id + ";");
+	}
+	
+	public void getServiceWorkerWithName(String name){
+		Database.getInstance().query(new String[]{ServiceWorkerView.KEY},
+				"select * from " + Worker.TABLE +
+				" where " + Worker.COLUMN_NAME + " like '" + name + "%';");
+	}
+	
 	//manager access -> called when action requires manager password
 	public boolean managerAccess(String managerPassword){
 		boolean accessGranted = false;
@@ -155,19 +200,11 @@ public class CashierViewController {
 		return accessGranted;
 	}
 	
-	public void setCustomer(int accountId){
-		//customer = CommonQuery.getCustomerWithId(accountId);
-	}
-	
-	public void removeCustomer(){
-		customer = null;
-	}
-	
 	//return
 	public void returnItem(String itemCode, int quantity){
 		String updateReserved = "update " + Item.TABLE + 
-				" set " + Item.COLUMN_RESERVED + " = " + Item.COLUMN_RESERVED + " + ?" + 
-				" where " + Item.COLUMN_ITEM_CODE + " = '?'";
+				" set " + Item.COLUMN_STOCK + " = " + Item.COLUMN_STOCK + " + ?" + 
+				" where " + Item.COLUMN_ITEM_CODE + " = ?";
 
 		try {
 			PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(updateReserved);
@@ -301,6 +338,8 @@ public class CashierViewController {
 	public void holdCart(String transactionType) {
 		cartBuffer.add(new Cart(cartItems, transactionType));
 		cartItems.clear();
+		
+		Database.getInstance().updateViews(new String[]{CartView.KEY, HoldView.KEY, CashierView.KEY});
 	}
 	
 	public ArrayList<Cart> getCartBuffer() {
@@ -315,7 +354,7 @@ public class CashierViewController {
 		cartBuffer.remove(index);
 	}
 	
-	public void buyItems(String transactionType, boolean isloan){	
+	public boolean buyItems(String transactionType, boolean isloan, Customer customer){	
 		String item_log = "insert into " + ItemLog.TABLE + " ("+ItemLog.COLUMN_ITEM_CODE+
 															", "+ItemLog.COLUMN_TRANSACTION_ID+
 															", "+ItemLog.COLUMN_QUANTITY_SOLD+
@@ -334,9 +373,38 @@ public class CashierViewController {
 																	", " + Transaction.COLUMN_DATE_SOLD + 
 																	", " + Transaction.COLUMN_TOTAL_PRICE + ") values (?, ?, ?, ?, ?, ?)";
 		
+		//gets total price of the item
+		BigDecimal totalPrice = BigDecimal.valueOf(0);
+		for(CartItem item : cartItems){
+			//calculates for total price of whole cart
+			totalPrice = totalPrice.add(item.getPriceSold().multiply(BigDecimal.valueOf(item.getQuantity())));
+		}
+
+		//checks if debt + total price of transaction is less than debt limit
+		if(isloan){
+			//update customer debt
+			String customerUpdate = "update " + Customer.TABLE + 
+					" set " + Customer.COLUMN_DEBT + " = " + Customer.COLUMN_DEBT + " + ?"+
+					" where " + Customer.COLUMN_ACCOUNT_ID + " = ? and " + 
+						Customer.COLUMN_DEBT + " + ? <= " + Customer.COLUMN_DEBT_LIMIT + ";";
+			
+			try {
+				PreparedStatement cus = Database.getInstance().getConnection().prepareStatement(customerUpdate);
+				cus.setBigDecimal(1, totalPrice);
+				cus.setInt(2, customer.getAccount_id());
+				cus.setBigDecimal(3, totalPrice);
+				
+				if(Database.getInstance().executeUpdate(cus) == 0){
+					return false;
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		Calendar cal = Calendar.getInstance();
 		Date today = new Date(cal.getTime().getTime());
-		BigDecimal totalPrice = BigDecimal.valueOf(0);
 		
 		String transactionCount = "select * from " + Transaction.TABLE;
 		ResultSet rs = Database.getInstance().query(new String[]{}, transactionCount);
@@ -367,9 +435,6 @@ public class CashierViewController {
 				reserved.setInt(1, ci.getQuantity());
 				reserved.setInt(2, ci.getQuantity());
 				reserved.setString(3, ci.getItemCode());
-				
-				//calculates for total price of whole cart
-				totalPrice = totalPrice.add(ci.getPriceSold().multiply(BigDecimal.valueOf(ci.getQuantity())));
 					
 				Database.getInstance().executeUpdate(log);
 				Database.getInstance().executeUpdate(reserved);
@@ -392,13 +457,10 @@ public class CashierViewController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		if(isloan){
-			//insert into customer debt
-		}
-		
+
 		cartItems.clear();
 		Database.getInstance().updateViews(new String[]{CashierView.KEY, CartView.KEY});
+		return true;
 	}
 	
 }

@@ -56,10 +56,12 @@ public class CartViewTabPane extends TabPane implements View {
 	
 	public void attach(){
 		Database.getInstance().attach(CartView.KEY, cartViewOngoing);
+		Database.getInstance().attach(HoldView.KEY, cartViewHold);
 	}
 	
 	public void detach(){
 		Database.getInstance().detach(CartView.KEY);
+		Database.getInstance().detach(HoldView.KEY);
 	}
 	
 	@Override

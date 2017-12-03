@@ -8,10 +8,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import model.Database;
 
 public class ServiceWorkerPopup extends Popup{
 
-	public static final String TITLE = "Return Item";
+	public static final String TITLE = "Service Workers";
 	
 	private CashierViewController cvc;
 	
@@ -64,8 +65,17 @@ public class ServiceWorkerPopup extends Popup{
 	}
 
 	private void initHandlers() {
+		Database.getInstance().attach(ServiceWorkerView.KEY, swv);
+		
+		cvc.getAllSerivceWorkers();
+		
 		searchButton.setOnAction(e -> {
-			//tim
+			switch(filterComboBox.getValue()){
+				case "ID": cvc.getServiceWorkerWithID(Integer.parseInt(searchTextField.getText()));
+					break;
+				case "Name": cvc.getServiceWorkerWithName(searchTextField.getText());
+					break;
+			}
 		});
 	}
 

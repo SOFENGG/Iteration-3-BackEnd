@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import model.Database;
 import model.Item;
 import model.User;
+import view.InventoryView;
 
 public class MainController extends Controller {
 	private LoginController lc;
@@ -42,7 +43,7 @@ public class MainController extends Controller {
 				mainStage.sizeToScene();
 				cvc.attach();
 				lc.detach();
-				cvc.getAllItems();
+				cvc.getAllItems(new String[]{InventoryView.KEY});
 				break;
 			case Code.MVC_CODE: scene.setRoot(mvc.getView(view));
 				mainStage.sizeToScene();

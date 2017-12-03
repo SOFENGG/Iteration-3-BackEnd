@@ -1,5 +1,7 @@
 package view;
 
+import java.math.BigDecimal;
+
 import controller.CashierViewController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -40,6 +42,7 @@ public class CartPopup extends Popup{
 		
 		this.cvc = cvc;
 		this.row = row;
+		qty = 1;
 		
 		initScene();
 		initHandlers ();
@@ -102,7 +105,16 @@ public class CartPopup extends Popup{
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
-			//tim
+			boolean success = cvc.addToCart(row.get(InventoryView.ITEM_CODE),
+								row.get(InventoryView.NAME),
+								BigDecimal.valueOf(Double.parseDouble(row.get(InventoryView.PRICE))),
+								qty);	
+			if(!success){
+				closePopup();
+				new AlertBoxPopup("Stock", "Not enough stock");
+			}else{
+				closePopup();
+			}
 		});
 		
 		cancelButton.setOnAction(e -> {

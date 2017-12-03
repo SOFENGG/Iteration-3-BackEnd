@@ -29,6 +29,7 @@ public class InventoryView extends ScrollPane implements View {
 	public static int ITEM_CODE;
 	public static int NAME;
 	public static int PRICE;
+	public static int STOCK;
 	
 	private CashierViewController cvc;
 	
@@ -113,6 +114,8 @@ public class InventoryView extends ScrollPane implements View {
 						NAME = i;
 					}else if(rs.getMetaData ().getColumnName (i + 1).equals(Item.COLUMN_PRICE_CUSTOMER)){
 						PRICE = i;
+					}else if(rs.getMetaData().getColumnName(i + 1).equals(Item.COLUMN_STOCK)){
+						STOCK = i;
 					}
 					
 				}

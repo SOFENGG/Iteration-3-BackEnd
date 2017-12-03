@@ -5,30 +5,29 @@ import java.math.BigDecimal;
 import controller.CashierViewController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.CartItem;
 
-public class OverridePricePopup extends Popup{
+public class ClearItemPopup extends Popup{
 
-	public static final String TITLE = "Override Price";
+	public static final String TITLE = "Clear Item";
 	
 	private CashierViewController cvc;
 	private CartItem item;
 	
 	private VBox layout;
-		private Label overrideLabel;
-		private HBox priceHBox;
-			private Label priceLabel;
-			private TextField priceTextField;
+		private Label itemLabel;
+		private HBox quantityHBox;
+			private Label quantityLabel;
+			private TextField quantityTextField;
 		private HBox buttonsHBox;
 			private Button okayButton;
 			private Button cancelButton;
 	
-	public OverridePricePopup(CashierViewController cvc, String itemCode) {
+	public ClearItemPopup(CashierViewController cvc, String itemCode) {
 		super(TITLE);
 		
 		this.cvc = cvc;
@@ -54,19 +53,19 @@ public class OverridePricePopup extends Popup{
 		layout = new VBox (20);
 		layout.setId("Popup");
 		
-			overrideLabel = new Label (item.getName() + " (" + item.getOriginalPrice().toString() + "php)");
-			overrideLabel.setId("DefaultLabel");
+			itemLabel = new Label (item.getName() + " (x" + item.getQuantity() + ")");
+			itemLabel.setId("DefaultLabel");
 			
-			priceHBox = new HBox (20);
+			quantityHBox = new HBox (20);
 				
-				priceLabel = new Label ("New price:");
-				priceLabel.setId("DefaultLabel");
+				quantityLabel = new Label ("New quantity:");
+				quantityLabel.setId("DefaultLabel");
 				
-				priceTextField = new TextField ();
-				priceTextField.setId("TextField");
-				priceTextField.setPromptText("price");
+				quantityTextField = new TextField ();
+				quantityTextField.setId("TextField");
+				quantityTextField.setPromptText("quantity");
 				
-			priceHBox.getChildren().addAll(priceLabel, priceTextField);
+			quantityHBox.getChildren().addAll(quantityLabel, quantityTextField);
 		
 			buttonsHBox = new HBox (20);
 			buttonsHBox.setAlignment(Pos.CENTER_RIGHT);
@@ -79,16 +78,19 @@ public class OverridePricePopup extends Popup{
 			
 			buttonsHBox.getChildren().addAll (cancelButton, okayButton);
 			
-		layout.getChildren().addAll(overrideLabel, priceHBox, buttonsHBox);
+		layout.getChildren().addAll(itemLabel, quantityHBox, buttonsHBox);
 	}
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
-			double inputPrice = Double.parseDouble(priceTextField.getText());
-			BigDecimal newPrice = BigDecimal.valueOf(inputPrice);
-			
-			cvc.overridePrice(item.getItemCode(),
-					newPrice);
+			int quantity = Integer.parseInt(quantityTextField.getText());
+			if(quantity <= item.getQuantity()){
+				cvc.removeCartItem(item.getItemCode(),quantity);
+				closePopup();
+			}else{
+				closePopup();
+				new AlertBoxPopup("Failed", "Failed");
+			}
 		});
 		
 		cancelButton.setOnAction(e -> {

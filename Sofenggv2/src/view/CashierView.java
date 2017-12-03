@@ -22,6 +22,7 @@ import model.Database;
 
 public class CashierView extends BorderPane implements View{
 	public static final String KEY = "cashierview";
+	public static String transaction = "";
 	
 	private CashierViewController cvc;
 	
@@ -207,6 +208,7 @@ public class CashierView extends BorderPane implements View{
 				retailButton.getStyleClass().add("ToggleButton");
 				retailButton.setToggleGroup(toggleGroup);
 				retailButton.setSelected(true);
+				transaction = "retail";
 				
 				wholeSaleButton = new ToggleButton ("Whole Sale");
 				wholeSaleButton.getStyleClass().add("ToggleButton");
@@ -288,7 +290,7 @@ public class CashierView extends BorderPane implements View{
 		filterComboBox.setOnAction(e -> {
 			switch(filterComboBox.getValue()){
 				case "Item Code": 
-				case "Description": cvc.getAllItems();
+				case "Description": cvc.getAllItems(new String[]{InventoryView.KEY});
 					break;
 				case "Service": cvc.getAllServices();
 					break;
@@ -298,9 +300,9 @@ public class CashierView extends BorderPane implements View{
 		
 		searchButton.setOnAction(e -> {
 			switch(filterComboBox.getValue()){
-				case "Item Code": cvc.searchItemByCode(searchTextField.getText());
+				case "Item Code": cvc.searchItemByCode(new String[]{InventoryView.KEY}, searchTextField.getText());
 					break;
-				case "Description": cvc.searchItem(searchTextField.getText());
+				case "Description": cvc.searchItem(new String[]{InventoryView.KEY}, searchTextField.getText());
 					break;
 				case "Service": cvc.searchService(searchTextField.getText());
 					break;
@@ -310,16 +312,13 @@ public class CashierView extends BorderPane implements View{
 		cartButton.setOnAction(e -> {
 			ObservableList<String> row = iv.getSelectedItem();
 			if(row != null){
-				
-				new CartPopup (cvc, row);
-				
-				int quantity = 1;
-				
-				cvc.addToCart(row.get(InventoryView.ITEM_CODE),
-						row.get(InventoryView.NAME),
-						BigDecimal.valueOf(Double.parseDouble(row.get(InventoryView.PRICE))),
-						quantity);
-			}	
+				if(Integer.parseInt(row.get(InventoryView.STOCK)) > 0) 
+					new CartPopup (cvc, row);
+				else
+					new AlertBoxPopup("Stock", "There is currently 0 stock of this item.");
+			}else{
+				new AlertBoxPopup("Error", "No selected item.");
+			}
 		});
 		
 		//left
@@ -342,39 +341,47 @@ public class CashierView extends BorderPane implements View{
 		//right
 		retailButton.setOnAction(e -> {
 			retailButton.setSelected(true);
+			transaction = "retail";
 		});
 		
 		wholeSaleButton.setOnAction(e -> {
 			wholeSaleButton.setSelected(true);
+			transaction = "wholesale";
 		});
 		
 		clearItemButton.setOnAction(e -> {
-			
+			ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
+			if(row != null){
+				new ClearItemPopup(cvc, row.get(CartView.ITEM_CODE));
+			}else{
+				new AlertBoxPopup("Error", "No selected cart item.");
+			}
+
 		});
 		
 		clearCartButton.setOnAction(e -> {
 			cvc.clearCart();
+			new AlertBoxPopup("Cart", "Cart is cleared.");
 		});
 		
 		checkoutButton.setOnAction(e -> {
-			new CheckoutPopup (cvc);
-			boolean isloan = false;
-			String transactionType = "retail";
-			
-			cvc.buyItems(transactionType, isloan);
+			if(!cvc.getCartItems().isEmpty())
+				new CheckoutPopup (cvc);
+			else
+				new AlertBoxPopup("Cart", "Cart is empty, can't proceed to checkout.");
 		});
 		
 		overridePriceButton.setOnAction(e -> {
-			new OverridePricePopup(cvc);
-			double inputPrice = 20;
-			BigDecimal newPrice = BigDecimal.valueOf(inputPrice);
-			
-			cvc.overridePrice(cvtp.getOngoingCartView().getSelectedItem().get(CartView.ITEM_CODE),
-					newPrice);
+			ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
+			if(row != null){
+				new OverridePricePopup(cvc, row.get(CartView.ITEM_CODE));
+			}else{
+				new AlertBoxPopup("Error", "No selected cart item.");
+			}
 		});
 		
 		holdButton.setOnAction(e -> {
-			
+			cvc.holdCart(transaction);
 		});
 		
 	}

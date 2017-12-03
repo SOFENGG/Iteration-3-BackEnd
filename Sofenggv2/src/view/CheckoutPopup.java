@@ -1,6 +1,9 @@
 package view;
 
+import java.math.BigDecimal;
+
 import controller.CashierViewController;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -12,6 +15,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.Customer;
+import model.Database;
 
 	public class CheckoutPopup extends Popup {
 	
@@ -125,6 +130,17 @@ import javafx.scene.layout.VBox;
 	}
 
 	private void initHandlers() {
+		searchButton.setOnAction(e -> {
+			switch(filterComboBox.getValue()){
+				case "ID": cvc.searchCustomer(Integer.parseInt(searchTextField.getText().toString()));
+					break;
+				case "Name": cvc.searchCustomerName(searchTextField.getText().toString());
+					break;
+				case "Address": cvc.searchCustomerAddress(searchTextField.getText().toString());
+					break;
+			}
+		});
+		
 		cashOutRadioButton.setOnAction(e -> {
 			cashOutRadioButton.setSelected(true);
 			
@@ -133,6 +149,7 @@ import javafx.scene.layout.VBox;
 			
 			layout.getChildren().addAll(amountHBox, paymentHBox, buttonsHBox);
 			
+			detach();
 			resizeScene();
 		});
 		
@@ -144,16 +161,53 @@ import javafx.scene.layout.VBox;
 			
 			layout.getChildren().addAll(amountHBox, paymentHBox, searchHBox, cv, buttonsHBox);
 			
+			//gets all customer and puts then to customer view
+			attach();
+			cvc.getAllCustomers();
+			
 			resizeScene();
 		});
 		
 		okayButton.setOnAction(e -> {
-			//tim
+			Customer customer = null;
+			boolean isloan = debtRadioButton.isSelected();
+			
+			if(isloan){
+				ObservableList<String> row = cv.getSelectedItem();
+				customer = new Customer(Integer.parseInt(row.get(0)),
+						row.get(1),
+						row.get(2),
+						row.get(3),
+						Integer.parseInt(row.get(4)),
+						BigDecimal.valueOf(Double.parseDouble(row.get(5))),
+						BigDecimal.valueOf(Double.parseDouble(row.get(6))));
+			}
+			
+			boolean success = cvc.buyItems(CashierView.transaction, isloan, customer);
+			
+			detach();
+			closePopup();
+			
+			if(!success){
+				new AlertBoxPopup("Transaction Failed", "Insufficient funds");
+			}else{
+				new AlertBoxPopup("Transaction Success", "Purchase Complete!");
+			}
+			
 		});
 		
 		cancelButton.setOnAction(e -> {
+			detach();
 			closePopup();
 		});
+	}
+	
+	private void attach(){
+		Database.getInstance().attach(CustomerView.KEY, cv);
+	}
+	
+	private void detach(){
+		Database.getInstance().detach(CustomerView.KEY);
 	}
 	
 

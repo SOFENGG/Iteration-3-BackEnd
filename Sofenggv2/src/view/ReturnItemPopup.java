@@ -8,10 +8,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import model.Database;
 
 public class ReturnItemPopup extends Popup{
 
 	public static final String TITLE = "Return Item";
+	private final String SPECIAL_INVENTORY_KEY = "inventory_return";
 	
 	private CashierViewController cvc;
 	
@@ -47,7 +49,6 @@ public class ReturnItemPopup extends Popup{
 				filterComboBox.getStyleClass().add("ComboBox");
 				filterComboBox.getItems().add("Item Code");
 				filterComboBox.getItems().add("Description");
-				filterComboBox.getItems().add("Service");
 				
 				filterComboBox.getSelectionModel ().selectFirst ();
 				
@@ -81,12 +82,23 @@ public class ReturnItemPopup extends Popup{
 	}
 	
 	private void initHandlers() {
+		Database.getInstance().attach(SPECIAL_INVENTORY_KEY, iv);
+		cvc.getAllItems(new String[]{SPECIAL_INVENTORY_KEY});
+		
 		searchButton.setOnAction(e -> {
-			//tim pls
+			switch(filterComboBox.getValue()){
+				case "Item Code": cvc.searchItemByCode(new String[]{SPECIAL_INVENTORY_KEY}, searchTextField.getText());
+					break;
+				case "Description": cvc.searchItem(new String[]{SPECIAL_INVENTORY_KEY}, searchTextField.getText());
+					break;
+			}
 		});
 		
 		stockButton.setOnAction(e -> {
 			//tim pls
+			Database.getInstance().detach(SPECIAL_INVENTORY_KEY);
+			cvc.returnItem(iv.getSelectedItem().get(InventoryView.ITEM_CODE), Integer.parseInt(stockTextField.getText()));
+			closePopup();
 		});
 	}
 
