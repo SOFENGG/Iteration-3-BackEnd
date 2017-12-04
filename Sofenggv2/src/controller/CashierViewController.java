@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Cart;
 import model.CartItem;
+import model.CartItemType;
 import model.Customer;
 import model.Database;
 import model.Item;
@@ -227,31 +228,10 @@ public class CashierViewController {
 		
 		Database.getInstance().updateViews(new String[]{CartView.KEY, CashierView.KEY});
 	}
-	
-	//insert servicelog
-	public void service(int workerId, int serviceId){
-		//add service id and worker id to service log
-		String service_log = "insert into " + ServiceLog.TABLE + " ("+ServiceLog.COLUMN_SERVICE_ID+
-																", "+ServiceLog.COLUMN_WORKER_ID+
-																", "+ServiceLog.COLUMN_DATE+") values (?, ?, ?)";
 		
-		Calendar cal = Calendar.getInstance();
-		Date today = new Date(cal.getTime().getTime());
-		
-		try {
-			PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(service_log);
-			ps.setInt(1, serviceId);
-			ps.setInt(2, workerId);
-			ps.setDate(3, today);
-			Database.getInstance().executeUpdate(ps);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	//<-- transaction functions -->
-	
-	public boolean addToCart(String itemCode, String name, BigDecimal price, int quantity){
+	//item
+	public boolean addToCart(CartItemType type, String code, String name, BigDecimal price, int quantity){
 		String updateReserved = "update " + Item.TABLE + 
 						" set " + Item.COLUMN_RESERVED + " =  " + Item.COLUMN_RESERVED + " + ? " + 
 						" where " + Item.COLUMN_ITEM_CODE + " = ? and " + Item.COLUMN_STOCK + " - " + Item.COLUMN_RESERVED + "  >= ? ;";
@@ -260,7 +240,7 @@ public class CashierViewController {
 		try {
 			PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(updateReserved);
 			ps.setInt(1, quantity);
-			ps.setString(2, itemCode);
+			ps.setString(2, code);
 			ps.setInt(3, quantity);
 			if(Database.getInstance().executeUpdate(ps) == 0)
 				return false; //not enough stock
@@ -269,13 +249,24 @@ public class CashierViewController {
 		}
 		
 		for(CartItem item : cartItems){
-			if(item.getItemCode().equals(itemCode)){
+			if(item.getType() == type
+					&& item.getItemCode().equals(code)){
 				item.setQuantity(item.getQuantity() + quantity);
 				found = true;
 			}
 		}
 		if(!found)
-			cartItems.add(new CartItem(itemCode, name, price, quantity));
+			cartItems.add(new CartItem(type, code, name, price, quantity));
+		
+		//updates all the views needed
+		Database.getInstance().notifyViews(new String[]{CartView.KEY, CashierView.KEY});
+		
+		return true;
+	}
+	
+	//service
+	public boolean addToCart(CartItemType type, int serviceId, int workerId, String name, BigDecimal price, int quantity){
+		cartItems.add(new CartItem(type, serviceId, workerId, name, price, quantity));
 		
 		//updates all the views needed
 		Database.getInstance().notifyViews(new String[]{CartView.KEY, CashierView.KEY});
@@ -304,6 +295,7 @@ public class CashierViewController {
 		Database.getInstance().notifyViews(new String[]{CartView.KEY});
 	}
 	
+	//remove cart item for TYPE ITEM
 	public void removeCartItem(String itemCode, int quantity){
 		String updateReserved = "update " + Item.TABLE + 
 								" set " + Item.COLUMN_RESERVED + " = " + Item.COLUMN_RESERVED + " - ?" + 
@@ -312,10 +304,12 @@ public class CashierViewController {
 		CartItem ci = null;
 		
 		for(CartItem item : cartItems){
-			if(item.getItemCode().equals(itemCode))
+			if(item.getType() == CartItemType.ITEM
+					&& item.getItemCode().equals(itemCode))
 				ci = item;
 		}
 		
+		//it's an item
 		try {
 			PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(updateReserved);
 			ps.setInt(1, quantity);
@@ -334,10 +328,25 @@ public class CashierViewController {
 		Database.getInstance().notifyViews(new String[]{CartView.KEY});
 	}
 	
+	//remove cart item for TYPE SERVJCE
+	public void removeCartItem(int itemCode, int quantity){
+			CartItem ci = null;
+			
+			for(CartItem item : cartItems){
+				if(item.getType() == CartItemType.SERVICE
+						&& item.getServiceId() == itemCode)
+					ci = item;
+			}
+			//it's a service
+			cartItems.remove(ci);
+			//updates all the views needed
+			Database.getInstance().notifyViews(new String[]{CartView.KEY});
+	}
+	
 	//hold/unhold cart methods - anj
 	public void holdCart(String transactionType) {
 		cartBuffer.add(new Cart(cartItems, transactionType));
-		cartItems.clear();
+		cartItems = new ArrayList<CartItem>();
 		
 		Database.getInstance().updateViews(new String[]{CartView.KEY, HoldView.KEY, CashierView.KEY});
 	}
@@ -360,6 +369,10 @@ public class CashierViewController {
 															", "+ItemLog.COLUMN_QUANTITY_SOLD+
 															", "+ItemLog.COLUMN_ORIGINAL_SOLD+
 															", "+ItemLog.COLUMN_PRICE_SOLD+") values (?, ?, ?, ?, ?)";
+		
+		String service_log = "insert into " + ServiceLog.TABLE + " ("+ServiceLog.COLUMN_SERVICE_ID+
+																", "+ServiceLog.COLUMN_WORKER_ID+
+																", "+ServiceLog.COLUMN_TRANSACTION_ID+") values (?, ?, ?)";
 		
 		String updateReserved = "update " + Item.TABLE + 
 								" set " + Item.COLUMN_RESERVED + " = " + Item.COLUMN_RESERVED + " - ?"+
@@ -385,6 +398,7 @@ public class CashierViewController {
 			//update customer debt
 			String customerUpdate = "update " + Customer.TABLE + 
 					" set " + Customer.COLUMN_DEBT + " = " + Customer.COLUMN_DEBT + " + ?"+
+					", " + Customer.COLUMN_TOTAL_VISITS + " = " + Customer.COLUMN_TOTAL_VISITS + " + 1"+
 					" where " + Customer.COLUMN_ACCOUNT_ID + " = ? and " + 
 						Customer.COLUMN_DEBT + " + ? <= " + Customer.COLUMN_DEBT_LIMIT + ";";
 			
@@ -421,15 +435,22 @@ public class CashierViewController {
 		
 		for(CartItem ci : cartItems){
 			try {
-				
-				//item_log
-				PreparedStatement log = Database.getInstance().getConnection().prepareStatement(item_log);
-				log.setString(1, ci.getItemCode());
-				log.setInt(2, transactionId);
-				log.setInt(3, ci.getQuantity());
-				log.setBigDecimal(4, ci.getOriginalPrice().multiply(BigDecimal.valueOf(ci.getQuantity())));
-				log.setBigDecimal(5, ci.getPriceSold().multiply(BigDecimal.valueOf(ci.getQuantity())));
-				
+				PreparedStatement log = null;
+				if(ci.getType() == CartItemType.ITEM){
+					//item_log
+					log = Database.getInstance().getConnection().prepareStatement(item_log);
+					log.setString(1, ci.getItemCode());
+					log.setInt(2, transactionId);
+					log.setInt(3, ci.getQuantity());
+					log.setBigDecimal(4, ci.getOriginalPrice().multiply(BigDecimal.valueOf(ci.getQuantity())));
+					log.setBigDecimal(5, ci.getPriceSold().multiply(BigDecimal.valueOf(ci.getQuantity())));
+				}else{
+					//service log
+					log = Database.getInstance().getConnection().prepareStatement(service_log);
+					log.setInt(1, ci.getServiceId()); //service id
+					log.setInt(2, ci.getWorkerId());//service worker
+					log.setInt(3, transactionId);		
+				}
 				//update item reserved
 				PreparedStatement reserved = Database.getInstance().getConnection().prepareStatement(updateReserved); 
 				reserved.setInt(1, ci.getQuantity());

@@ -22,14 +22,20 @@ import javafx.scene.control.TableRow;
 import javafx.util.Callback;
 import model.Database;
 import model.Item;
+import model.Service;
 
 public class InventoryView extends ScrollPane implements View {
 	public static final String KEY = "inventory";
-	//column indexes
+	//column index for items
 	public static int ITEM_CODE;
 	public static int NAME;
 	public static int PRICE;
 	public static int STOCK;
+	
+	//column index for service
+	public static int SERVICE_ID;
+	public static int SERVICE_NAME;
+	public static int SERVICE_PRICE;
 	
 	private CashierViewController cvc;
 	
@@ -116,6 +122,12 @@ public class InventoryView extends ScrollPane implements View {
 						PRICE = i;
 					}else if(rs.getMetaData().getColumnName(i + 1).equals(Item.COLUMN_STOCK)){
 						STOCK = i;
+					}else if(rs.getMetaData ().getColumnName (i + 1).equals(Service.COLUMN_SERVICE_ID)){
+						SERVICE_ID = i;
+					}else if(rs.getMetaData ().getColumnName (i + 1).equals(Service.COLUMN_SERVICE_NAME)){
+						SERVICE_NAME = i;
+					}else if(rs.getMetaData ().getColumnName (i + 1).equals(Service.COLUMN_PRICE)){
+						SERVICE_PRICE = i;
 					}
 					
 				}

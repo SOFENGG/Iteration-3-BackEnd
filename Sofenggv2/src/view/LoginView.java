@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -33,7 +34,7 @@ public class LoginView extends StackPane implements View{
 		private TextField usernameField;
 	private HBox passwordBox;
 		private Label password;
-		private TextField passwordField;
+		private PasswordField passwordField;
 	private Button login;
 	
 	public LoginView (LoginController lc) {
@@ -101,7 +102,7 @@ public class LoginView extends StackPane implements View{
 				password = new Label ();
 				password.setText ("Password:");
 				password.setId ("DefaultLabel");
-				passwordField = new TextField ();
+				passwordField = new PasswordField ();
 				passwordField.setText ("");
 				passwordField.setId("TextField");
 				

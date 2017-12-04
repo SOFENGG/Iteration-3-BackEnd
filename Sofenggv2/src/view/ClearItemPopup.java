@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.CartItem;
+import model.CartItemType;
 
 public class ClearItemPopup extends Popup{
 
@@ -42,7 +43,8 @@ public class ClearItemPopup extends Popup{
 	
 	public void initCartItem(String itemCode){
 		for(CartItem i : cvc.getCartItems()){
-			if(i.getItemCode().equals(itemCode)){
+			if(i.getType() == CartItemType.ITEM
+					&& i.getItemCode().equals(itemCode)){
 				item = i;
 				break;
 			}
@@ -58,7 +60,7 @@ public class ClearItemPopup extends Popup{
 			
 			quantityHBox = new HBox (20);
 				
-				quantityLabel = new Label ("New quantity:");
+				quantityLabel = new Label ("Return quantity:");
 				quantityLabel.setId("DefaultLabel");
 				
 				quantityTextField = new TextField ();

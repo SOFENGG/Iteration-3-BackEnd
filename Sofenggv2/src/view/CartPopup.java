@@ -13,6 +13,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.CartItemType;
 
 public class CartPopup extends Popup{
 
@@ -83,6 +84,8 @@ public class CartPopup extends Popup{
 						resizeScene();
 					}
 				});
+				//sets intinial qty to 1
+				qty = 1;
 				
 				totalLabel = new Label ("Total Price:");
 				totalLabel.setId("DefaultLabel");
@@ -105,7 +108,8 @@ public class CartPopup extends Popup{
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
-			boolean success = cvc.addToCart(row.get(InventoryView.ITEM_CODE),
+			boolean success = cvc.addToCart(CartItemType.ITEM,
+								row.get(InventoryView.ITEM_CODE),
 								row.get(InventoryView.NAME),
 								BigDecimal.valueOf(Double.parseDouble(row.get(InventoryView.PRICE))),
 								qty);	

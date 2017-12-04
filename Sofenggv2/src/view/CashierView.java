@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import model.CartItem;
+import model.CartItemType;
 import model.Database;
 
 public class CashierView extends BorderPane implements View{
@@ -312,10 +313,21 @@ public class CashierView extends BorderPane implements View{
 		cartButton.setOnAction(e -> {
 			ObservableList<String> row = iv.getSelectedItem();
 			if(row != null){
-				if(Integer.parseInt(row.get(InventoryView.STOCK)) > 0) 
-					new CartPopup (cvc, row);
-				else
-					new AlertBoxPopup("Stock", "There is currently 0 stock of this item.");
+				if(!filterComboBox.getValue().equals("Service")){
+					//item is selected
+					if(Integer.parseInt(row.get(InventoryView.STOCK)) > 0) 
+						new CartPopup (cvc, row);
+					else
+						new AlertBoxPopup("Stock", "There is currently 0 stock of this item.");
+				}else{
+					//service is seleted
+					cvc.addToCart(CartItemType.SERVICE,
+							Integer.parseInt(row.get(InventoryView.SERVICE_ID)),
+							1,
+							row.get(InventoryView.SERVICE_NAME),
+							BigDecimal.valueOf(Double.parseDouble(row.get(InventoryView.SERVICE_PRICE))),
+							1);
+				}
 			}else{
 				new AlertBoxPopup("Error", "No selected item.");
 			}
@@ -352,7 +364,10 @@ public class CashierView extends BorderPane implements View{
 		clearItemButton.setOnAction(e -> {
 			ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
 			if(row != null){
-				new ClearItemPopup(cvc, row.get(CartView.ITEM_CODE));
+				if(CartItemType.valueOf(row.get(CartView.TYPE)) == CartItemType.ITEM)
+					new ClearItemPopup(cvc, row.get(CartView.ITEM_CODE));
+				else
+					cvc.removeCartItem(Integer.parseInt(row.get(CartView.ITEM_CODE)), 1);
 			}else{
 				new AlertBoxPopup("Error", "No selected cart item.");
 			}

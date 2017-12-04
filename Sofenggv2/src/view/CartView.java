@@ -15,15 +15,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 import model.CartItem;
+import model.CartItemType;
+import model.Worker;
 
 public class CartView extends ScrollPane implements View  {
 	public static final String KEY = "cart";
 	//column indexes
-	public static final int ITEM_CODE = 0;
-	public static final int NAME = 1;
-	public static final int QUANTITY = 2;
-	public static final int UNIT_PRICE = 3;
-	public static final int TOTAL_PRICE = 4;
+	public static final int TYPE = 0;
+	public static final int ITEM_CODE = 1;
+	public static final int NAME = 2;
+	public static final int QUANTITY = 3;
+	public static final int UNIT_PRICE = 4;
+	public static final int TOTAL_PRICE = 5;
 	
 	private CashierViewController cvc;
 	
@@ -56,6 +59,7 @@ public class CartView extends ScrollPane implements View  {
 		setContent (tableView);
 		
 		//add columns
+		addTableColumn("type", TYPE);
 		addTableColumn("item_code", ITEM_CODE);
 		addTableColumn("name", NAME);
 		addTableColumn("quantity", QUANTITY);
@@ -80,7 +84,8 @@ public class CartView extends ScrollPane implements View  {
 			tableView.getItems ().removeAll (row);
 			data.clear();
 		}
-		
+
+		addTableColumn("type", TYPE);
 		addTableColumn("item_code", ITEM_CODE);
 		addTableColumn("name", NAME);
 		addTableColumn("quantity", QUANTITY);
@@ -89,7 +94,15 @@ public class CartView extends ScrollPane implements View  {
 		
 		for(CartItem item : cvc.getCartItems()){
 			row = FXCollections.observableArrayList ();
-			row.add(item.getItemCode());
+			
+			row.add(item.getType().toString());
+			
+			if(item.getType() == CartItemType.ITEM){
+				row.add(item.getItemCode());
+			}else{
+				row.add(item.getServiceId() + "");
+			}
+			
 			row.add(item.getName());
 			row.add(item.getQuantity()+"");
 			row.add(item.getPriceSold().toString());

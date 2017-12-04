@@ -49,6 +49,15 @@ public class OverridePricePopup extends Popup{
 			}
 		}
 	}
+	
+	public void initCartItem(int serviceId){
+		for(CartItem i : cvc.getCartItems()){
+			if(i.getServiceId() == serviceId){
+				item = i;
+				break;
+			}
+		}
+	}
 
 	private void initScene() {
 		layout = new VBox (20);
@@ -89,6 +98,7 @@ public class OverridePricePopup extends Popup{
 			
 			cvc.overridePrice(item.getItemCode(),
 					newPrice);
+			closePopup();
 		});
 		
 		cancelButton.setOnAction(e -> {
