@@ -169,10 +169,14 @@ import model.Database;
 		});
 		
 		okayButton.setOnAction(e -> {
+			
 			Customer customer = null;
 			boolean isloan = debtRadioButton.isSelected();
 			
 			if(isloan){
+				//manager verification if debt
+				new ManagerPopup(cvc);
+				
 				ObservableList<String> row = cv.getSelectedItem();
 				customer = new Customer(Integer.parseInt(row.get(0)),
 						row.get(1),

@@ -102,8 +102,8 @@ public class LoginView extends StackPane implements View{
 				password = new Label ();
 				password.setText ("Password:");
 				password.setId ("DefaultLabel");
+				
 				passwordField = new PasswordField ();
-				passwordField.setText ("");
 				passwordField.setId("TextField");
 				
 			passwordBox.getChildren ().addAll (password, passwordField);

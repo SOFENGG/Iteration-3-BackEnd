@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -51,10 +52,6 @@ public class CashierView extends BorderPane implements View{
 		private InventoryView iv;
 			
 	private VBox rightVBox;
-		private HBox saleHBox;
-			private ToggleGroup toggleGroup;
-				private ToggleButton retailButton;
-				private ToggleButton wholeSaleButton;
 		private CartViewTabPane cvtp;
 		private HBox checkoutHBox;
 			private HBox checkoutLeftHBox;
@@ -62,13 +59,17 @@ public class CashierView extends BorderPane implements View{
 			private HBox checkoutRightHBox;
 				private Button clearCartButton;
 				private Button checkoutButton;
+			private Button resumeButton;
+			private Button removeCartButton;
 		private HBox cartOptionsHBox;
-			private HBox holdHBox;
+			private HBox cartOptionsLeftHBox;
 				private Button holdButton;
-			private HBox overrideHBox;
 				private Button overridePriceButton;
-			private HBox clearItemHBox;
 				private Button clearItemButton;
+			private HBox cartOptionsRightHBox;
+				private ToggleGroup toggleGroup;
+					private ToggleButton retailButton;
+					private ToggleButton wholeSaleButton;
 			
 	public CashierView (CashierViewController cvc) {
 		super ();
@@ -199,24 +200,7 @@ public class CashierView extends BorderPane implements View{
 	private void initRight() {
 		rightVBox = new VBox (15);
 		rightVBox.setId("RightVbox");
-		
-			saleHBox = new HBox ();
-			saleHBox.setAlignment(Pos.CENTER);
-				
-				toggleGroup = new ToggleGroup ();
-				
-				retailButton = new ToggleButton ("Retail Sale");
-				retailButton.getStyleClass().add("ToggleButton");
-				retailButton.setToggleGroup(toggleGroup);
-				retailButton.setSelected(true);
-				transaction = "retail";
-				
-				wholeSaleButton = new ToggleButton ("Whole Sale");
-				wholeSaleButton.getStyleClass().add("ToggleButton");
-				wholeSaleButton.setToggleGroup(toggleGroup);
 			
-			saleHBox.getChildren().addAll(retailButton, wholeSaleButton);
-		
 			checkoutHBox = new HBox ();
 			checkoutHBox.setAlignment(Pos.TOP_CENTER);
 				
@@ -242,39 +226,57 @@ public class CashierView extends BorderPane implements View{
 			checkoutHBox.getChildren ().addAll (checkoutLeftHBox, checkoutRightHBox);
 			
 			cartOptionsHBox = new HBox ();
-			cartOptionsHBox.setAlignment(Pos.BOTTOM_CENTER);
+			cartOptionsHBox.setAlignment(Pos.CENTER);
 			
-				holdHBox = new HBox ();
-				holdHBox.setAlignment(Pos.CENTER_LEFT);
-					holdButton = new Button ("Hold");
-					holdButton.getStyleClass().add("Button");
-				holdHBox.getChildren().addAll(holdButton);
+				cartOptionsLeftHBox = new HBox (10);
+				cartOptionsLeftHBox.setAlignment(Pos.CENTER_LEFT);
 				
-				overrideHBox = new HBox ();
-				overrideHBox.setAlignment(Pos.CENTER);
+					holdButton = new Button ("Hold Cart");
+					holdButton.getStyleClass().add("Button");
+					
 					overridePriceButton = new Button ("Override Price");
 					overridePriceButton.getStyleClass().add("Button");
-				overrideHBox.getChildren().addAll(overridePriceButton);
-				
-				clearItemHBox = new HBox ();
-				clearItemHBox.setAlignment(Pos.CENTER_RIGHT);
+					
 					clearItemButton = new Button ("Clear Item");
 					clearItemButton.getStyleClass().add("Button");
-				clearItemHBox.getChildren().addAll(clearItemButton);
+					
+				cartOptionsLeftHBox.getChildren().addAll(holdButton, overridePriceButton, clearItemButton);
+				
+				cartOptionsRightHBox = new HBox ();
+				cartOptionsRightHBox.setAlignment(Pos.CENTER_RIGHT);
+					
+					toggleGroup = new ToggleGroup ();
+					
+					retailButton = new ToggleButton ("Retail Sale");
+					retailButton.getStyleClass().add("ToggleButton");
+					retailButton.setToggleGroup(toggleGroup);
+					retailButton.setSelected(true);
+					transaction = "retail";
+					
+					wholeSaleButton = new ToggleButton ("Whole Sale");
+					wholeSaleButton.getStyleClass().add("ToggleButton");
+					wholeSaleButton.setToggleGroup(toggleGroup);
+				
+				cartOptionsRightHBox.getChildren().addAll(retailButton, wholeSaleButton);
+				
+				resumeButton = new Button ("Resume Cart");
+				resumeButton.getStyleClass().add("GreenButton");
+				
+				removeCartButton = new Button ("Remove Cart");
+				removeCartButton.getStyleClass().add("RedButton");
 						
-			cartOptionsHBox.getChildren ().addAll (holdHBox, overrideHBox, clearItemHBox);
-			
+			cartOptionsHBox.getChildren ().addAll (cartOptionsLeftHBox, cartOptionsRightHBox);
+						
 			cvtp = new CartViewTabPane (cvc);
+			cvtp.setView(this);
 			
-		rightVBox.getChildren ().addAll (saleHBox, cvtp, cartOptionsHBox, checkoutHBox);
+		rightVBox.getChildren ().addAll (cvtp, cartOptionsHBox, checkoutHBox);
 		
-		HBox.setHgrow (saleHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutLeftHBox, Priority.ALWAYS);
 		HBox.setHgrow (checkoutRightHBox, Priority.ALWAYS);
-		HBox.setHgrow (holdHBox, Priority.ALWAYS);
-		HBox.setHgrow (overrideHBox, Priority.ALWAYS);
-		HBox.setHgrow (clearItemHBox, Priority.ALWAYS);
+		HBox.setHgrow (cartOptionsLeftHBox, Priority.ALWAYS);
+		HBox.setHgrow (cartOptionsRightHBox, Priority.ALWAYS);
 		VBox.setVgrow (rightVBox, Priority.ALWAYS);
 	}
 	
@@ -396,6 +398,7 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		holdButton.setOnAction(e -> {
+			new ManagerPopup(cvc);
 			cvc.holdCart(transaction);
 		});
 		
@@ -424,6 +427,28 @@ public class CashierView extends BorderPane implements View{
 		}
 		
 		totalLabel.setText("Total: " + totalPrice.toString() + "php");
+		
+		if(cvtp.getTab() == 0) {
+			if (!cartOptionsHBox.getChildren().isEmpty())
+				cartOptionsHBox.getChildren().removeAll(cartOptionsHBox.getChildren());
+			
+			if (!checkoutHBox.getChildren().isEmpty())
+				checkoutHBox.getChildren().removeAll(checkoutHBox.getChildren());
+			
+			cartOptionsHBox.getChildren ().addAll (cartOptionsLeftHBox, cartOptionsRightHBox);
+			checkoutHBox.getChildren ().addAll (checkoutLeftHBox, checkoutRightHBox);
+		}
+		else if (cvtp.getTab() == 1) {
+			if (!cartOptionsHBox.getChildren().isEmpty())
+				cartOptionsHBox.getChildren().removeAll(cartOptionsHBox.getChildren());
+			
+			if (!checkoutHBox.getChildren().isEmpty())
+				checkoutHBox.getChildren().removeAll(checkoutHBox.getChildren());
+			
+			cartOptionsHBox.getChildren ().addAll (removeCartButton, resumeButton);
+		}
+		
+		cvc.getMainStage().sizeToScene();
 	}
 	
 }

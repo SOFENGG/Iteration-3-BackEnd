@@ -1,6 +1,7 @@
 package view;
 
 import controller.CashierViewController;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
@@ -16,6 +17,8 @@ public class CartViewTabPane extends TabPane implements View {
 	
 	private Tab ongoingTab;
 	private Tab holdTab;
+	
+	private View view;
 		
 	public CartViewTabPane (CashierViewController cvc) {
 		super();
@@ -51,7 +54,16 @@ public class CartViewTabPane extends TabPane implements View {
 	}
 	
 	private void initHanders() {
+		ongoingTab.setOnSelectionChanged(e -> {
+			view.update();
+		});
+		holdTab.setOnSelectionChanged(e -> {
+			view.update();
+		});
+	}
 	
+	public void setView(View view) {
+		this.view = view;
 	}
 	
 	public void attach(){
@@ -72,6 +84,10 @@ public class CartViewTabPane extends TabPane implements View {
 	
 	public CartView getOngoingCartView(){
 		return cartViewOngoing;
+	}
+	
+	public int getTab () {
+		return getSelectionModel().getSelectedIndex();
 	}
 
 }

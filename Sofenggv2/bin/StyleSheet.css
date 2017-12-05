@@ -249,7 +249,7 @@
 
 .Button {
 	-fx-font-size: 16px;
-	-fx-padding: 5px 25px 5px 25px;
+	-fx-padding: 2.5px 5px 2.5px 5px;
 	-fx-font-family: "Source Sans Pro", sans-serif;
 	-fx-background-color: #D4D8D8;
 	-fx-text-fill: #FFF;
@@ -276,7 +276,7 @@
 
 .ToggleButton {
 	-fx-font-size: 16px;
-	-fx-padding: 5px 25px 5px 25px;
+	-fx-padding: 1px 2px 1px 2px;
 	-fx-font-family: "Source Sans Pro", sans-serif;
 	-fx-text-fill: #000000;
 	-fx-background-color: #FFEE58;
