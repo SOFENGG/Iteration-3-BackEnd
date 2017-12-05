@@ -76,7 +76,7 @@ public class ClearItemPopup extends Popup{
 				okayButton.getStyleClass().add("GreenButton");
 				
 				cancelButton = new Button ("Cancel");
-				cancelButton.getStyleClass().add("Button");
+				cancelButton.getStyleClass().add("RedButton");
 			
 			buttonsHBox.getChildren().addAll (cancelButton, okayButton);
 			

@@ -31,7 +31,7 @@ public class AlertBoxPopup extends Popup {
 			label.setText(message);
 			
 			closeButton = new Button("Close the window");
-			closeButton.getStyleClass().add("Button");
+			closeButton.getStyleClass().add("RedButton");
 			closeButton.setOnAction(e -> close());
 		
 		layout.getChildren().addAll(label, closeButton);

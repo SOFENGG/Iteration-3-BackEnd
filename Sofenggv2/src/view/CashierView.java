@@ -389,6 +389,7 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		overridePriceButton.setOnAction(e -> {
+			new ManagerPopup (cvc);
 			ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
 			if(row != null){
 				new OverridePricePopup(cvc, row.get(CartView.ITEM_CODE));
@@ -398,7 +399,7 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		holdButton.setOnAction(e -> {
-			new ManagerPopup(cvc);
+			new CustomerConfirmationPopup(cvc);
 			cvc.holdCart(transaction);
 		});
 		
