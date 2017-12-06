@@ -11,11 +11,12 @@ public class Cart {
 	private Date date;
 	private ArrayList<CartItem> cartItems;
 	private String transactionType;
+	private String owner;
 	
-	public Cart(ArrayList<CartItem> cartItems, String transactionType) {
+	public Cart(String owner, ArrayList<CartItem> cartItems, String transactionType) {
 		date = new Date();
+		this.owner = owner;
 		this.cartItems = cartItems;
-		
 		this.transactionType = transactionType;
 	}
 	
@@ -45,5 +46,9 @@ public class Cart {
 	//for both display in hold tab as well as cart restoration
 	public String getTransactionType() {
 		return transactionType;
+	}
+	
+	public String getOwner(){
+		return owner;
 	}
 }

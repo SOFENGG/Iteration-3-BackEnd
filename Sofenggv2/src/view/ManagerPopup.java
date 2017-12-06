@@ -17,20 +17,20 @@ public class ManagerPopup extends Popup{
 
 	private VBox layout;
 		private Label managerLabel;
-		private HBox usernameHBox;
-			private Label usernameLabel;
-			private TextField usernameTextField;
 		private HBox passwordHBox;
 			private Label passwordLabel;
 			private PasswordField passwordField;
 		private HBox buttonsHBox;
 			private Button okayButton;
 			private Button cancelButton;
+			
+	private boolean access;
 	
 	public ManagerPopup(CashierViewController cvc) {
 		super(TITLE);
 		
 		this.cvc = cvc;
+		access = false;
 		
 		initScene();
 		initHandlers ();
@@ -44,16 +44,6 @@ public class ManagerPopup extends Popup{
 		
 			managerLabel = new Label ("Manager credentials");
 			managerLabel.setId("DefaultLabel");
-			
-			usernameHBox = new HBox (10);
-			
-				usernameLabel = new Label ("Username:");
-				usernameLabel.setId("DefaultLabel");
-				
-				usernameTextField = new TextField ();
-				usernameTextField.setId("TextField");
-			
-			usernameHBox.getChildren().addAll(usernameLabel, usernameTextField);
 			
 			passwordHBox = new HBox (10);
 			
@@ -76,17 +66,23 @@ public class ManagerPopup extends Popup{
 			
 			buttonsHBox.getChildren().addAll (cancelButton, okayButton);
 		
-		layout.getChildren().addAll(managerLabel, usernameHBox, passwordHBox, buttonsHBox);
+		layout.getChildren().addAll(managerLabel, passwordHBox, buttonsHBox);
 	}
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
 			//new AlertBoxPopup if wrong userpass
+			access = cvc.managerAccess(passwordField.getText());
+			closePopup();
 		});
 		
 		cancelButton.setOnAction(e -> {
 			closePopup();
 		});
+	}
+	
+	public boolean getAccess(){
+		return access;
 	}
 
 }

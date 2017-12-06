@@ -194,10 +194,18 @@ public class CashierViewController {
 	public boolean managerAccess(String managerPassword){
 		boolean accessGranted = false;
 		
-		/*if(Query.getInstance().userQuery("select * from " + User.TABLE + " where "+ User.COLUMN_PASSWORD + " = '"+ managerPassword + "' and " + User.COLUMN_USER_LEVEL + " = " + User.MANAGER_LEVEL + ";").size() > 0){
+		/*if(Query.getInstance().userQuery().size() > 0){
 			accessGranted = true;
 		}*/
-		
+		ResultSet rs = Database.getInstance().query(new String[]{}, "select * from " + User.TABLE + " where "+ User.COLUMN_PASSWORD + " = '"+ managerPassword + "' and " + User.COLUMN_USER_LEVEL + " = " + User.MANAGER_LEVEL + ";");
+		try {
+			rs.last();
+			if(rs.getRow() > 0)
+				accessGranted = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return accessGranted;
 	}
 	
@@ -344,8 +352,8 @@ public class CashierViewController {
 	}
 	
 	//hold/unhold cart methods - anj
-	public void holdCart(String transactionType) {
-		cartBuffer.add(new Cart(cartItems, transactionType));
+	public void holdCart(String owner, String transactionType) {
+		cartBuffer.add(new Cart(owner, cartItems, transactionType));
 		cartItems = new ArrayList<CartItem>();
 		
 		Database.getInstance().updateViews(new String[]{CartView.KEY, HoldView.KEY, CashierView.KEY});
@@ -356,11 +364,50 @@ public class CashierViewController {
 	}
 	
 	public void restoreCart(int index) {
+		String updateReserved = "update " + Item.TABLE + 
+				" set " + Item.COLUMN_RESERVED + " = " + Item.COLUMN_RESERVED + " - ?" + 
+				" where " + Item.COLUMN_ITEM_CODE + " = ?";
+
+		for(CartItem ci : cartItems){
+			if(ci.getType() == CartItemType.ITEM){
+				try {
+					PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(updateReserved);
+					ps.setInt(1, ci.getQuantity());
+					ps.setString(2, ci.getItemCode());
+					Database.getInstance().executeUpdate(ps);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		cartItems.clear();
 		cartItems = cartBuffer.get(index).getCartItems();
 		//set cart to either whole sale or retail sale (see CartPane commented out function) - anj
 		//CartPane.setWoR(cartBuffer.get(index).getTransactionType();
 		cartBuffer.remove(index);
+		
+		Database.getInstance().updateViews(new String[]{CartView.KEY, HoldView.KEY});
+	}
+	
+	public void removeHeldCart(int index){
+		String updateReserved = "update " + Item.TABLE + 
+				" set " + Item.COLUMN_RESERVED + " = " + Item.COLUMN_RESERVED + " - ?" + 
+				" where " + Item.COLUMN_ITEM_CODE + " = ?";
+
+		for(CartItem ci : cartBuffer.get(index).getCartItems()){
+			if(ci.getType() == CartItemType.ITEM){
+				try {
+					PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(updateReserved);
+					ps.setInt(1, ci.getQuantity());
+					ps.setString(2, ci.getItemCode());
+					Database.getInstance().executeUpdate(ps);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		cartBuffer.remove(index);
+		Database.getInstance().updateViews(new String[]{HoldView.KEY});
 	}
 	
 	public boolean buyItems(String transactionType, boolean isloan, Customer customer){	

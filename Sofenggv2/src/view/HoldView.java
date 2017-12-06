@@ -19,11 +19,12 @@ import model.Cart;
 public class HoldView extends ScrollPane implements View {
 	public static final String KEY = "holdview";
 	//indexes
-	private static final int NUMBER = 0;
-	private static final int TRANSACTION = 1;
-	private static final int DATE = 2;
-	private static final int TIME = 3;
-	private static final int TOTAL_PRICE = 4;
+	public static final int NUMBER = 0;
+	private static final int OWNER = 1;
+	private static final int TRANSACTION = 2;
+	private static final int DATE = 3;
+	private static final int TIME = 4;
+	private static final int TOTAL_PRICE = 5;
 	
 	private CashierViewController cvc;
 	
@@ -57,6 +58,7 @@ public class HoldView extends ScrollPane implements View {
 		
 		//add columns
 		addTableColumn("No.", NUMBER);
+		addTableColumn("Owner", OWNER);
 		addTableColumn("Transaction", TRANSACTION);
 		addTableColumn("Date", DATE);
 		addTableColumn("Time", TIME);
@@ -82,6 +84,7 @@ public class HoldView extends ScrollPane implements View {
 		}
 		
 		addTableColumn("No.", NUMBER);
+		addTableColumn("Owner", OWNER);
 		addTableColumn("Transaction", TRANSACTION);
 		addTableColumn("Date", DATE);
 		addTableColumn("Time", TIME);
@@ -91,6 +94,7 @@ public class HoldView extends ScrollPane implements View {
 		for(Cart cart : cvc.getCartBuffer()){
 			row = FXCollections.observableArrayList ();
 			row.add(index + "");
+			row.add(cart.getOwner());
 			row.add(cart.getTransactionType());
 			row.add(cart.getDate());
 			row.add(cart.getTime());

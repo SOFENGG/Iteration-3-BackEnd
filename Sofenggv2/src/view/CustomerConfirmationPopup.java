@@ -67,7 +67,8 @@ public static final String TITLE = "Customer confirmation";
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
-			
+			cvc.holdCart(usernameTextField.getText(), CashierView.transaction);
+			closePopup();
 		});
 		
 		cancelButton.setOnAction(e -> {

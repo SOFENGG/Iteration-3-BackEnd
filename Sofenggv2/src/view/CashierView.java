@@ -389,18 +389,43 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		overridePriceButton.setOnAction(e -> {
-			new ManagerPopup (cvc);
-			ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
-			if(row != null){
-				new OverridePricePopup(cvc, row.get(CartView.ITEM_CODE));
+			ManagerPopup pop = new ManagerPopup (cvc);
+			if(pop.getAccess()){
+				ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
+				if(row != null){
+					new OverridePricePopup(cvc, row.get(CartView.ITEM_CODE));
+				}else{
+					new AlertBoxPopup("Error", "No selected cart item.");
+				}
 			}else{
-				new AlertBoxPopup("Error", "No selected cart item.");
+				new AlertBoxPopup("Access", "Access Denied.");
 			}
 		});
 		
 		holdButton.setOnAction(e -> {
 			new CustomerConfirmationPopup(cvc);
-			cvc.holdCart(transaction);
+		});
+		
+		resumeButton.setOnAction(e -> {
+			ObservableList<String> row = cvtp.getHoldView().getSelectedItem();
+			
+			if(row != null){
+				cvc.restoreCart(Integer.parseInt(row.get(HoldView.NUMBER)) - 1);
+				new AlertBoxPopup("Success", "Cart was resumed.");
+			}else{
+				new AlertBoxPopup("Error", "No selected cart.");
+			}
+		});
+		
+		removeCartButton.setOnAction(e -> {
+			ObservableList<String> row = cvtp.getHoldView().getSelectedItem();
+			
+			if(row != null){
+				cvc.removeHeldCart(Integer.parseInt(row.get(HoldView.NUMBER)) - 1);
+				new AlertBoxPopup("Success", "Cart was removed.");
+			}else{
+				new AlertBoxPopup("Error", "No selected cart.");
+			}
 		});
 		
 	}

@@ -86,6 +86,10 @@ public class CartViewTabPane extends TabPane implements View {
 		return cartViewOngoing;
 	}
 	
+	public HoldView getHoldView(){
+		return cartViewHold;
+	}
+	
 	public int getTab () {
 		return getSelectionModel().getSelectedIndex();
 	}

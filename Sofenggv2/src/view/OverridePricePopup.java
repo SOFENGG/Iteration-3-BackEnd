@@ -94,7 +94,7 @@ public class OverridePricePopup extends Popup{
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
 			//manager verification
-			new ManagerPopup (cvc);
+			
 			double inputPrice = Double.parseDouble(priceTextField.getText());
 			BigDecimal newPrice = BigDecimal.valueOf(inputPrice);
 			
