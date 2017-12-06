@@ -175,16 +175,20 @@ import model.Database;
 			
 			if(isloan){
 				//manager verification if debt
-				new ManagerPopup(cvc);
+				ManagerPopup pop = new ManagerPopup(cvc);
 				
-				ObservableList<String> row = cv.getSelectedItem();
-				customer = new Customer(Integer.parseInt(row.get(0)),
-						row.get(1),
-						row.get(2),
-						row.get(3),
-						Integer.parseInt(row.get(4)),
-						BigDecimal.valueOf(Double.parseDouble(row.get(5))),
-						BigDecimal.valueOf(Double.parseDouble(row.get(6))));
+				if(pop.getAccess()){
+					ObservableList<String> row = cv.getSelectedItem();
+					customer = new Customer(Integer.parseInt(row.get(0)),
+							row.get(1),
+							row.get(2),
+							row.get(3),
+							Integer.parseInt(row.get(4)),
+							BigDecimal.valueOf(Double.parseDouble(row.get(5))),
+							BigDecimal.valueOf(Double.parseDouble(row.get(6))));
+				}else{
+					new AlertBoxPopup("Access", "Access denied");
+				}
 			}
 			
 			boolean success = cvc.buyItems(CashierView.transaction, isloan, customer);
