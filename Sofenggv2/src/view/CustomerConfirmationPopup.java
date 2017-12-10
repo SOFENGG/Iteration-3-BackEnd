@@ -67,8 +67,21 @@ public static final String TITLE = "Customer confirmation";
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
-			cvc.holdCart(usernameTextField.getText(), CashierView.transaction);
+			boolean success = true;
+			boolean empty = false;
+			
+			if(usernameTextField.getText().matches(".*\\w.*"))
+				 success = cvc.holdCart(usernameTextField.getText(), CashierView.transaction);
+			else
+				empty = true;
+			
 			closePopup();
+			
+			if(!success)
+				new AlertBoxPopup("Hold Cart", "Cart is empty!");
+			else
+				if(empty)
+					new AlertBoxPopup("Hold Cart", "Enter a cart name.");
 		});
 		
 		cancelButton.setOnAction(e -> {

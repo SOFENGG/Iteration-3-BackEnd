@@ -14,6 +14,7 @@ import model.Cart;
 import model.CartItem;
 import model.CartItemType;
 import model.Customer;
+import model.DailyIncome;
 import model.Database;
 import model.Item;
 import model.ItemLog;
@@ -236,9 +237,32 @@ public class CashierViewController {
 		
 		Database.getInstance().updateViews(new String[]{CartView.KEY, CashierView.KEY});
 	}
+	
+	//end of day
+	public boolean endOfDay(BigDecimal total_amount){
+		if(total_amount.doubleValue() <= 0)
+			return false;
 		
+		String daily_income = "insert into " + DailyIncome.TABLE + " ("+ DailyIncome.COLUMN_USER_ID +
+				", "+DailyIncome.COLUMN_DATE+
+				", "+DailyIncome.COLUMN_TOTAL_AMOUNT+") values (?, ?, ?)";
+		
+		try {
+			PreparedStatement di = Database.getInstance().getConnection().prepareStatement(daily_income);
+			di.setInt(1, cashier.getID());
+			di.setDate(2, new java.sql.Date(new java.util.Date().getTime()));
+			di.setBigDecimal(3, total_amount);
+			Database.getInstance().executeUpdate(di);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
 	//<-- transaction functions -->
-	//item
+	//add to cart item for TYPE ITEM
 	public boolean addToCart(CartItemType type, String code, String name, BigDecimal price, int quantity){
 		String updateReserved = "update " + Item.TABLE + 
 						" set " + Item.COLUMN_RESERVED + " =  " + Item.COLUMN_RESERVED + " + ? " + 
@@ -272,12 +296,12 @@ public class CashierViewController {
 		return true;
 	}
 	
-	//service
+	//add to cart item for TYPE SERVICE
 	public boolean addToCart(CartItemType type, int serviceId, int workerId, String name, BigDecimal price, int quantity){
 		cartItems.add(new CartItem(type, serviceId, workerId, name, price, quantity));
 		
 		//updates all the views needed
-		Database.getInstance().notifyViews(new String[]{CartView.KEY, CashierView.KEY});
+		Database.getInstance().notifyViews(new String[]{InventoryView.KEY, CartView.KEY, CashierView.KEY});
 		
 		return true;
 	}
@@ -300,7 +324,7 @@ public class CashierViewController {
 		cartItems.clear();
 		
 		//updates all the views needed
-		Database.getInstance().notifyViews(new String[]{CartView.KEY});
+		Database.getInstance().notifyViews(new String[]{CartView.KEY, CashierView.KEY});
 	}
 	
 	//remove cart item for TYPE ITEM
@@ -333,7 +357,7 @@ public class CashierViewController {
 			ci.setQuantity(ci.getQuantity() - quantity);
 		
 		//updates all the views needed
-		Database.getInstance().notifyViews(new String[]{CartView.KEY});
+		Database.getInstance().notifyViews(new String[]{CartView.KEY, CashierView.KEY});
 	}
 	
 	//remove cart item for TYPE SERVJCE
@@ -348,15 +372,19 @@ public class CashierViewController {
 			//it's a service
 			cartItems.remove(ci);
 			//updates all the views needed
-			Database.getInstance().notifyViews(new String[]{CartView.KEY});
+			Database.getInstance().notifyViews(new String[]{CartView.KEY, CashierView.KEY});
 	}
 	
 	//hold/unhold cart methods - anj
-	public void holdCart(String owner, String transactionType) {
+	public boolean holdCart(String owner, String transactionType) {
+		if(cartItems.isEmpty())
+			return false;
+		
 		cartBuffer.add(new Cart(owner, cartItems, transactionType));
 		cartItems = new ArrayList<CartItem>();
 		
 		Database.getInstance().updateViews(new String[]{CartView.KEY, HoldView.KEY, CashierView.KEY});
+		return true;
 	}
 	
 	public ArrayList<Cart> getCartBuffer() {

@@ -81,6 +81,28 @@ public class InventoryView extends ScrollPane implements View {
 	public ObservableList<String> getSelectedItem(){
 		return (ObservableList<String>) tableView.getSelectionModel().getSelectedItem();
 	}
+	
+	public void minusStock(String itemCode, int quantity){
+		for(Object row : (ObservableList<String>)tableView.getItems()){
+			ObservableList<String> thisRow = (ObservableList<String>)row;
+			if(thisRow.get(ITEM_CODE).equals(itemCode)){
+				int newStock = Integer.parseInt(thisRow.get(STOCK)) - quantity;
+				thisRow.set(STOCK, newStock + "");
+			}
+		}
+		tableView.refresh();
+	}
+	
+	public void addStock(String itemCode, int quantity){
+		for(Object row : (ObservableList<String>)tableView.getItems()){
+			ObservableList<String> thisRow = (ObservableList<String>)row;
+			if(thisRow.get(ITEM_CODE).equals(itemCode)){
+				int newStock = Integer.parseInt(thisRow.get(STOCK)) + quantity;
+				thisRow.set(STOCK, newStock + "");
+			}
+		}
+		tableView.refresh();
+	}
 
 	@Override
 	public void update() {

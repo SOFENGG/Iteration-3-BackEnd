@@ -71,7 +71,14 @@ public class ServiceWorkerPopup extends Popup{
 		
 		searchButton.setOnAction(e -> {
 			switch(filterComboBox.getValue()){
-				case "ID": cvc.getServiceWorkerWithID(Integer.parseInt(searchTextField.getText()));
+				case "ID":
+					int number;
+					try{
+						number = Integer.parseInt(searchTextField.getText());
+						cvc.getServiceWorkerWithID(number);
+					}catch(NumberFormatException ex){
+						new AlertBoxPopup("Search Key", "Entered search key is not a number");
+					}
 					break;
 				case "Name": cvc.getServiceWorkerWithName(searchTextField.getText());
 					break;

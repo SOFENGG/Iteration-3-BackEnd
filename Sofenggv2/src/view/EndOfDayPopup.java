@@ -1,5 +1,7 @@
 package view;
 
+import java.math.BigDecimal;
+
 import controller.CashierViewController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -62,7 +64,8 @@ public class EndOfDayPopup extends Popup{
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
-			//print with LaTeX???
+			cvc.endOfDay(BigDecimal.valueOf(total));
+			closePopup();
 		});
 		
 		cancelButton.setOnAction(e -> {

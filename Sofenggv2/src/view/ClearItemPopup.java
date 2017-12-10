@@ -18,6 +18,7 @@ public class ClearItemPopup extends Popup{
 	
 	private CashierViewController cvc;
 	private CartItem item;
+	private int quantity;
 	
 	private VBox layout;
 		private Label itemLabel;
@@ -42,6 +43,7 @@ public class ClearItemPopup extends Popup{
 	}
 	
 	public void initCartItem(String itemCode){
+		quantity = 0;
 		for(CartItem i : cvc.getCartItems()){
 			if(i.getType() == CartItemType.ITEM
 					&& i.getItemCode().equals(itemCode)){
@@ -85,19 +87,25 @@ public class ClearItemPopup extends Popup{
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
-			int quantity = Integer.parseInt(quantityTextField.getText());
+			quantity = Integer.parseInt(quantityTextField.getText());
 			if(quantity <= item.getQuantity()){
 				cvc.removeCartItem(item.getItemCode(),quantity);
 				closePopup();
 			}else{
+				quantity = 0;
 				closePopup();
 				new AlertBoxPopup("Failed", "Failed");
 			}
 		});
 		
 		cancelButton.setOnAction(e -> {
+			quantity = 0;
 			closePopup();
 		});
 	}
-
+	
+	public int getQuantity(){
+		return quantity;
+	}
+	
 }

@@ -25,12 +25,14 @@ public class ManagerPopup extends Popup{
 			private Button cancelButton;
 			
 	private boolean access;
+	private boolean canceled;
 	
 	public ManagerPopup(CashierViewController cvc) {
 		super(TITLE);
 		
 		this.cvc = cvc;
 		access = false;
+		canceled = true;
 		
 		initScene();
 		initHandlers ();
@@ -73,16 +75,22 @@ public class ManagerPopup extends Popup{
 		okayButton.setOnAction(e -> {
 			//new AlertBoxPopup if wrong userpass
 			access = cvc.managerAccess(passwordField.getText());
+			canceled = false;
 			closePopup();
 		});
 		
 		cancelButton.setOnAction(e -> {
+			canceled = true;
 			closePopup();
 		});
 	}
 	
 	public boolean getAccess(){
 		return access;
+	}
+	
+	public boolean isCanceled(){
+		return canceled;
 	}
 
 }

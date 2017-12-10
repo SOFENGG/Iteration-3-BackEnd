@@ -125,6 +125,10 @@ public class CartPopup extends Popup{
 			closePopup();
 		});
 	}
+	
+	public int getQuantity(){
+		return qty;
+	}
 
 	
 	

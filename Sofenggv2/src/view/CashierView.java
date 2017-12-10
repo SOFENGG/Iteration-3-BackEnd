@@ -302,13 +302,17 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		searchButton.setOnAction(e -> {
-			switch(filterComboBox.getValue()){
-				case "Item Code": cvc.searchItemByCode(new String[]{InventoryView.KEY}, searchTextField.getText());
-					break;
-				case "Description": cvc.searchItem(new String[]{InventoryView.KEY}, searchTextField.getText());
-					break;
-				case "Service": cvc.searchService(searchTextField.getText());
-					break;
+			if(!searchTextField.getText().equals("")){
+				switch(filterComboBox.getValue()){
+					case "Item Code": cvc.searchItemByCode(new String[]{InventoryView.KEY}, searchTextField.getText());
+						break;
+					case "Description": cvc.searchItem(new String[]{InventoryView.KEY}, searchTextField.getText());
+						break;
+					case "Service": cvc.searchService(searchTextField.getText());
+						break;
+				}
+			}else{
+				new AlertBoxPopup("Search", "No matches found.");
 			}
 		});
 		
@@ -316,11 +320,16 @@ public class CashierView extends BorderPane implements View{
 			ObservableList<String> row = iv.getSelectedItem();
 			if(row != null){
 				if(!filterComboBox.getValue().equals("Service")){
+					CartPopup popup = null;
 					//item is selected
-					if(Integer.parseInt(row.get(InventoryView.STOCK)) > 0) 
-						new CartPopup (cvc, row);
-					else
+					if(Integer.parseInt(row.get(InventoryView.STOCK)) > 0) {
+						popup = new CartPopup (cvc, row);
+						if(popup.getQuantity() <= Integer.parseInt(row.get(InventoryView.STOCK))){
+							iv.minusStock(row.get(InventoryView.ITEM_CODE), popup.getQuantity());
+						}
+					}else
 						new AlertBoxPopup("Stock", "There is currently 0 stock of this item.");
+					
 				}else{
 					//service is seleted
 					cvc.addToCart(CartItemType.SERVICE,
@@ -365,10 +374,12 @@ public class CashierView extends BorderPane implements View{
 		
 		clearItemButton.setOnAction(e -> {
 			ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
+			ClearItemPopup popup;
 			if(row != null){
-				if(CartItemType.valueOf(row.get(CartView.TYPE)) == CartItemType.ITEM)
-					new ClearItemPopup(cvc, row.get(CartView.ITEM_CODE));
-				else
+				if(CartItemType.valueOf(row.get(CartView.TYPE)) == CartItemType.ITEM){
+					popup = new ClearItemPopup(cvc, row.get(CartView.ITEM_CODE));
+					iv.addStock(row.get(CartView.ITEM_CODE), popup.getQuantity());
+				}else
 					cvc.removeCartItem(Integer.parseInt(row.get(CartView.ITEM_CODE)), 1);
 			}else{
 				new AlertBoxPopup("Error", "No selected cart item.");
@@ -377,6 +388,11 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		clearCartButton.setOnAction(e -> {
+			//ui
+			for(CartItem item : cvc.getCartItems())
+				if(item.getType() == CartItemType.ITEM)
+					iv.addStock(item.getItemCode(), item.getQuantity());
+			//backend
 			cvc.clearCart();
 			new AlertBoxPopup("Cart", "Cart is cleared.");
 		});
@@ -398,7 +414,8 @@ public class CashierView extends BorderPane implements View{
 					new AlertBoxPopup("Error", "No selected cart item.");
 				}
 			}else{
-				new AlertBoxPopup("Access", "Access Denied.");
+				if(!pop.isCanceled())
+					new AlertBoxPopup("Access", "Access Denied.");
 			}
 		});
 		
