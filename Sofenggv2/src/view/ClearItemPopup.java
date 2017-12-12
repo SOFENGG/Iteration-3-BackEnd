@@ -44,7 +44,7 @@ public class ClearItemPopup extends Popup{
 	
 	public void initCartItem(String itemCode){
 		quantity = 0;
-		for(CartItem i : cvc.getCartItems()){
+		for(CartItem i : cvc.getCart().getCartItems()){
 			if(i.getType() == CartItemType.ITEM
 					&& i.getItemCode().equals(itemCode)){
 				item = i;

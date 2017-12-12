@@ -92,7 +92,7 @@ public class CartView extends ScrollPane implements View  {
 		addTableColumn("unit price", UNIT_PRICE);
 		addTableColumn("total price", TOTAL_PRICE);
 		
-		for(CartItem item : cvc.getCartItems()){
+		for(CartItem item : cvc.getCart().getCartItems()){
 			row = FXCollections.observableArrayList ();
 			
 			row.add(item.getType().toString());
