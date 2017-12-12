@@ -389,7 +389,7 @@ public class CashierView extends BorderPane implements View{
 		
 		clearCartButton.setOnAction(e -> {
 			//ui
-			for(CartItem item : cvc.getCartItems())
+			for(CartItem item : cvc.getCart().getCartItems())
 				if(item.getType() == CartItemType.ITEM)
 					iv.addStock(item.getItemCode(), item.getQuantity());
 			//backend
@@ -398,25 +398,27 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		checkoutButton.setOnAction(e -> {
-			if(!cvc.getCartItems().isEmpty())
+			if(!cvc.getCart().getCartItems().isEmpty())
 				new CheckoutPopup (cvc);
 			else
 				new AlertBoxPopup("Cart", "Cart is empty, can't proceed to checkout.");
 		});
 		
 		overridePriceButton.setOnAction(e -> {
-			ManagerPopup pop = new ManagerPopup (cvc);
-			if(pop.getAccess()){
+			
 				ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
 				if(row != null){
-					new OverridePricePopup(cvc, row.get(CartView.ITEM_CODE));
+					ManagerPopup pop = new ManagerPopup (cvc);
+					if(pop.getAccess()){
+						new OverridePricePopup(cvc, row.get(CartView.ITEM_CODE));
+					}else{
+						if(!pop.isCanceled())
+							new AlertBoxPopup("Access", "Access Denied.");
+					}
 				}else{
 					new AlertBoxPopup("Error", "No selected cart item.");
 				}
-			}else{
-				if(!pop.isCanceled())
-					new AlertBoxPopup("Access", "Access Denied.");
-			}
+		
 		});
 		
 		holdButton.setOnAction(e -> {
@@ -465,7 +467,7 @@ public class CashierView extends BorderPane implements View{
 	public void update() {
 		BigDecimal totalPrice = BigDecimal.valueOf(0);
 		
-		for (CartItem item : cvc.getCartItems()) {
+		for (CartItem item : cvc.getCart().getCartItems()) {
 			totalPrice = totalPrice.add(item.getPriceSold().multiply(BigDecimal.valueOf(item.getQuantity())));
 		}
 		
@@ -489,6 +491,12 @@ public class CashierView extends BorderPane implements View{
 				checkoutHBox.getChildren().removeAll(checkoutHBox.getChildren());
 			
 			cartOptionsHBox.getChildren ().addAll (removeCartButton, resumeButton);
+		}
+		
+		if(cvc.getCart().getTransactionType().equals("retail")){
+			retailButton.setSelected(true);
+		}else{
+			wholeSaleButton.setSelected(true);
 		}
 		
 		cvc.getMainStage().sizeToScene();

@@ -172,6 +172,7 @@ import model.Database;
 			
 			Customer customer = null;
 			boolean isloan = debtRadioButton.isSelected();
+			boolean success = false;
 			
 			if(isloan){
 				//manager verification if debt
@@ -186,21 +187,26 @@ import model.Database;
 							Integer.parseInt(row.get(4)),
 							BigDecimal.valueOf(Double.parseDouble(row.get(5))),
 							BigDecimal.valueOf(Double.parseDouble(row.get(6))));
+					
+					success = cvc.buyItems(CashierView.transaction, isloan, customer);
+					
+					detach();
+					closePopup();
+					
+					if(!success){
+						new AlertBoxPopup("Transaction Failed", "Insufficient funds");
+					}else{
+						new AlertBoxPopup("Transaction Success", "Purchase Complete!");
+					}
+					
 				}else{
-					new AlertBoxPopup("Access", "Access denied");
+					if(!pop.isCanceled())
+						new AlertBoxPopup("Access", "Access denied");
 				}
 			}
 			
-			boolean success = cvc.buyItems(CashierView.transaction, isloan, customer);
-			
 			detach();
 			closePopup();
-			
-			if(!success){
-				new AlertBoxPopup("Transaction Failed", "Insufficient funds");
-			}else{
-				new AlertBoxPopup("Transaction Success", "Purchase Complete!");
-			}
 			
 		});
 		

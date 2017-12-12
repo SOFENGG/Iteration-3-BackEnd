@@ -51,4 +51,12 @@ public class Cart {
 	public String getOwner(){
 		return owner;
 	}
+	
+	public void setName(String name){
+		this.owner = name;
+	}
+	
+	public void setTransactionType(String type){
+		this.transactionType = type;
+	}
 }

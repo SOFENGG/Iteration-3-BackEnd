@@ -42,7 +42,7 @@ public class OverridePricePopup extends Popup{
 	}
 	
 	public void initCartItem(String itemCode){
-		for(CartItem i : cvc.getCartItems()){
+		for(CartItem i : cvc.getCart().getCartItems()){
 			if(i.getItemCode().equals(itemCode)){
 				item = i;
 				break;
@@ -51,7 +51,7 @@ public class OverridePricePopup extends Popup{
 	}
 	
 	public void initCartItem(int serviceId){
-		for(CartItem i : cvc.getCartItems()){
+		for(CartItem i : cvc.getCart().getCartItems()){
 			if(i.getServiceId() == serviceId){
 				item = i;
 				break;
@@ -95,12 +95,17 @@ public class OverridePricePopup extends Popup{
 		okayButton.setOnAction(e -> {
 			//manager verification
 			
-			double inputPrice = Double.parseDouble(priceTextField.getText());
-			BigDecimal newPrice = BigDecimal.valueOf(inputPrice);
+			try{
+				double inputPrice = Double.parseDouble(priceTextField.getText());
+				BigDecimal newPrice = BigDecimal.valueOf(inputPrice);
+				cvc.overridePrice(item.getItemCode(),
+						newPrice);
+				closePopup();
+			}catch(NumberFormatException ex){
+				closePopup();
+				new AlertBoxPopup("Error", "Enter a valid number.");
+			}
 			
-			cvc.overridePrice(item.getItemCode(),
-					newPrice);
-			closePopup();
 		});
 		
 		cancelButton.setOnAction(e -> {
