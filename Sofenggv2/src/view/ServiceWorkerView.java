@@ -11,14 +11,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 import model.Database;
 
-public class ServiceWorkerView extends ScrollPane implements View{
+public class ServiceWorkerView extends HBox implements View{
 	public static final String KEY = "serviceworkerview";
 	private CashierViewController cvc;
 	
@@ -39,8 +40,6 @@ public class ServiceWorkerView extends ScrollPane implements View{
 	}
 	
 	private void initWV() {
-		setHbarPolicy (ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		setVbarPolicy (ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		//setId ("Border");
 		
 		tableView = new TableView();
@@ -48,7 +47,8 @@ public class ServiceWorkerView extends ScrollPane implements View{
 		col = new ArrayList<TableColumn>();
 		data = FXCollections.observableArrayList();
 		
-		setContent (tableView);
+		setHgrow(tableView, Priority.ALWAYS);
+		getChildren ().addAll (tableView);
 	}
 
 	@Override

@@ -332,6 +332,7 @@ public class CashierView extends BorderPane implements View{
 					
 				}else{
 					//service is seleted
+					ServicePopup popup = new ServicePopup (cvc);
 					cvc.addToCart(CartItemType.SERVICE,
 							Integer.parseInt(row.get(InventoryView.SERVICE_ID)),
 							1,
