@@ -347,7 +347,7 @@ public class CashierView extends BorderPane implements View{
 		
 		//left
 		returnItem.setOnAction(e -> {
-			new ReturnItemPopup (cvc);
+			new ReturnItemPopup (cvc, iv);
 		});
 		
 		serviceWorker.setOnAction(e -> {
@@ -360,7 +360,7 @@ public class CashierView extends BorderPane implements View{
 		
 		logout.setOnAction(e -> {
 			cvc.logout();
-		});
+		});                   
 		
 		//right
 		retailButton.setOnAction(e -> {

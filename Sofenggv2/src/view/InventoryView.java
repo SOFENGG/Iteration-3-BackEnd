@@ -20,6 +20,7 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.TableRow;
 import javafx.util.Callback;
+import model.CartItem;
 import model.Database;
 import model.Item;
 import model.Service;
@@ -181,6 +182,10 @@ public class InventoryView extends ScrollPane implements View {
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
+			}
+			
+			for(CartItem item : cvc.getCart().getCartItems()){
+				minusStock(item.getItemCode(),item.getQuantity());
 			}
 		}
 	}

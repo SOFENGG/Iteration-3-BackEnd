@@ -120,7 +120,13 @@ public static final String TITLE = "End of Day";
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
-			//print with LaTeX???
+			if(total > 0){
+				cvc.endOfDay(BigDecimal.valueOf(total));
+			}else{
+				closePopup();
+				new AlertBoxPopup("Error", "No input.");
+			}
+			closePopup();
 		});
 		
 		cancelButton.setOnAction(e -> {

@@ -213,15 +213,33 @@ public class CashierViewController {
 	}
 	
 	//return
-	public void returnItem(String itemCode, int quantity){
+	public void returnItem(String itemCode, int quantity, BigDecimal price){
 		String updateReserved = "update " + Item.TABLE + 
 				" set " + Item.COLUMN_STOCK + " = " + Item.COLUMN_STOCK + " + ?" + 
 				" where " + Item.COLUMN_ITEM_CODE + " = ?";
-
+		
+		String item_log = "insert into " + ItemLog.TABLE + " ("+ItemLog.COLUMN_ITEM_CODE+
+				", "+ItemLog.COLUMN_TYPE+
+				", "+ItemLog.COLUMN_TRANSACTION_ID+
+				", "+ItemLog.COLUMN_QUANTITY_SOLD+
+				", "+ItemLog.COLUMN_ORIGINAL_SOLD+
+				", "+ItemLog.COLUMN_PRICE_SOLD+") values (?, ?, ?, ?, ?, ?)";
+		
 		try {
 			PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(updateReserved);
 			ps.setInt(1, quantity);
 			ps.setString(2, itemCode);
+			
+			PreparedStatement log = Database.getInstance().getConnection().prepareStatement(item_log);
+			log = Database.getInstance().getConnection().prepareStatement(item_log);
+			log.setString(1, itemCode);
+			log.setString(2, "returned");
+			log.setInt(3, -1);
+			log.setInt(4, quantity);
+			log.setBigDecimal(5, price.multiply(BigDecimal.valueOf(quantity)));
+			log.setBigDecimal(6, price.multiply(BigDecimal.valueOf(quantity)));
+			
+			Database.getInstance().executeUpdate(log);
 			Database.getInstance().executeUpdate(ps);
 		} catch (SQLException e) {
 			e.printStackTrace();

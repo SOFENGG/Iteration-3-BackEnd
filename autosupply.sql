@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.20, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: autosupply
 -- ------------------------------------------------------
--- Server version	5.7.20-log
+-- Server version	5.7.19-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -41,8 +41,34 @@ CREATE TABLE `customers` (
 
 LOCK TABLES `customers` WRITE;
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-INSERT INTO `customers` VALUES (1,'jarod','makati','12310312',3,9999.0000,20000.0000),(2,'tim','manila','09173352933',4,50000.0000,50000.0000);
+INSERT INTO `customers` VALUES (1,'jarod','makati','12310312',6,10455.0000,20000.0000),(2,'tim','manila','09173352933',4,50000.0000,50000.0000);
 /*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `daily_income`
+--
+
+DROP TABLE IF EXISTS `daily_income`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `daily_income` (
+  `daily_income_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `total_amount` decimal(19,4) NOT NULL,
+  PRIMARY KEY (`daily_income_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `daily_income`
+--
+
+LOCK TABLES `daily_income` WRITE;
+/*!40000 ALTER TABLE `daily_income` DISABLE KEYS */;
+INSERT INTO `daily_income` VALUES (1,4,'2017-12-12',1540.0000);
+/*!40000 ALTER TABLE `daily_income` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -60,7 +86,6 @@ CREATE TABLE `items` (
   `manufacturer` varchar(45) NOT NULL,
   `supplier_code` int(11) NOT NULL,
   `stock` int(11) NOT NULL,
-  `reserved` int(11) NOT NULL,
   `date_purchase` date NOT NULL,
   `price_supplier` decimal(19,4) NOT NULL,
   `price_customer` decimal(19,4) NOT NULL,
@@ -76,7 +101,7 @@ CREATE TABLE `items` (
 
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
-INSERT INTO `items` VALUES ('0','white wheel','they see me rollin','Wheel','Toyota',1,2,2,'1998-11-10',20.0000,25.0000),('1','black tinted window','they hatin','Window','Honda',0,2,1,'2017-11-10',20.0000,25.0000);
+INSERT INTO `items` VALUES ('0','white wheel','they see me rollin','Wheel','Toyota',1,54,'1998-11-10',20.0000,25.0000),('1','black tinted window','they hatin','Window','Honda',0,28,'2017-11-10',20.0000,25.0000);
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,12 +115,13 @@ DROP TABLE IF EXISTS `items_log`;
 CREATE TABLE `items_log` (
   `sale_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_code` varchar(45) NOT NULL,
+  `type` varchar(45) NOT NULL,
   `transaction_id` int(11) NOT NULL,
   `quantity_sold` int(11) NOT NULL,
   `original_price` decimal(19,4) NOT NULL,
   `price_sold` decimal(19,4) NOT NULL,
   PRIMARY KEY (`sale_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -104,7 +130,7 @@ CREATE TABLE `items_log` (
 
 LOCK TABLES `items_log` WRITE;
 /*!40000 ALTER TABLE `items_log` DISABLE KEYS */;
-INSERT INTO `items_log` VALUES (1,'1',1,2,50.0000,20.0000);
+INSERT INTO `items_log` VALUES (35,'0','sold',0,1,25.0000,20.0000),(36,'0','returned',-1,20,500.0000,500.0000),(37,'1','returned',-1,12,300.0000,300.0000),(38,'0','returned',-1,12,300.0000,300.0000),(39,'0','returned',-1,12,300.0000,300.0000),(40,'1','returned',-1,13,325.0000,325.0000);
 /*!40000 ALTER TABLE `items_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,9 +145,9 @@ CREATE TABLE `service_log` (
   `service_log_id` int(11) NOT NULL AUTO_INCREMENT,
   `service_id` int(11) NOT NULL,
   `worker_id` int(11) NOT NULL,
-  `date` date NOT NULL,
+  `transaction_id` int(11) NOT NULL,
   PRIMARY KEY (`service_log_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,7 +171,7 @@ CREATE TABLE `services` (
   `service_name` varchar(45) NOT NULL,
   `price` decimal(19,4) NOT NULL,
   PRIMARY KEY (`service_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +180,7 @@ CREATE TABLE `services` (
 
 LOCK TABLES `services` WRITE;
 /*!40000 ALTER TABLE `services` DISABLE KEYS */;
-INSERT INTO `services` VALUES (1,'Air pumping',20.0000);
+INSERT INTO `services` VALUES (1,'Air pumping',20.0000),(2,'xd',10.0000);
 /*!40000 ALTER TABLE `services` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -209,7 +235,7 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-INSERT INTO `transactions` VALUES (1,4,'RETAIL SALE',0,'2017-11-24',10.0000);
+INSERT INTO `transactions` VALUES (0,4,'retail',1,'2017-12-12',20.0000);
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -275,4 +301,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-24 21:37:22
+-- Dump completed on 2017-12-12 19:45:03

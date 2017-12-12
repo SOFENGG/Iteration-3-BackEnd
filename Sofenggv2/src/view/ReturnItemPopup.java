@@ -1,5 +1,7 @@
 package view;
 
+import java.math.BigDecimal;
+
 import controller.CashierViewController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -27,10 +29,13 @@ public class ReturnItemPopup extends Popup{
 			private TextField stockTextField;
 			private Button stockButton;
 	
-	public ReturnItemPopup(CashierViewController cvc) {
+	private InventoryView mainInventory;
+	
+	public ReturnItemPopup(CashierViewController cvc, InventoryView mainInventory) {
 		super(TITLE);
 		
 		this.cvc = cvc;
+		this.mainInventory = mainInventory;
 		
 		initScene();
 		initHandlers ();
@@ -97,8 +102,15 @@ public class ReturnItemPopup extends Popup{
 		stockButton.setOnAction(e -> {
 			//tim pls
 			Database.getInstance().detach(SPECIAL_INVENTORY_KEY);
-			cvc.returnItem(iv.getSelectedItem().get(InventoryView.ITEM_CODE), Integer.parseInt(stockTextField.getText()));
-			closePopup();
+			try{
+				cvc.returnItem(iv.getSelectedItem().get(InventoryView.ITEM_CODE), Integer.parseInt(stockTextField.getText()), BigDecimal.valueOf(Double.parseDouble(iv.getSelectedItem().get(InventoryView.PRICE))));
+				mainInventory.addStock(iv.getSelectedItem().get(InventoryView.ITEM_CODE), Integer.parseInt(stockTextField.getText()));
+				closePopup();
+			}catch(NumberFormatException exp){
+				closePopup();
+				new AlertBoxPopup("Error", "Enter a number xd.");
+			}
+			
 		});
 	}
 
