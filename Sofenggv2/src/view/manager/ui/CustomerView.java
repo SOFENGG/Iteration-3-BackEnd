@@ -1,14 +1,62 @@
 package view.manager.ui;
 
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+
+import controller.ManagerViewController;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.util.Callback;
+import model.Database;
+import view.View;
+import view.cashier.AlertBoxPopup;
 
-public class CustomerView extends MainView {
+public class CustomerView extends MainView implements View {
+	public static final String KEY = "customerviewkey";
 	
-	public CustomerView() {
+	private ManagerViewController mvc;
+	private ObservableList<ObservableList> data;
+	
+	private ArrayList<TableColumn> col;
+	private ObservableList<String> row;
+	
+	private ResultSet rs = null;
+	
+	public CustomerView(ManagerViewController mvc) {
 		super();
+		this.mvc = mvc;
+		init();
+		initHandler();
 		setUniqueToViewTableAndFilter();
+	}
+	
+	public void init(){
+		col = new ArrayList<TableColumn>();
+		data = FXCollections.observableArrayList();
+	}
+	
+	public void initHandler(){
+		searchButton.setOnAction(e -> {
+			try{
+				switch(searchColumns.getValue()){
+					case "ID": mvc.searchCustomer(new String[] {KEY}, Integer.parseInt(searchField.getText().toString()));
+						break;
+					case "Name": mvc.searchCustomerName(new String[] {KEY}, searchField.getText().toString());
+						break;
+					case "Address": mvc.searchCustomerAddress(new String[] {KEY}, searchField.getText().toString());
+						break;
+				}
+			}catch(NumberFormatException nfe){
+				new AlertBoxPopup("Input Error", "Enter a number.");
+			}
+		});
 	}
 	
 	/* For the Back End Developers */
@@ -25,7 +73,7 @@ public class CustomerView extends MainView {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
 		/* Test Cases */
-			list.addAll("Item Code", "Description");
+			list.addAll("ID", "Name", "Address");
 		
 		return list;
 	}
@@ -35,6 +83,71 @@ public class CustomerView extends MainView {
 	private TableColumn<Object, ?> fillColumns() {
 		
 		return null;
+	}
+
+	@Override
+	public void update() {
+		if(rs != Database.getInstance().getRS()){
+			rs = Database.getInstance().getRS();
+			if (rs == null)
+				return;
+			
+			if (!tableView.getColumns ().isEmpty ()){
+				for(int i = 0; i < col.size(); i++){
+					tableView.getColumns ().removeAll (col.get(i));
+				}
+				col.clear();
+			}
+			
+			if (!tableView.getItems ().isEmpty ()){
+				tableView.getItems ().removeAll (row);
+				data.clear();
+			}
+			
+			try {
+				for (int i = 0; i < rs.getMetaData ().getColumnCount (); i++) {
+					final int j = i;
+					TableColumn c = new TableColumn (rs.getMetaData ().getColumnName (i + 1));
+					c.setCellValueFactory (new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>> () {
+						public ObservableValue<String> call (CellDataFeatures<ObservableList, String> param) {
+								return new SimpleStringProperty (param.getValue ().get (j).toString ());
+						}
+					});
+					
+					col.add(c);
+					tableView.getColumns ().addAll (c);
+					
+				}
+				
+				while (rs.next()) {
+					row = FXCollections.observableArrayList ();
+					
+					for (int i = 1; i <= rs.getMetaData ().getColumnCount (); i++) {
+						String s = "";
+						switch(rs.getMetaData().getColumnType(i)){
+							case Types.INTEGER: s = Integer.toString(rs.getInt(i));
+								break;
+							case Types.DATE: Date d = rs.getDate(i);
+								s = d.toString();
+								break;
+							case Types.VARCHAR: s = rs.getString(i);
+								break;
+							case Types.BIGINT: s = Integer.toString(rs.getInt(i));
+								break;
+							case Types.DECIMAL: s = (rs.getBigDecimal(i)).doubleValue() + "";
+								break;
+						}
+						row.add (s);
+					}
+					
+					data.add(row);
+				}
+				tableView.setItems(data);
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

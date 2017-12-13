@@ -4,9 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import view.View;
 import view.manager.final_values.Values;
 
-public class SalesReportView extends MainView {
+public class SalesReportView extends MainView implements View {
 	
 	private Button createReportBtn;
 	private Button reportDetailsBtn;
@@ -59,6 +60,12 @@ public class SalesReportView extends MainView {
 	private TableColumn<Object, ?> fillColumns() {
 		
 		return null;
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

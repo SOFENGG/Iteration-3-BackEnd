@@ -1,14 +1,20 @@
 package view.manager.ui;
 
+import java.math.BigDecimal;
+
+import controller.ManagerViewController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import model.Supplier;
+import view.cashier.AlertBoxPopup;
 import view.manager.final_values.Values;
 
 public class SupplierBanner extends Banner{
+	private ManagerViewController mvc;
 	
 	/* Left Section */
 	private TextField supplierCodeField;
@@ -23,10 +29,41 @@ public class SupplierBanner extends Banner{
 	/* Bottom Buttons */
 	private Button addConfirmBtn;
 				
-	public SupplierBanner(){
+	public SupplierBanner(ManagerViewController mvc){
 		super();
+		this.mvc = mvc;
 		updateToSupplierBanner();
 		setPositions();
+		initHandler();
+	}
+	
+	public void initHandler(){
+		addConfirmBtn.setOnAction(e -> {
+			String supplierCode = supplierCodeField.getText();
+			String contactPerson = contactPersonField.getText();
+			String taxId = taxIdField.getText();
+			String supplierName = supplierNameField.getText();
+			String contactNumber = contactNumberField.getText();
+			
+			if(!supplierCode.equals("") 
+					&& !contactPerson.equals("")
+					&& !taxId.equals("")
+					&& !supplierName.equals("")
+					&& !contactNumber.equals("")){
+				
+				mvc.addSupplier(new Supplier(supplierCode, supplierName, contactPerson, contactNumber, taxId));
+				
+				new AlertBoxPopup("Success", "Supplier added.");
+				supplierCodeField.setText("");
+				contactPersonField.setText("");
+				taxIdField.setText("");
+				supplierNameField.setText("");
+				contactNumberField.setText("");
+			}else{
+				new AlertBoxPopup("Input Error", "Some fields are left blank.");
+			}
+			
+		});
 	}
 
 	private void updateToSupplierBanner() {

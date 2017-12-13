@@ -1,5 +1,6 @@
 package view.manager.ui_factories;
 
+import controller.ManagerViewController;
 import view.manager.ui.Banner;
 import view.manager.ui.CustomerBanner;
 import view.manager.ui.DateBanner;
@@ -19,19 +20,19 @@ public class BannerFactory {
 	private final static int BANNER_PURCHASE_ORDER_CODE = 05;
 	private final static int BANNER_SALES_REPORT_CODE = 06;
 	
-	public static Banner getBanner(int code) {
+	public static Banner getBanner(int code, ManagerViewController mvc) {
 		
 		switch(code) {
 		case BANNER_DATE_CODE:
 			return new DateBanner();
 		case BANNER_CUSTOMER_CODE:
-			return new CustomerBanner();
+			return new CustomerBanner(mvc);
 		case BANNER_FILTER_CODE:
 			return new FilterBanner();
 		case BANNER_INVENTORY_CODE:
-			return new InventoryBanner();
+			return new InventoryBanner(mvc);
 		case BANNER_SUPPLIER_CODE:
-			return new SupplierBanner();
+			return new SupplierBanner(mvc);
 		case BANNER_PURCHASE_ORDER_CODE:
 			return new PurchaseOrderBanner();
 		case BANNER_SALES_REPORT_CODE:

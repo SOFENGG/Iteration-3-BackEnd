@@ -1,15 +1,19 @@
 package view.manager.ui;
 
+import java.math.BigDecimal;
+
+import controller.ManagerViewController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import view.cashier.AlertBoxPopup;
 import view.manager.final_values.Values;
 
 public class InventoryBanner extends Banner{
-	
+	private ManagerViewController mvc;
 
 	/* Left Section */
 	private TextField itemCodeField;
@@ -22,13 +26,41 @@ public class InventoryBanner extends Banner{
 	
 	/* Bottom Buttons */
 	private Button editConfirmBtn;
-
 		
-		
-	public InventoryBanner() {
+	public InventoryBanner(ManagerViewController mvc) {
 		super();
+		this.mvc = mvc;
 		updateToInventoryBanner();
 		setPositions();
+		initHandler();
+	}
+	
+	public void initHandler(){
+		editConfirmBtn.setOnAction(e -> {
+			String itemCode = itemCodeField.getText();
+			String supplierCode = supplierField.getText();
+			String description = ItemDescriptionField.getText();
+			BigDecimal unitPrice;
+			
+			try{
+				unitPrice = BigDecimal.valueOf(Double.parseDouble(unitPriceField.getText()));
+				
+				if(!itemCode.equals("") && !supplierCode.equals("") && !description.equals("")){
+					mvc.editItem(itemCode, description, supplierCode, unitPrice);
+					new AlertBoxPopup("Success", "Item updated.");
+					itemCodeField.setText("");
+					supplierField.setText("");
+					ItemDescriptionField.setText("");
+					unitPriceField.setText("");
+				}else{
+					new AlertBoxPopup("Input Error", "Some fields are left blank.");
+				}
+				
+			}catch(NumberFormatException nfe){
+				new AlertBoxPopup("Input Error", "Enter a valid number.");
+			}
+	
+		});
 	}
 	
 	private void updateToInventoryBanner() {

@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import controller.ManagerViewController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -7,9 +8,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
+import view.View;
 
-public class TransactionView extends MainView{
-	
+public class TransactionView extends MainView implements View{
 	private static boolean isToday;
 	
 	private TabPane tabbedPane;
@@ -62,7 +63,7 @@ public class TransactionView extends MainView{
 					isToday = false;
 					
 					/* Banner Switching */
-					ManagerView.reinitBanner(02);;
+					ManagerView.reinitBanner(02);
 					
 				} else {
 					historyTab.setContent(null);
@@ -102,6 +103,12 @@ public class TransactionView extends MainView{
 	private TableColumn<Object, ?> fillColumns() {
 		
 		return null;
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

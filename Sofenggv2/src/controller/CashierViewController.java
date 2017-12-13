@@ -410,12 +410,13 @@ public class CashierViewController {
 																	", " + Transaction.COLUMN_DATE_SOLD + 
 																	", " + Transaction.COLUMN_TOTAL_PRICE + ") values (?, ?, ?, ?, ?, ?)";
 		
+		/*
+		 * check here if all the items in the cart can be purchased, if atleast one item is out of stock
+		 * abort transaction, return false
+		 */
+		
 		//gets total price of the item
-		BigDecimal totalPrice = BigDecimal.valueOf(0);
-		for(CartItem item : activeCart.getCartItems()){
-			//calculates for total price of whole cart
-			totalPrice = totalPrice.add(item.getPriceSold().multiply(BigDecimal.valueOf(item.getQuantity())));
-		}
+		BigDecimal totalPrice = activeCart.getTotalPrice();
 
 		//checks if debt + total price of transaction is less than debt limit
 		if(isloan){

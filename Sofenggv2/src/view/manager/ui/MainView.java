@@ -4,19 +4,21 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import view.View;
 import view.manager.final_values.Values;
 
 public abstract class MainView extends BorderPane{
 	
-		private HBox filterOptions;
+		protected HBox filterOptions;
 			protected ComboBox<String> searchColumns;
-			private TextField searchField;
-			private Button searchButton;
+			protected TextField searchField;
+			protected Button searchButton;
 			private Button filterButton;
-		protected Table tableView;
+		protected TableView tableView;
 		protected HBox actionButtons;
 			
 	public MainView() {

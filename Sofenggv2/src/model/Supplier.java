@@ -9,13 +9,13 @@ public class Supplier {
 	public static final String COLUMN_CONTACT_NUMBER = "contact_number";
 	public static final String COLUMN_TAX_ID = "tax_id";
 	
-	private int supplierCode;
+	private String supplierCode;
 	private String name;
 	private String contactPerson;
-	private int contactNumber;
+	private String contactNumber;
 	private String taxID;
 	
-	public Supplier(int supplierCode, String name, String contactPerson, int contactNumber, String taxID) {
+	public Supplier(String supplierCode, String name, String contactPerson, String contactNumber, String taxID) {
 		this.supplierCode = supplierCode;
 		this.name = name;
 		this.contactPerson = contactPerson;
@@ -23,11 +23,11 @@ public class Supplier {
 		this.taxID = taxID;
 	}
 
-	public int getSupplierCode() {
+	public String getSupplierCode() {
 		return supplierCode;
 	}
 
-	public void setSupplierCode(int supplierCode) {
+	public void setSupplierCode(String supplierCode) {
 		this.supplierCode = supplierCode;
 	}
 
@@ -47,11 +47,11 @@ public class Supplier {
 		this.contactPerson = contactPerson;
 	}
 
-	public int getContactNumber() {
+	public String getContactNumber() {
 		return contactNumber;
 	}
 
-	public void setContactNumber(int contactNumber) {
+	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
 	}
 

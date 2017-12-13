@@ -11,7 +11,7 @@ import view.manager.ui_factories.ViewFactory;
 
 public class ManagerView extends BorderPane implements View {
 		
-	private ManagerViewController mvc;
+	private static ManagerViewController mvc;
 	
 	/* Node Variables */
 		private HeaderPane headerPane;
@@ -79,14 +79,14 @@ public class ManagerView extends BorderPane implements View {
 	
 	private void reinitView(int viewKey) {
 		midBox.getChildren().remove(paneView);
-		paneView = ViewFactory.getView(viewKey);
+		paneView = ViewFactory.getView(viewKey, mvc);
 		midBox.getChildren().add(paneView);
 		HBox.setHgrow(paneView, Priority.ALWAYS);
 	}
 	
 	protected static void reinitBanner(int bannerKey) {
 		midBox.getChildren().remove(banner);
-		banner = BannerFactory.getBanner(bannerKey);
+		banner = BannerFactory.getBanner(bannerKey, mvc);
 		midBox.getChildren().add(banner);
 	}
 	
@@ -118,10 +118,10 @@ public class ManagerView extends BorderPane implements View {
 		//midBox.setPadding(new Insets(Values.MID_BOX_TOP_PADDING, Values.MID_BOX_RIGHT_PADDING, Values.MID_BOX_BOTTOM_PADDING, Values.MID_BOX_LEFT_PADDING));
 		
 		/* Banner Initialization */
-		banner = BannerFactory.getBanner(00);
+		banner = BannerFactory.getBanner(00, mvc);
 		
 		/* Pane View Initialization */
-		paneView  = ViewFactory.getView(00);
+		paneView  = ViewFactory.getView(00, mvc);
 		
 		/* Assembly of Nav Menu and Pane View into MidBox */
 		midBox.getChildren().addAll(paneView, banner);
