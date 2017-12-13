@@ -25,12 +25,12 @@ import model.User;
 import model.Worker;
 import util.CommonQuery;
 import util.Query;
-import view.CartView;
-import view.CashierView;
-import view.CustomerView;
-import view.HoldView;
-import view.InventoryView;
-import view.ServiceWorkerView;
+import view.cashier.CartView;
+import view.cashier.CashierView;
+import view.cashier.CustomerView;
+import view.cashier.HoldView;
+import view.cashier.InventoryView;
+import view.cashier.ServiceWorkerView;
 
 public class CashierViewController {
 

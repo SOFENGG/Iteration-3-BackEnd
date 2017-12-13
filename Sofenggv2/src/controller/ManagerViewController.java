@@ -9,8 +9,8 @@ import model.Database;
 import model.Item;
 import model.User;
 import util.Query;
-import view.CashierView;
-import view.ManagerView;
+import view.cashier.CashierView;
+import view.manager.ui.ManagerView;
 
 public class ManagerViewController {
 
@@ -47,11 +47,11 @@ public class ManagerViewController {
 		/*
 		 * attach all manager related views here
 		 */
-		mv.attach();
+		//mv.attach();
 	}
 	
 	public void detach(){
-		mv.detach();
+		//mv.detach();
 	}
 	
 	public void setUser(User user){

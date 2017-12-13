@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 import model.Database;
 import model.Item;
 import model.User;
-import view.InventoryView;
+import view.cashier.InventoryView;
 
 public class MainController extends Controller {
 	private LoginController lc;

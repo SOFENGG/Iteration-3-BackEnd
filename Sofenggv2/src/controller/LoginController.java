@@ -9,9 +9,9 @@ import javafx.stage.Stage;
 import model.Database;
 import model.User;
 import util.Query;
-import view.AlertBoxPopup;
-import view.InventoryView;
-import view.LoginView;
+import view.cashier.AlertBoxPopup;
+import view.cashier.InventoryView;
+import view.cashier.LoginView;
 
 public class LoginController {
 	private LoginView lv;
