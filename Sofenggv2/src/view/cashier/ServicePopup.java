@@ -1,6 +1,7 @@
 package view.cashier;
 
 import controller.CashierViewController;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -26,11 +27,20 @@ public class ServicePopup extends Popup{
 		private HBox buttonsHBox;
 			private Button okayButton;
 			private Button cancelButton;
+			
+	private boolean success;
+	private boolean cancel;
+	private int workerId;
+	private String workerName;
 	
 	public ServicePopup(CashierViewController cvc) {
 		super(TITLE);
 		
 		this.cvc = cvc;
+		cancel = true;
+		success = false;
+		workerId = 0;
+		workerName = "";
 		
 		initScene();
 		initHandlers ();
@@ -100,13 +110,39 @@ public class ServicePopup extends Popup{
 		});
 		
 		okayButton.setOnAction(e -> {
+			cancel = false;
+			ObservableList<String> row = swv.getSelectedItem();
+			
+			if(row != null){
+				workerName = row.get(1);
+				workerId = Integer.parseInt(row.get(0));
+				success = true;
+			}else{
+				new AlertBoxPopup("Error", "No selected worker.");
+			}
 			closePopup();
 		});
 		
 		cancelButton.setOnAction(e -> {
+			cancel = true;
 			closePopup();
 			//Database.getInstance().detach(ServiceWorkerView.KEY); --> DOESNT WORK
 		});
 	}
+	
+	public boolean isCancel(){
+		return cancel;
+	}
+	
+	public boolean isSuccess(){
+		return success;
+	}
+	
+	public int getWorkerId(){
+		return workerId;
+	}
 
+	public String getWorkerName(){
+		return workerName;
+	}
 }

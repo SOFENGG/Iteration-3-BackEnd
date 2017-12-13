@@ -44,6 +44,7 @@ public class MainController extends Controller {
 				cvc.attach();
 				lc.detach();
 				cvc.getAllItems(new String[]{InventoryView.KEY});
+				cvc.getAllServices();
 				break;
 			case Code.MVC_CODE: scene.setRoot(mvc.getView(view));
 				mainStage.sizeToScene();

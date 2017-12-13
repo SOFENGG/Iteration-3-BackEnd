@@ -290,7 +290,7 @@ public class CashierView extends BorderPane implements View{
 		
 		
 		//center
-		filterComboBox.setOnAction(e -> {
+		/*filterComboBox.setOnAction(e -> {
 			switch(filterComboBox.getValue()){
 				case "Item Code": 
 				case "Description": cvc.getAllItems(new String[]{InventoryView.KEY});
@@ -299,17 +299,16 @@ public class CashierView extends BorderPane implements View{
 					break;
 			}
 			searchTextField.setText("");
-		});
+		});*/
 		
 		searchButton.setOnAction(e -> {
 			if(!searchTextField.getText().equals("")){
-				switch(filterComboBox.getValue()){
-					case "Item Code": cvc.searchItemByCode(new String[]{InventoryView.KEY}, searchTextField.getText());
-						break;
-					case "Description": cvc.searchItem(new String[]{InventoryView.KEY}, searchTextField.getText());
-						break;
-					case "Service": cvc.searchService(searchTextField.getText());
-						break;
+				if(ivtp.getTab() == 0){
+					//inventory
+					cvc.searchItem(new String[]{InventoryView.KEY}, searchTextField.getText());
+				}else{
+					//service
+					cvc.searchService(searchTextField.getText());
 				}
 			}else{
 				new AlertBoxPopup("Search", "No matches found.");
@@ -317,9 +316,14 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		cartButton.setOnAction(e -> {
-			ObservableList<String> row = ivtp.getInventoryView().getSelectedItem();
+			ObservableList<String> row;
+			if(ivtp.getTab() == 0)
+				row = ivtp.getInventoryView().getSelectedItem();
+			else
+				row = ivtp.getServiceView().getSelectedItem();
+			
 			if(row != null){
-				if(!filterComboBox.getValue().equals("Service")){
+				if(ivtp.getTab() == 0){
 					CartPopup popup = null;
 					//item is selected
 					if(Integer.parseInt(row.get(InventoryView.STOCK)) > 0) {
@@ -333,12 +337,16 @@ public class CashierView extends BorderPane implements View{
 				}else{
 					//service is seleted
 					ServicePopup popup = new ServicePopup (cvc);
-					cvc.addToCart(CartItemType.SERVICE,
-							Integer.parseInt(row.get(InventoryView.SERVICE_ID)),
-							1,
-							row.get(InventoryView.SERVICE_NAME),
-							BigDecimal.valueOf(Double.parseDouble(row.get(InventoryView.SERVICE_PRICE))),
-							1);
+					if(!popup.isCancel()){
+						if(popup.isSuccess()){
+							cvc.addToCart(CartItemType.SERVICE,
+									Integer.parseInt(row.get(ServiceView.SERVICE_ID)),
+									popup.getWorkerId(),
+									row.get(ServiceView.SERVICE_NAME) + " ("+ popup.getWorkerName() + ")",
+									BigDecimal.valueOf(Double.parseDouble(row.get(ServiceView.SERVICE_PRICE))),
+									1);
+						}
+					}
 				}
 			}else{
 				new AlertBoxPopup("Error", "No selected item.");
@@ -408,16 +416,20 @@ public class CashierView extends BorderPane implements View{
 		overridePriceButton.setOnAction(e -> {
 			
 				ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
-				if(row != null){
-					ManagerPopup pop = new ManagerPopup (cvc);
-					if(pop.getAccess()){
-						new OverridePricePopup(cvc, row.get(CartView.ITEM_CODE));
+				if(row.get(CartView.TYPE).equals("ITEM")){
+					if(row != null){
+						ManagerPopup pop = new ManagerPopup (cvc);
+						if(pop.getAccess()){
+							new OverridePricePopup(cvc, row.get(CartView.ITEM_CODE));
+						}else{
+							if(!pop.isCanceled())
+								new AlertBoxPopup("Access", "Access Denied.");
+						}
 					}else{
-						if(!pop.isCanceled())
-							new AlertBoxPopup("Access", "Access Denied.");
+						new AlertBoxPopup("Error", "No selected cart item.");
 					}
 				}else{
-					new AlertBoxPopup("Error", "No selected cart item.");
+					new AlertBoxPopup("Error", "Can't override services.");
 				}
 		
 		});
@@ -454,6 +466,7 @@ public class CashierView extends BorderPane implements View{
 		//put all attaching of views here
 		Database.getInstance().attach(KEY, this);
 		Database.getInstance().attach(InventoryView.KEY, ivtp.getInventoryView());
+		Database.getInstance().attach(ServiceView.KEY, ivtp.getServiceView());
 		cvtp.attach();
 	}
 	
@@ -461,6 +474,7 @@ public class CashierView extends BorderPane implements View{
 		//put all detaching of vies here
 		Database.getInstance().detach(KEY);
 		Database.getInstance().detach(InventoryView.KEY);
+		Database.getInstance().detach(ServiceView.KEY);
 		cvtp.detach();
 	}
 	

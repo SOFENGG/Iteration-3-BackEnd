@@ -203,6 +203,24 @@ import model.Database;
 					if(!pop.isCanceled())
 						new AlertBoxPopup("Access", "Access denied");
 				}
+			}else{
+				try{
+					float input = Float.parseFloat(amountTextField.getText());
+					if(BigDecimal.valueOf(input).doubleValue() >= cvc.getCart().getTotalPrice().doubleValue()){
+						success = cvc.buyItems(CashierView.transaction, isloan, null);
+						new AlertBoxPopup("Transaction Success", "Purchase Complete!");
+					}else{
+						detach();
+						closePopup();
+						new AlertBoxPopup("Error", "gg xd");
+					}
+					
+				}catch(NumberFormatException ex){
+					detach();
+					closePopup();
+					new AlertBoxPopup("Error", "Enter a number.");
+				}
+				
 			}
 			
 			detach();

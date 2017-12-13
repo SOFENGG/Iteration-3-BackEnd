@@ -30,6 +30,7 @@ import view.cashier.CashierView;
 import view.cashier.CustomerView;
 import view.cashier.HoldView;
 import view.cashier.InventoryView;
+import view.cashier.ServiceView;
 import view.cashier.ServiceWorkerView;
 
 public class CashierViewController {
@@ -167,12 +168,12 @@ public class CashierViewController {
 	
 	//services
 	public void getAllServices(){
-		Database.getInstance().query(new String[] {InventoryView.KEY},
+		Database.getInstance().query(new String[] {ServiceView.KEY},
 				"select * from " + Service.TABLE);
 	}
 	
 	public void searchService(String search){
-		Database.getInstance().query(new String[] {InventoryView.KEY},
+		Database.getInstance().query(new String[] {ServiceView.KEY},
 				"select * from "+Service.TABLE+" where concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '%" + search + "%';");
 	}
 	
@@ -307,7 +308,7 @@ public class CashierViewController {
 		activeCart.getCartItems().add(new CartItem(type, serviceId, workerId, name, price, quantity));
 		
 		//updates all the views needed
-		Database.getInstance().notifyViews(new String[]{InventoryView.KEY, CartView.KEY, CashierView.KEY});
+		Database.getInstance().notifyViews(new String[]{CartView.KEY, CashierView.KEY});
 		
 		return true;
 	}

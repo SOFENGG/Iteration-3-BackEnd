@@ -62,5 +62,13 @@ public class InventoryViewTabPane extends TabPane implements View {
 	public InventoryView getInventoryView () {
 		return iv;
 	}
+	
+	public ServiceView getServiceView(){
+		return sv;
+	}
+	
+	public int getTab () {
+		return getSelectionModel().getSelectedIndex();
+	}
 
 }

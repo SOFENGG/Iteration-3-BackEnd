@@ -91,12 +91,13 @@ public class ReturnItemPopup extends Popup{
 		cvc.getAllItems(new String[]{SPECIAL_INVENTORY_KEY});
 		
 		searchButton.setOnAction(e -> {
-			switch(filterComboBox.getValue()){
+			/*switch(filterComboBox.getValue()){
 				case "Item Code": cvc.searchItemByCode(new String[]{SPECIAL_INVENTORY_KEY}, searchTextField.getText());
 					break;
 				case "Description": cvc.searchItem(new String[]{SPECIAL_INVENTORY_KEY}, searchTextField.getText());
 					break;
-			}
+			}*/
+			cvc.searchItem(new String[]{SPECIAL_INVENTORY_KEY}, searchTextField.getText());
 		});
 		
 		stockButton.setOnAction(e -> {

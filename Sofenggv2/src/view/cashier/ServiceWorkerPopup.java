@@ -55,7 +55,7 @@ public class ServiceWorkerPopup extends Popup{
 				searchButton.getStyleClass ().add("SearchButton");
 				searchButton.setMinSize(40, 40);
 					
-			searchHBox.getChildren().addAll(searchTextField, searchButton);
+			searchHBox.getChildren().addAll(filterComboBox, searchTextField, searchButton);
 		
 			swv = new ServiceWorkerView (cvc);
 			

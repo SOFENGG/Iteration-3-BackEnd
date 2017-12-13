@@ -51,6 +51,10 @@ public class ServiceWorkerView extends HBox implements View{
 		setHgrow(tableView, Priority.ALWAYS);
 		getChildren ().addAll (tableView);
 	}
+	
+	public ObservableList<String> getSelectedItem(){
+		return (ObservableList<String>) tableView.getSelectionModel().getSelectedItem();
+	}
 
 	@Override
 	public void update() {
