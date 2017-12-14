@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `autosupply` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `autosupply`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: autosupply
@@ -135,6 +137,33 @@ INSERT INTO `items_log` VALUES (35,'0','sold',0,1,25.0000,20.0000),(36,'0','retu
 UNLOCK TABLES;
 
 --
+-- Table structure for table `purchase_orders`
+--
+
+DROP TABLE IF EXISTS `purchase_orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `purchase_orders` (
+  `order_id` int(11) NOT NULL,
+  `supplier_code` varchar(45) NOT NULL,
+  `total_price` decimal(19,4) NOT NULL,
+  `date_ordered` date NOT NULL,
+  `is_pending` int(4) NOT NULL,
+  `date_received` date DEFAULT NULL,
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `purchase_orders`
+--
+
+LOCK TABLES `purchase_orders` WRITE;
+/*!40000 ALTER TABLE `purchase_orders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `purchase_orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `service_log`
 --
 
@@ -223,7 +252,7 @@ CREATE TABLE `transactions` (
   `transaction_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `transaction_type` varchar(45) NOT NULL,
-  `is_loan` tinyint(4) NOT NULL,
+  `is_loan` int(4) NOT NULL,
   `date_sold` date NOT NULL,
   `total_price` decimal(19,4) NOT NULL,
   PRIMARY KEY (`transaction_id`)
@@ -236,7 +265,7 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-INSERT INTO `transactions` VALUES (0,4,'retail',1,'2017-12-12',20.0000),(1,4,'retail',0,'2017-12-13',25.0000),(2,4,'retail',0,'2017-12-13',25.0000),(3,4,'retail',0,'2017-12-13',25.0000);
+INSERT INTO `transactions` VALUES (0,4,'retail',1,'2017-12-12',20.0000),(1,4,'retail',0,'2017-12-13',25.0000),(2,4,'retail',0,'2017-12-13',25.0000),(3,4,'retail',0,'2017-12-13',25.0000),(4,4,'retail',1,'2017-12-14',50.0000),(5,4,'whole',0,'2017-12-14',20.0000),(6,4,'retail',0,'2016-11-10',25.0000),(7,4,'whole',1,'2017-12-15',100.0000),(8,4,'retail',0,'2017-12-10',25.0000),(9,4,'whole',1,'2017-11-10',50.0000),(10,4,'retail',0,'2017-07-10',25.0000),(11,4,'whole',1,'2017-04-01',69.0000),(12,4,'retail',0,'2016-12-24',50.0000);
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -302,4 +331,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-14 18:00:55
+-- Dump completed on 2017-12-15  1:09:09
