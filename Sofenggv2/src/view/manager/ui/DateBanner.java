@@ -1,7 +1,6 @@
 package view.manager.ui;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javafx.scene.control.Label;
@@ -39,6 +38,7 @@ public class DateBanner extends Banner {
 	}
 	
 	/* returns the string format of the current time*/
+	@SuppressWarnings("static-access")
 	private String getToday(){
 		String dateString = "";
 

@@ -23,17 +23,20 @@ public static final String TITLE = "End of Day";
 	private int total;
 	
 	private VBox layout;
-		private Label cashDenominationLabel;
-		private HBox input1000;
-		private HBox input500;
-		private HBox input200;
-		private HBox input100; 
-		private HBox input50;
-		private HBox input20;
-		private HBox input10;
-		private HBox input5; 
-		private HBox input1;
-		private Label totalLabel;
+		private VBox cashDenominationVBox;
+			private Label cashDenominationLabel;
+			private HBox input1000;
+			private HBox input500;
+			private HBox input200;
+			private HBox input100; 
+			private HBox input50;
+			private HBox input20;
+			private HBox input10;
+			private HBox input5; 
+			private HBox input1;
+			private HBox totalHBox;
+				private Label totalLabel;
+				private Label totalAmountLabel;
 		private HBox buttonsHBox;
 			private Button okayButton;
 			private Button cancelButton;
@@ -53,21 +56,35 @@ public static final String TITLE = "End of Day";
 		layout = new VBox (10);
 		layout.setId("Popup");
 		
-			cashDenominationLabel = new Label ("Cash Denominations");
-			cashDenominationLabel.setId("DefaultLabel");
+			cashDenominationVBox = new VBox ();
+			cashDenominationVBox.setId("PopupDetails");
 			
-			input1000 = createDenomBox(1000);
-			input500 = createDenomBox(500);
-			input200 = createDenomBox(200);
-			input100 = createDenomBox(100);
-			input50 = createDenomBox(50);
-			input20 = createDenomBox(20);
-			input10 = createDenomBox(10);
-			input5 = createDenomBox(5);
-			input1 = createDenomBox(1);
+				cashDenominationLabel = new Label ("Cash Denominations");
+				cashDenominationLabel.setId("LabelTitle");
+				
+				input1000 = createDenomBox(1000);
+				input500 = createDenomBox(500);
+				input200 = createDenomBox(200);
+				input100 = createDenomBox(100);
+				input50 = createDenomBox(50);
+				input20 = createDenomBox(20);
+				input10 = createDenomBox(10);
+				input5 = createDenomBox(5);
+				input1 = createDenomBox(1);
+				
+				totalHBox = new HBox (20);
+				
+					totalLabel = new Label ("Total Amount:");
+					totalLabel.setId("LabelGray");
+					
+					totalAmountLabel = new Label ("PHP 0");
+					totalAmountLabel.setId("DefaultLabel");
+					
+				totalHBox.getChildren().addAll(totalLabel, totalAmountLabel);
 			
-			totalLabel = new Label ("Total Amount: ");
-			totalLabel.setId("DefaultLabel");
+			cashDenominationVBox.getChildren().addAll(cashDenominationLabel, input1000, input500, input200, 
+					input100, input50, input20, input10, 
+					input5, input1, totalHBox);
 			
 			buttonsHBox = new HBox (20);
 			buttonsHBox.setAlignment(Pos.CENTER_RIGHT);
@@ -80,9 +97,7 @@ public static final String TITLE = "End of Day";
 			
 			buttonsHBox.getChildren().addAll (cancelButton, okayButton);
 			
-		layout.getChildren().addAll(cashDenominationLabel, input1000, input500, input200, 
-				input100, input50, input20, input10, 
-				input5, input1, totalLabel, buttonsHBox);
+		layout.getChildren().addAll(cashDenominationVBox, buttonsHBox);
 		
 		HBox.setHgrow (layout, Priority.ALWAYS);
 		VBox.setVgrow (layout, Priority.ALWAYS);
@@ -108,7 +123,7 @@ public static final String TITLE = "End of Day";
 				@Override
 				public void changed(ObservableValue<? extends Integer> arg0, Integer arg1, Integer arg2) {
 					total = total - (denominations * arg1) + (denominations * arg2);
-					totalLabel.setText ("Total Amount: PHP " + total);
+					totalAmountLabel.setText ("PHP " + total);
 					resizeScene();
 				}
 			});

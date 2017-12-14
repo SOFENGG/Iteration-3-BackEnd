@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import controller.ManagerViewController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -13,9 +14,8 @@ public class PurchaseOrderView extends MainView implements View{
 	private Button removeItemBtn;
 	private Button clearAllBtn;
 	
-	public PurchaseOrderView() {
-		super();
-		addUniqueToViewNodes();
+	public PurchaseOrderView(ManagerViewController mvc) {
+		super(mvc);
 		setUniqueToViewTableAndFilter();
 		initHandlers();
 	}

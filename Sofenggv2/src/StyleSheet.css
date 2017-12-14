@@ -6,6 +6,19 @@
 	-fx-text-fill: #000;
 }
 
+#LabelTitle {
+	-fx-font-size: 20px;
+	-fx-font-family: "Source Sans Pro", sans-serif;
+	-fx-text-fill: #000;
+	-fx-font-weight: bold;
+}
+
+#LabelGray {
+	-fx-font-size: 20px;
+	-fx-font-family: "Source Sans Pro", sans-serif;
+	-fx-text-fill: #4C6167;
+}
+
 #Border {
 	-fx-border-color: black;
 }
@@ -43,6 +56,12 @@
 
 #LoginBox {
 	-fx-background-color: #E4F1FE;
+}
+
+#PopupDetails {
+	-fx-background-color: #FFFFFF;
+	-fx-padding: 25px;
+	-fx-background-radius: 3px;
 }
 
 .MenuButton {

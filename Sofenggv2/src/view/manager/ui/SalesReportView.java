@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import controller.ManagerViewController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -12,8 +13,8 @@ public class SalesReportView extends MainView implements View {
 	private Button createReportBtn;
 	private Button reportDetailsBtn;
 	
-	public SalesReportView() {
-		super();
+	public SalesReportView(ManagerViewController mvc) {
+		super(mvc);
 		addUniqueToViewNodes();
 		setUniqueToViewTableAndFilter();
 	}

@@ -15,6 +15,8 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.Date;
 
+import controller.ManagerViewController;
+
 public class FilterPopup extends Popup {
 	
 	private VBox layout;
@@ -58,9 +60,11 @@ public class FilterPopup extends Popup {
 			private Button applyFilterButton;
 			
 			
-
-	public FilterPopup(String title) {
+	private ManagerViewController mvc;
+	
+	public FilterPopup(String title, ManagerViewController mvc) {
 		super(title);
+		this.mvc = mvc;
 
 		initScene();
 		initHandlers();
@@ -237,14 +241,14 @@ public class FilterPopup extends Popup {
 		applyFilterButton.setOnAction(e -> {
 			ArrayList<Object> filters = new ArrayList<>();
 			
-			//determine if preset or custom is selected
+			//get where clause
+			//determine whether preset or custom is selected
 			if (presetRadioButton.isSelected()) {
 				//0 = preset selected
-				 filters.add((Integer) 0); 
+				filters.add((Integer) 0); 
 				 
 				//if preset, get and add index of selected time frame
 				//0 = 7 days, 1 = 5 days, 2 = 3 months, 3 = 6 months, 4 = 1 year
-				System.out.println(presetComboBox.getSelectionModel().getSelectedIndex());
 				filters.add((Integer) presetComboBox.getSelectionModel().getSelectedIndex());
 			} else {
 				//1 = custom selected
@@ -252,12 +256,12 @@ public class FilterPopup extends Popup {
 				
 				//get start and end dates as date class
 				Date startDate = java.sql.Date.valueOf(startDatePicker.getValue());
-				Date endDate = java.sql.Date.valueOf(startDatePicker.getValue());
+				Date endDate = java.sql.Date.valueOf(endDatePicker.getValue());
 				//add start and end dates as strings of db format (yyyy-MM-dd)
 				filters.add((String) startDate.toString());
 				filters.add((String) endDate.toString());
 				
-				//determine if all week or select days is selected
+				//determine whether all week or select days is selected
 				if (allWeekRadioButton.isSelected()) {
 					//0 = all week selected
 					filters.add((Integer) 0);
@@ -265,7 +269,7 @@ public class FilterPopup extends Popup {
 					//1 = select days selected
 					filters.add((Integer) 1);
 					
-					//get integers of days selected to be used by sql DAYOFWEEK()
+					//get integers of days selected to be used by sql dayofweek()
 					ArrayList<Integer> selectedDays = new ArrayList<>();
 					if (sundayCheckBox.isSelected()) selectedDays.add(1);
 					if (mondayCheckBox.isSelected()) selectedDays.add(2);
@@ -279,9 +283,28 @@ public class FilterPopup extends Popup {
 					filters.add(selectedDays);
 				}
 				
-				
+				//get order by clause
+				//determine whether ascending or descending is selected
+				//0 = ascending selected
+				if (ascRadioButton.isSelected()) filters.add((Integer) 0);
+				//1 = descending selected
+				else filters.add((Integer) 1);
+					
+				//determine whether by month, by year, by cost, or by transaction # is selected
+				//0 = month selected
+				if (monthRadioButton.isSelected()) filters.add((Integer) 0);
+				//1 = year selected
+				else if (yearRadioButton.isSelected()) filters.add((Integer) 1);
+				//2 = cost selected
+				else if (costRadioButton.isSelected()) filters.add((Integer) 2);
+				//3 = transaction # selected
+				else filters.add((Integer) 3);
 			}
 			
+			//run sql filter parser -> ManagerViewController
+			System.out.println(filters.size() - 1);
+			mvc.setFilter(filters);
+			mvc.getFilteredTransactions(new String[] {TransactionView.KEY});
 		});
 	}
 

@@ -35,7 +35,7 @@ public class CashierView extends BorderPane implements View{
 			private ImageView logoView;
 			private Image logo;
 		private HBox helpHBox;
-			private ToggleButton helpButton;
+			private Button helpButton;
 		
 	private VBox leftVBox;
 			private Button returnItem;
@@ -93,7 +93,7 @@ public class CashierView extends BorderPane implements View{
 		initRight();
 		
 		setTop(topHBox);
-		//setLeft(leftVBox);
+		setLeft(leftVBox);
 		setCenter(centerVBox);
 		setRight(rightVBox);
 	}
@@ -110,6 +110,7 @@ public class CashierView extends BorderPane implements View{
 			menuButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 			menuButton.getStyleClass().add("MenuButton");
 			menuButton.setMinSize(50, 50);
+			menuButton.setSelected(true);
 			
 		menuHBox.getChildren().addAll(menuButton);
 		
@@ -129,7 +130,7 @@ public class CashierView extends BorderPane implements View{
 		helpHBox.setSpacing (50);
 		helpHBox.setAlignment (Pos.CENTER_RIGHT);
 		
-			helpButton = new ToggleButton ();
+			helpButton = new Button ();
 			helpButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 			helpButton.getStyleClass().add("HelpButton");
 			helpButton.setMinSize(50, 50);

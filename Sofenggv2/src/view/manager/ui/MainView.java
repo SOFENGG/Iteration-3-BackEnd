@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import controller.ManagerViewController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -8,7 +9,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import view.View;
 import view.manager.final_values.Values;
 
 public abstract class MainView extends BorderPane{
@@ -18,10 +18,14 @@ public abstract class MainView extends BorderPane{
 			protected TextField searchField;
 			protected Button searchButton;
 			private Button filterButton;
+		@SuppressWarnings("rawtypes")
 		protected TableView tableView;
 		protected HBox actionButtons;
 			
-	public MainView() {
+	protected ManagerViewController mvc;
+	
+	public MainView(ManagerViewController mvc) {
+		this.mvc = mvc;
 		setId("View");
 		updatePaneView();
 	}
@@ -40,7 +44,7 @@ public abstract class MainView extends BorderPane{
 	
 	private void initHandlers() {
 		filterButton.setOnAction(e -> {
-			FilterPopup fp = new FilterPopup(Values.FILTER_POPUP_TITLE);
+			FilterPopup fp = new FilterPopup(Values.FILTER_POPUP_TITLE, mvc);
 			fp.show();
 		});
 	}

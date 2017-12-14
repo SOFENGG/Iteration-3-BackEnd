@@ -231,7 +231,11 @@ import model.Database;
 					}else{
 						detach();
 						closePopup();
+<<<<<<< HEAD
 						new AlertBoxPopup("Error", "Cash received was not enough.");
+=======
+						new AlertBoxPopup("Error", "Transaction Failed");
+>>>>>>> e0cd509299a83db98d59d96ec8394faf90e3c8d2
 					}
 					
 				}catch(NumberFormatException ex){

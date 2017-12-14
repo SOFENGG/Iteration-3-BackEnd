@@ -24,6 +24,7 @@ public class ManagerView extends BorderPane implements View {
 	/* boolean */
 		private boolean navMenuShown = false;
 
+	@SuppressWarnings("static-access")
 	public ManagerView(ManagerViewController mvc) {
 		this.mvc = mvc;
 		initPane();

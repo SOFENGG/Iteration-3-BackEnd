@@ -21,22 +21,22 @@ import view.cashier.AlertBoxPopup;
 public class CustomerView extends MainView implements View {
 	public static final String KEY = "customerviewkey";
 	
-	private ManagerViewController mvc;
+	@SuppressWarnings("rawtypes")
 	private ObservableList<ObservableList> data;
-	
+	@SuppressWarnings("rawtypes")
 	private ArrayList<TableColumn> col;
 	private ObservableList<String> row;
 	
 	private ResultSet rs = null;
 	
 	public CustomerView(ManagerViewController mvc) {
-		super();
-		this.mvc = mvc;
+		super(mvc);
 		init();
 		initHandler();
 		setUniqueToViewTableAndFilter();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void init(){
 		col = new ArrayList<TableColumn>();
 		data = FXCollections.observableArrayList();
@@ -96,11 +96,12 @@ public class CustomerView extends MainView implements View {
 	
 	
 	/* This function is for the Back End Developers */
-	private TableColumn<Object, ?> fillColumns() {
+	/*private TableColumn<Object, ?> fillColumns() {
 		
 		return null;
-	}
+	}*/
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void update() {
 		if(rs != Database.getInstance().getRS()){
