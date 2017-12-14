@@ -131,7 +131,7 @@ public class InventoryView extends HBox implements View {
 								return new SimpleStringProperty (param.getValue ().get (j).toString ());
 						}
 					});
-					
+					c.getStyleClass().add("TableColumn");
 					col.add(c);
 					tableView.getColumns ().addAll (c);
 					

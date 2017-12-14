@@ -89,7 +89,7 @@ public static final String TITLE = "End of Day";
 	}
 
 	private HBox createDenomBox(int denominations) {
-		HBox denominationsHBox = new HBox(20);
+		HBox denominationsHBox = new HBox(15);
 		
 			Label denominationsLabel = new Label("PHP " + denominations + " x ");
 			denominationsLabel.setId("DefaultLabel");

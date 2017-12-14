@@ -42,13 +42,19 @@ public class CashierView extends BorderPane implements View{
 			private Button serviceWorker;
 			private Button endOfDay;
 			private Button logout;
+			private VBox cashierVBox;
+				private HBox cashierHBox;
+					private Label cashierNameLabel;
+					private Label cashierLabel;
 	
 	private VBox centerVBox;
-		private HBox searchHBox;
-			private ComboBox<String> filterComboBox;
-			private TextField searchTextField;
-			private Button searchButton;
-			private Button cartButton;
+		private HBox centerTopHBox;
+			private HBox searchHBox;
+				private ComboBox<String> filterComboBox;
+				private TextField searchTextField;
+				private Button searchButton;
+			private HBox cartHBox;
+				private Button cartButton;
 		private InventoryViewTabPane ivtp;
 			
 	private VBox rightVBox;
@@ -157,8 +163,25 @@ public class CashierView extends BorderPane implements View{
 				logout.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				logout.getStyleClass().add("LeftButton");
 				
+				cashierVBox = new VBox ();
+				cashierVBox.setAlignment(Pos.BOTTOM_CENTER);
+				
+					cashierHBox = new HBox ();
+					cashierHBox.setId("CashierHBox");
+					
+					cashierNameLabel = new Label ();
+					cashierNameLabel.setId("DefaultLabel");
+					
+					cashierLabel = new Label ("Cashier");
+					cashierLabel.setId("DefaultLabel");
+					
+					cashierHBox.getChildren().addAll(cashierNameLabel, cashierLabel);
+				
+				cashierVBox.getChildren().addAll(cashierHBox);
+				
 		leftVBox.getChildren().addAll(returnItem, serviceWorker, endOfDay, logout);
 		
+		VBox.setVgrow(cashierVBox, Priority.ALWAYS);
 		VBox.setVgrow (leftVBox, Priority.ALWAYS);
 	}
 
@@ -166,34 +189,45 @@ public class CashierView extends BorderPane implements View{
 		centerVBox = new VBox (10);
 		centerVBox.setId("CenterVbox");
 		
-			searchHBox = new HBox (20);
-			searchHBox.setAlignment(Pos.CENTER);
-			
-				filterComboBox = new ComboBox<String> ();
-				filterComboBox.getStyleClass().add("ComboBox");
-				filterComboBox.getItems().add("Item Code");
-				filterComboBox.getItems().add("Description");
-				filterComboBox.getItems().add("Service");
+			centerTopHBox = new HBox ();
+		
+				searchHBox = new HBox ();
+				searchHBox.setAlignment(Pos.CENTER_LEFT);
 				
-				filterComboBox.getSelectionModel ().selectFirst ();
-				
-				searchTextField = new TextField ();
-				searchTextField.setId ("TextField");
-				
-				searchButton = new Button ();
-				searchButton.getStyleClass ().add("SearchButton");
-				searchButton.setMinSize(40, 40);
-			
-				cartButton = new Button ();
-				cartButton.getStyleClass ().add("CartButton");
-				cartButton.setMinSize(40, 40);
+					filterComboBox = new ComboBox<String> ();
+					filterComboBox.getStyleClass().add("ComboBox");
+					filterComboBox.getItems().add("Item Code");
+					filterComboBox.getItems().add("Description");
+					filterComboBox.getItems().add("Service");
 					
-			searchHBox.getChildren().addAll(searchTextField, searchButton, cartButton);
+					filterComboBox.getSelectionModel ().selectFirst ();
+					
+					searchTextField = new TextField ();
+					searchTextField.setId ("TextField");
+					searchTextField.setPromptText("Search...");
+					
+					searchButton = new Button ();
+					searchButton.getStyleClass ().add("SearchButton");
+					searchButton.setMinSize(40, 40);
+						
+				searchHBox.getChildren().addAll(searchTextField, searchButton);
+				
+				cartHBox = new HBox();
+				cartHBox.setAlignment(Pos.CENTER_RIGHT);
+				
+					cartButton = new Button ("Add to cart");
+					cartButton.getStyleClass ().add("GreenButton");
+				
+				cartHBox.getChildren().addAll(cartButton);
+		
+			centerTopHBox.getChildren().addAll(searchHBox, cartHBox);
 			
 			ivtp = new InventoryViewTabPane (cvc);
 			
-		centerVBox.getChildren().addAll(searchHBox, ivtp);
+		centerVBox.getChildren().addAll(centerTopHBox, ivtp);
 		
+		HBox.setHgrow(searchHBox, Priority.ALWAYS);
+		HBox.setHgrow(cartHBox, Priority.ALWAYS);
 		VBox.setVgrow (centerVBox, Priority.ALWAYS);
 	}
 
@@ -248,13 +282,13 @@ public class CashierView extends BorderPane implements View{
 					toggleGroup = new ToggleGroup ();
 					
 					retailButton = new ToggleButton ("Retail Sale");
-					retailButton.getStyleClass().add("ToggleButton");
+					retailButton.getStyleClass().add("RetailButton");
 					retailButton.setToggleGroup(toggleGroup);
 					retailButton.setSelected(true);
 					transaction = "retail";
 					
 					wholeSaleButton = new ToggleButton ("Whole Sale");
-					wholeSaleButton.getStyleClass().add("ToggleButton");
+					wholeSaleButton.getStyleClass().add("WholesaleButton");
 					wholeSaleButton.setToggleGroup(toggleGroup);
 				
 				cartOptionsRightHBox.getChildren().addAll(retailButton, wholeSaleButton);
@@ -298,7 +332,6 @@ public class CashierView extends BorderPane implements View{
 				case "Service": cvc.getAllServices();
 					break;
 			}
-			searchTextField.setText("");
 		});*/
 		
 		searchButton.setOnAction(e -> {
@@ -486,7 +519,7 @@ public class CashierView extends BorderPane implements View{
 			totalPrice = totalPrice.add(item.getPriceSold().multiply(BigDecimal.valueOf(item.getQuantity())));
 		}
 		
-		totalLabel.setText("Total: " + totalPrice.toString() + "php");
+		totalLabel.setText("Total: PHP " + totalPrice.toString());
 		
 		if(cvtp.getTab() == 0) {
 			if (!cartOptionsHBox.getChildren().isEmpty())

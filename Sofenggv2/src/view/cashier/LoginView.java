@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -31,9 +33,13 @@ public class LoginView extends StackPane implements View{
 	
 	private VBox loginBox;
 	private HBox usernameBox;
+		private Image usernameImage;
+		private ImageView usernameView;
 		private Label username;
 		private TextField usernameField;
 	private HBox passwordBox;
+		private Image passwordImage;
+		private ImageView passwordView;
 		private Label password;
 		private PasswordField passwordField;
 	private Button login;
@@ -46,12 +52,12 @@ public class LoginView extends StackPane implements View{
 		setMaxSize (Double.MAX_VALUE, Double.MAX_VALUE);
 			
 		initLoginView();
-		initMedia();
-		initMusic();
+		//initMedia();
+		//initMusic();
 		initHandlers();
 		
 		//setCenter (loginBox);
-		getChildren().addAll(mediaViewMusic, mediaView, imgBox, loginBox);
+		getChildren().addAll(imgBox, loginBox);
 	}
 
 	private void initMedia() {
@@ -78,15 +84,21 @@ public class LoginView extends StackPane implements View{
 	private void initLoginView() {
 		imgBox = new VBox ();
 		imgBox.setAlignment(Pos.CENTER);
-		imgBox.setId("LoginBox");
+		imgBox.setId("LogoBox");
 		
 		loginBox = new VBox (20);
 		loginBox.setAlignment (Pos.CENTER);
-		loginBox.setId("LoginBox");
+		//loginBox.setId("LoginBox");
 		loginBox.setPadding(new Insets(300, 0, 0, 0));
 		
 			usernameBox = new HBox (10);
 			usernameBox.setAlignment (Pos.CENTER);
+				
+				usernameImage = new Image(("username.png"));
+				usernameView = new ImageView(); 
+				usernameView.setImage(usernameImage);
+				usernameView.setFitHeight(25);
+				usernameView.setPreserveRatio(true);
 			
 				username = new Label ();
 				username.setText ("Username:");
@@ -94,11 +106,18 @@ public class LoginView extends StackPane implements View{
 				usernameField = new TextField ();
 				usernameField.setText("");
 				usernameField.setId("TextField");
+				usernameField.setPromptText("Username");
 				
-			usernameBox.getChildren ().addAll (username, usernameField);
+			usernameBox.getChildren ().addAll (usernameView, usernameField);
 			
 			passwordBox = new HBox (10);
 			passwordBox.setAlignment (Pos.CENTER);
+			
+				passwordImage = new Image(("password.png"));
+				passwordView = new ImageView(); 
+				passwordView.setImage(passwordImage);
+				passwordView.setFitHeight(25);
+				passwordView.setPreserveRatio(true);
 			
 				password = new Label ();
 				password.setText ("Password:");
@@ -106,8 +125,9 @@ public class LoginView extends StackPane implements View{
 				
 				passwordField = new PasswordField ();
 				passwordField.setId("TextField");
+				passwordField.setPromptText("Password");
 				
-			passwordBox.getChildren ().addAll (password, passwordField);
+			passwordBox.getChildren ().addAll (passwordView, passwordField);
 			
 			login = new Button ();
 			login.setText("Login");
@@ -119,8 +139,10 @@ public class LoginView extends StackPane implements View{
 	private void initHandlers() {
 		login.setOnAction(e ->  {
 			lc.logIn(usernameField.getText(), passwordField.getText());
-			player.stop();
-			music.stop();
+			usernameField.clear();
+			passwordField.clear();
+			//player.stop();
+			//music.stop();
 		});
 		
 	}

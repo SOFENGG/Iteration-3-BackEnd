@@ -509,4 +509,8 @@ public class CashierViewController {
 		return true;
 	}
 	
+	public User getCashier () {
+		return cashier;
+	}
+	
 }

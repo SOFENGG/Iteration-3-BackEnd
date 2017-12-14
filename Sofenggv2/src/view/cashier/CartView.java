@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -52,6 +53,7 @@ public class CartView extends HBox implements View  {
 		//setId ("Border");
 		
 		tableView = new TableView();
+		tableView.setPlaceholder(new Label ("No items in cart"));
 		//tableView.setId("TableView");
 		col = new ArrayList<TableColumn>();
 		data = FXCollections.observableArrayList();

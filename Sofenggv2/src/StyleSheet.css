@@ -30,11 +30,19 @@
 	-fx-padding: 10;
 }
 
-#LoginBox {
+#CashierHBox {
+	-fx-background-color: #8D99A5;
+}
+
+#LogoBox {
 	-fx-background-image: url("E&Elogo.png");
 	-fx-background-repeat: no-repeat;
-	-fx-background-position: left top;
-	-fx-background-size: 250px 175px
+	-fx-background-position: center 10%;
+	-fx-background-size: 250px 175px;
+}
+
+#LoginBox {
+	-fx-background-color: #E4F1FE;
 }
 
 .MenuButton {
@@ -42,7 +50,7 @@
     -fx-background-size: 32px 32px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-background-color: #6c7a89;
+    -fx-background-color: transparent;
     -fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
     -fx-cursor: hand;
 }
@@ -52,7 +60,7 @@
     -fx-background-size: 32px 32px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-background-color: #6c7a89;
+    -fx-background-color: transparent;
     -fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
     -fx-cursor: hand;
 }
@@ -107,12 +115,81 @@
 	-fx-background-color: #8994A0;
 }
 
+.table-view{
+   -fx-background-color: #fff;
+   -fx-background-radius: 3px;
+   -fx-padding: 3px 10px 3px 10px;
+}
+
+.table-view .filler {
+	-fx-background-color: #fff;
+}
+
+/*table headers*/
+.table-view .column-header-background{
+    -fx-background-color: transparent;
+    -fx-text-fill: #fff;
+}
+
+.table-view .column-header-background .label{
+    -fx-text-fill: #000;
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-family: "Source Sans Pro", sans-serif;
+	-fx-font-weight: bold;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+
+/*table rows*/
+.table-view .table-cell{
+    -fx-text-fill: #000;
+    -fx-font-family: "Source Sans Pro", sans-serif;
+}
+
+.table-row-cell{
+    -fx-background-color: -fx-table-cell-border-color, #F5F7FA;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em; /* 0 */
+}
+
+.table-row-cell:odd{
+    -fx-background-color: -fx-table-cell-border-color, #fff;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em; /* 0 */
+}
+
+.table-row-cell:empty .table-cell {
+	-fx-border-width: 0px;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #C9DDE1;
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
+}
+
+.table-view > .virtual-flow > .scroll-bar:vertical,
+.table-view > .virtual-flow > .scroll-bar:vertical > .track,
+.table-view > .virtual-flow > .scroll-bar:vertical > .track-background, 
+.table-view > .virtual-flow > .scroll-bar:horizontal,
+.table-view > .virtual-flow > .scroll-bar:horizontal > .track,
+.table-view > .virtual-flow > .scroll-bar:horizontal > .track-background {
+    -fx-background-color: transparent;
+}
+
+.table-view > .virtual-flow > .scroll-bar > .increment-button, 
+.table-view > .virtual-flow > .scroll-bar > .decrement-button {
+    -fx-opacity: 0;
+}
+
 #TextField {
 	-fx-font-size: 16px;
 	-fx-font-family: "Source Sans Pro", sans-serif;
 	-fx-font-weight: normal;
 	-fx-background-color: #FFFFFF;
-	-fx-border-color: #000000;
+	-fx-border-color: #F0F3F4;
 	-fx-border-radius: 3px;
 	-fx-effect: dropshadow(three-pass-box, #9E9E9E, 3, 0, 0, 2);
 }
@@ -144,7 +221,7 @@
     -fx-background-size: 32px 32px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-background-color: #D4D8D8;
+    -fx-background-color: transparent;
     -fx-cursor: hand;
     -fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
 }
@@ -171,14 +248,14 @@
     -fx-background-size: 32px 32px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-    -fx-background-color: #D4D8D8;
+    -fx-background-color: transparent;
     -fx-cursor: hand;
     -fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
 }
 
 .SearchButton:hover {
 	-fx-opacity: 0.6;
-	-fx-background-color: #98A1AC;
+	-fx-background-color: #D3DCDE;
 }
 
 .SearchButton:pressed {
@@ -220,6 +297,13 @@
 	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
 }
 
+.GreenButton:disabled {
+	-fx-opacity: 0.6;	
+	-fx-background-color: #ECF0F1;
+	-fx-border-color: #03a678;
+	-fx-border-radius: 3px;
+}
+
 .RedButton {
 	-fx-font-size: 16px;
 	-fx-padding: 5px 25px 5px 25px;
@@ -247,57 +331,90 @@
 	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
 }
 
+.RedButton:disabled {
+	-fx-opacity: 0.6;	
+	-fx-background-color: #ECF0F1;
+	-fx-border-color: #C0392B;
+	-fx-border-radius: 3px;
+}
+
 .Button {
 	-fx-font-size: 16px;
 	-fx-padding: 2.5px 5px 2.5px 5px;
 	-fx-font-family: "Source Sans Pro", sans-serif;
-	-fx-background-color: #D4D8D8;
-	-fx-text-fill: #FFF;
+	-fx-background-color: #ECF0F1;
+	-fx-border-color: #34495e;
+	-fx-border-radius: 3px;
+	-fx-text-fill: #34495e;
 	-fx-cursor: hand;
-	-fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
 }
 
 .Button:hover {
-	-fx-opacity: 0.6;
-	-fx-background-color: #98A1AC;
+	-fx-background-color: #34495e;
+	-fx-text-fill: #FFF;
 }
 
 .Button:pressed {
-	-fx-opacity: 0.8;
-	-fx-background-color: #8994A0;
-	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
 }
 
 .Button:selected {
 	-fx-opacity: 1.0;
 	-fx-background-color: #7A8794;
-	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
 }
 
-.ToggleButton {
+.RetailButton {
 	-fx-font-size: 16px;
-	-fx-padding: 1px 2px 1px 2px;
+	-fx-padding: 1px 5px 1px 5px;
 	-fx-font-family: "Source Sans Pro", sans-serif;
-	-fx-text-fill: #000000;
-	-fx-background-color: #FFEE58;
-	-fx-background-radius: 3px;
-	-fx-border-color: transparent;
+	-fx-text-fill: #34495e;
+	-fx-background-color: #ECF0F1;
+	-fx-border-color: #34495e;
+	-fx-border-radius: 20px 0px 0px 20px;
+	-fx-background-radius: 20px 0px 0px 20px;
 	-fx-border-width: 1;
 	-fx-cursor: hand;
-	-fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
 }
 
-.ToggleButton:selected {
+.RetailButton:selected {
 	-fx-text-fill: #FFFFFF;
-	-fx-background-color: #FDD835;
-	-fx-effect: dropshadow(three-pass-box, transparent, 4, 0, 0, 2);
+	-fx-background-color: #34495e;
 }
 
-.ToggleButton:hover {
+.RetailButton:hover {
+	-fx-text-fill: #FFFFFF;
+	-fx-background-color: #34495e;
 	-fx-opacity: 0.8;
 }
 
-.ToggleButton:pressed {
+.RetailButton:pressed {
+	-fx-opacity: 0.6;
+}
+
+.WholesaleButton {
+	-fx-font-size: 16px;
+	-fx-padding: 1px 5px 1px 5px;
+	-fx-font-family: "Source Sans Pro", sans-serif;
+	-fx-text-fill: #34495e;
+	-fx-background-color: #ECF0F1;
+	-fx-border-color: #34495e;
+	-fx-border-radius: 0px 20px 20px 0px;
+	-fx-background-radius: 0px 20px 20px 0px;
+	-fx-border-width: 1;
+	-fx-cursor: hand;
+}
+
+.WholesaleButton:selected {
+	-fx-text-fill: #FFFFFF;
+	-fx-background-color: #34495e;
+}
+
+.WholesaleButton:hover {
+	-fx-text-fill: #FFFFFF;
+	-fx-background-color: #34495e;
+	-fx-opacity: 0.8;
+}
+
+.WholesaleButton:pressed {
 	-fx-opacity: 0.6;
 }
 
@@ -319,4 +436,69 @@
 	-fx-font-size: 20px;
 	-fx-font-family: "Source Sans Pro", sans-serif;
 	-fx-text-fill: #000;
+}
+
+/*scrollbar */
+.scroll-bar,
+.scroll-bar:vertical,
+.scroll-bar:vertical .track {
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+	-fx-background-radius: 0px;
+	-fx-border-radius: 0px;
+}
+
+.scroll-bar:vertical .thumb {
+	-fx-background-color: #555555;
+	-fx-background-radius: 0px;
+}
+
+.scroll-bar:vertical .decrement-button,
+.scroll-bar:vertical .increment-button {
+	-fx-background-color: transparent;
+	-fx-background-radius: 0px;
+	-fx-padding: 0 20 0 0;
+}
+
+.scroll-bar .decrement-arrow,
+.scroll-bar .increment-arrow {
+	-fx-shape: " ";
+	-fx-padding: 0;
+}
+
+/*tab */
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane
+{
+    -fx-tab-min-width:90px;
+}
+
+.tab{
+    -fx-background-insets: 0 1 0 1,0,0;
+}
+.tab-pane .tab
+{
+    -fx-background-color: #e6e6e6;
+    -fx-cursor: hand;
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: #34495e;
+}
+
+.tab .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: #828282;
+    -fx-font-family: "Source Sans Pro", sans-serif;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: #FFFFFF;
 }
