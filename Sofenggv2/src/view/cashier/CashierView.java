@@ -345,7 +345,13 @@ public class CashierView extends BorderPane implements View{
 					cvc.searchService(searchTextField.getText());
 				}
 			}else{
-				new AlertBoxPopup("Search", "No matches found.");
+				if(ivtp.getTab() == 0){
+					//inventory
+					cvc.getAllItems(new String[]{InventoryView.KEY});
+				}else{
+					//service
+					cvc.getAllServices();
+				}
 			}
 		});
 		
@@ -441,9 +447,11 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		checkoutButton.setOnAction(e -> {
-			if(!cvc.getCart().getCartItems().isEmpty())
-				new CheckoutPopup (cvc);
-			else
+			if(!cvc.getCart().getCartItems().isEmpty()){
+				boolean canProcceed = cvc.checkCart();
+				if(canProcceed)
+					new CheckoutPopup (cvc);
+			}else
 				new AlertBoxPopup("Cart", "Cart is empty, can't proceed to checkout.");
 		});
 		

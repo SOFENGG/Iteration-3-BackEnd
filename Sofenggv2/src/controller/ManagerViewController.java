@@ -166,7 +166,7 @@ public class ManagerViewController {
 		
 		public void searchService(String[] keys, String search){
 			Database.getInstance().query(keys,
-					"select * from "+Service.TABLE+" where concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '%" + search + "%';");
+					"select * from "+Service.TABLE+" where concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '" + search + "%' OR concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '% "+search+"%';");
 		}
 		
 		public void getAllSerivceWorkers(String[] keys){
@@ -185,7 +185,8 @@ public class ManagerViewController {
 					"select * from " + Worker.TABLE +
 					" where " + Worker.COLUMN_NAME + " like '" + name + "%' OR "+Worker.COLUMN_NAME+" like '% "+name+"%';");
 		}
-		
+	
+	//supplier
 	public void getAllSuppliers(String[] keys){
 		Database.getInstance().query(keys, 
 				"select * from " + Supplier.TABLE);

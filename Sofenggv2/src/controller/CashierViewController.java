@@ -25,6 +25,7 @@ import model.User;
 import model.Worker;
 import util.CommonQuery;
 import util.Query;
+import view.cashier.AlertBoxPopup;
 import view.cashier.CartView;
 import view.cashier.CashierView;
 import view.cashier.CustomerView;
@@ -174,7 +175,7 @@ public class CashierViewController {
 	
 	public void searchService(String search){
 		Database.getInstance().query(new String[] {ServiceView.KEY},
-				"select * from "+Service.TABLE+" where concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '%" + search + "%';");
+				"select * from "+Service.TABLE+" where concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '" + search + "%' OR concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '% "+search+"%';");
 	}
 	
 	public void getAllSerivceWorkers(){
@@ -387,6 +388,30 @@ public class CashierViewController {
 		Database.getInstance().updateViews(new String[]{HoldView.KEY});
 	}
 	
+	public boolean checkCart(){
+		/*
+		 * check here if all the items in the cart can be purchased, if atleast one item is out of stock
+		 * abort transaction, return false
+		 */
+		for(CartItem item : activeCart.getCartItems()){
+			if(item.getType() == CartItemType.ITEM){
+				String sql = "select * from " + Item.TABLE + " where " + Item.COLUMN_STOCK + " >= "+item.getQuantity()+" and " + Item.COLUMN_ITEM_CODE + " like '"+item.getItemCode()+"';";
+				ResultSet rs = Database.getInstance().query(new String[]{}, sql);
+				try {
+					rs.next();
+					if(rs.getRow() == 0){
+						new AlertBoxPopup("Stock", "Not enough stock of " + item.getName() + ".");
+						return false;
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return true;
+	}
+	
 	public boolean buyItems(String transactionType, boolean isloan, Customer customer){	
 		String item_log = "insert into " + ItemLog.TABLE + " ("+ItemLog.COLUMN_ITEM_CODE+
 															", "+ItemLog.COLUMN_TYPE+
@@ -410,26 +435,7 @@ public class CashierViewController {
 																	", " + Transaction.COLUMN_DATE_SOLD + 
 																	", " + Transaction.COLUMN_TOTAL_PRICE + ") values (?, ?, ?, ?, ?, ?)";
 		
-		/*
-		 * check here if all the items in the cart can be purchased, if atleast one item is out of stock
-		 * abort transaction, return false
-		 */
-		/*for(CartItem item : activeCart.getCartItems()){
-			if(item.getType() == CartItemType.ITEM){
-				String sql = "select * from " + Item.TABLE + " where " + Item.COLUMN_STOCK + " >= "+item.getQuantity()+" and " + Item.COLUMN_ITEM_CODE + " like '"+item.getItemCode()+"';";
-				System.out.println(sql);
-				ResultSet rs = Database.getInstance().query(new String[]{}, sql);
-				try {
-					if(rs.getRow() == 0){
-						System.out.println("fail");
-						return false;
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}*/
+		
 		
 		//gets total price of the item
 		BigDecimal totalPrice = activeCart.getTotalPrice();
