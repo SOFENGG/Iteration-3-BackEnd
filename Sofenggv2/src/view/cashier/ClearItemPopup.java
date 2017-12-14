@@ -87,14 +87,18 @@ public class ClearItemPopup extends Popup{
 
 	private void initHandlers() {
 		okayButton.setOnAction(e -> {
-			quantity = Integer.parseInt(quantityTextField.getText());
-			if(quantity <= item.getQuantity()){
-				cvc.removeCartItem(item.getItemCode(),quantity);
-				closePopup();
-			}else{
-				quantity = 0;
-				closePopup();
-				new AlertBoxPopup("Failed", "Failed");
+			try{
+				quantity = Integer.parseInt(quantityTextField.getText());
+				if(quantity <= item.getQuantity() && quantity >= 1){
+					cvc.removeCartItem(item.getItemCode(),quantity);
+					closePopup();
+				}else{
+					quantity = 0;
+					closePopup();
+					new AlertBoxPopup("Failed", "Failed");
+				}
+			}catch(NumberFormatException nfe){
+				new AlertBoxPopup("Input Error", "Enter a number.");
 			}
 		});
 		

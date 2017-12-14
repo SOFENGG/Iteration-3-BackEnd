@@ -43,7 +43,7 @@ public class ServiceWorkerPopup extends Popup{
 			
 				filterComboBox = new ComboBox<String> ();
 				filterComboBox.getStyleClass().add("ComboBox");
-				filterComboBox.getItems().add("ID");
+				filterComboBox.getItems().add("Worker ID");
 				filterComboBox.getItems().add("Name");
 				
 				filterComboBox.getSelectionModel ().selectFirst ();
@@ -71,16 +71,23 @@ public class ServiceWorkerPopup extends Popup{
 		
 		searchButton.setOnAction(e -> {
 			switch(filterComboBox.getValue()){
-				case "ID":
+				case "Worker ID":
 					int number;
 					try{
 						number = Integer.parseInt(searchTextField.getText());
 						cvc.getServiceWorkerWithID(number);
 					}catch(NumberFormatException ex){
-						new AlertBoxPopup("Search Key", "Entered search key is not a number");
+						if(!searchTextField.getText().equals(""))
+							new AlertBoxPopup("Search Key", "Entered search key is not a number");
+						else
+							cvc.getAllSerivceWorkers();
 					}
 					break;
-				case "Name": cvc.getServiceWorkerWithName(searchTextField.getText());
+				case "Name": 
+					if(!searchTextField.getText().equals(""))
+						cvc.getServiceWorkerWithName(searchTextField.getText());
+					else
+						cvc.getAllSerivceWorkers();
 					break;
 			}
 		});

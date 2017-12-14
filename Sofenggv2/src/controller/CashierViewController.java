@@ -119,7 +119,7 @@ public class CashierViewController {
 	public void searchCustomerName(String search){
 		String sql = "";
 		sql = "select * from " + Customer.TABLE +
-				" where " + Customer.COLUMN_NAME + " like '" + search + "%';";
+				" where " + Customer.COLUMN_NAME + " like '" + search + "%' OR "+Customer.COLUMN_NAME+" like '% "+search+"%';";
 		Database.getInstance().query(new String[]{CustomerView.KEY},
 				sql);
 	}
@@ -127,7 +127,7 @@ public class CashierViewController {
 	public void searchCustomerAddress(String search){
 		String sql = "";
 		sql = "select * from " + Customer.TABLE +
-				" where " + Customer.COLUMN_ADDRESS + " like '%" + search + "%';";
+				" where " + Customer.COLUMN_ADDRESS + " like '" + search + "%' OR "+Customer.COLUMN_ADDRESS+" like '% "+search+"%';";
 		Database.getInstance().query(new String[]{CustomerView.KEY},
 				sql);
 	}
@@ -191,7 +191,7 @@ public class CashierViewController {
 	public void getServiceWorkerWithName(String name){
 		Database.getInstance().query(new String[]{ServiceWorkerView.KEY},
 				"select * from " + Worker.TABLE +
-				" where " + Worker.COLUMN_NAME + " like '" + name + "%';");
+				" where "+ Worker.COLUMN_NAME + " like '" + name + "%' OR "+Worker.COLUMN_NAME+" like '% "+name+"%';");
 	}
 	
 	//manager access -> called when action requires manager password
@@ -414,6 +414,22 @@ public class CashierViewController {
 		 * check here if all the items in the cart can be purchased, if atleast one item is out of stock
 		 * abort transaction, return false
 		 */
+		/*for(CartItem item : activeCart.getCartItems()){
+			if(item.getType() == CartItemType.ITEM){
+				String sql = "select * from " + Item.TABLE + " where " + Item.COLUMN_STOCK + " >= "+item.getQuantity()+" and " + Item.COLUMN_ITEM_CODE + " like '"+item.getItemCode()+"';";
+				System.out.println(sql);
+				ResultSet rs = Database.getInstance().query(new String[]{}, sql);
+				try {
+					if(rs.getRow() == 0){
+						System.out.println("fail");
+						return false;
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}*/
 		
 		//gets total price of the item
 		BigDecimal totalPrice = activeCart.getTotalPrice();

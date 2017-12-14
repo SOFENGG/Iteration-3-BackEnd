@@ -109,7 +109,7 @@ public class ReturnItemPopup extends Popup{
 				closePopup();
 			}catch(NumberFormatException exp){
 				closePopup();
-				new AlertBoxPopup("Error", "Enter a number xd.");
+				new AlertBoxPopup("Error", "Enter a number.");
 			}
 			
 		});

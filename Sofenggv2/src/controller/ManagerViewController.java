@@ -93,7 +93,7 @@ public class ManagerViewController {
 		public void searchCustomerName(String[] keys, String search){
 			String sql = "";
 			sql = "select * from " + Customer.TABLE +
-					" where " + Customer.COLUMN_NAME + " like '" + search + "%';";
+					" where " + Customer.COLUMN_NAME + " like '" + search + "%' OR "+Customer.COLUMN_NAME+" like '% "+search+"%';";
 			Database.getInstance().query(keys,
 					sql);
 		}
@@ -101,7 +101,7 @@ public class ManagerViewController {
 		public void searchCustomerAddress(String[] keys, String search){
 			String sql = "";
 			sql = "select * from " + Customer.TABLE +
-					" where " + Customer.COLUMN_ADDRESS + " like '%" + search + "%';";
+					" where " + Customer.COLUMN_ADDRESS + " like '" + search + "%' OR "+Customer.COLUMN_ADDRESS+" like '% "+search+"%';";
 			Database.getInstance().query(keys,
 					sql);
 		}
@@ -185,7 +185,7 @@ public class ManagerViewController {
 		public void getServiceWorkerWithName(String[] keys, String name){
 			Database.getInstance().query(keys,
 					"select * from " + Worker.TABLE +
-					" where " + Worker.COLUMN_NAME + " like '" + name + "%';");
+					" where " + Worker.COLUMN_NAME + " like '" + name + "%' OR "+Worker.COLUMN_NAME+" like '% "+name+"%';");
 		}
 		
 	public void getAllSuppliers(String[] keys){

@@ -122,11 +122,12 @@ public static final String TITLE = "End of Day";
 		okayButton.setOnAction(e -> {
 			if(total > 0){
 				cvc.endOfDay(BigDecimal.valueOf(total));
+				closePopup();
+				new AlertBoxPopup("Success", "Total earning for today was logged.");
 			}else{
 				closePopup();
 				new AlertBoxPopup("Error", "No input.");
 			}
-			closePopup();
 		});
 		
 		cancelButton.setOnAction(e -> {

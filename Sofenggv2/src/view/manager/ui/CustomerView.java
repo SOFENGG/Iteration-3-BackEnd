@@ -46,11 +46,27 @@ public class CustomerView extends MainView implements View {
 		searchButton.setOnAction(e -> {
 			try{
 				switch(searchColumns.getValue()){
-					case "ID": mvc.searchCustomer(new String[] {KEY}, Integer.parseInt(searchField.getText().toString()));
+					case "Account ID": 
+						try{
+							mvc.searchCustomer(new String[] {KEY}, Integer.parseInt(searchField.getText().toString()));
+						}catch(NumberFormatException nfe){
+							if(!searchField.getText().equals(""))
+								new AlertBoxPopup("Input Error", "Enter a number.");
+							else
+								mvc.getAllCustomers(new String[]{KEY});
+						}
 						break;
-					case "Name": mvc.searchCustomerName(new String[] {KEY}, searchField.getText().toString());
+					case "Name":
+						if(!searchField.getText().equals(""))
+							mvc.searchCustomerName(new String[] {KEY}, searchField.getText().toString());
+						else
+							mvc.getAllCustomers(new String[]{KEY});
 						break;
-					case "Address": mvc.searchCustomerAddress(new String[] {KEY}, searchField.getText().toString());
+					case "Address":
+						if(!searchField.getText().equals(""))
+							mvc.searchCustomerAddress(new String[] {KEY}, searchField.getText().toString());
+						else
+							mvc.getAllCustomers(new String[]{KEY});
 						break;
 				}
 			}catch(NumberFormatException nfe){
@@ -73,7 +89,7 @@ public class CustomerView extends MainView implements View {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
 		/* Test Cases */
-			list.addAll("ID", "Name", "Address");
+			list.addAll("Account ID", "Name", "Address");
 		
 		return list;
 	}

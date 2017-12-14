@@ -57,7 +57,7 @@ public class ServicePopup extends Popup{
 			
 				filterComboBox = new ComboBox<String> ();
 				filterComboBox.getStyleClass().add("ComboBox");
-				filterComboBox.getItems().add("ID");
+				filterComboBox.getItems().add("Worker ID");
 				filterComboBox.getItems().add("Name");
 				
 				filterComboBox.getSelectionModel ().selectFirst ();
@@ -90,21 +90,27 @@ public class ServicePopup extends Popup{
 	private void initHandlers() {
 		Database.getInstance().attach(ServiceWorkerView.KEY, swv);
 		
-		//BUGGED AF
 		cvc.getAllSerivceWorkers();
 		
 		searchButton.setOnAction(e -> {
 			switch(filterComboBox.getValue()){
-				case "ID":
+				case "Worker ID":
 					int number;
 					try{
 						number = Integer.parseInt(searchTextField.getText());
 						cvc.getServiceWorkerWithID(number);
 					}catch(NumberFormatException ex){
-						new AlertBoxPopup("Search Key", "Entered search key is not a number");
+						if(!searchTextField.getText().equals(""))
+							new AlertBoxPopup("Search Key", "Entered search key is not a number");
+						else
+							cvc.getAllSerivceWorkers();
 					}
 					break;
-				case "Name": cvc.getServiceWorkerWithName(searchTextField.getText());
+				case "Name": 
+					if(!searchTextField.getText().equals(""))
+						cvc.getServiceWorkerWithName(searchTextField.getText());
+					else
+						cvc.getAllSerivceWorkers();
 					break;
 			}
 		});
@@ -117,10 +123,11 @@ public class ServicePopup extends Popup{
 				workerName = row.get(1);
 				workerId = Integer.parseInt(row.get(0));
 				success = true;
+				closePopup();
 			}else{
 				new AlertBoxPopup("Error", "No selected worker.");
 			}
-			closePopup();
+			
 		});
 		
 		cancelButton.setOnAction(e -> {

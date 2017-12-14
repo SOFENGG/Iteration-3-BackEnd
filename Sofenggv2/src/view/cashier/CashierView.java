@@ -151,7 +151,7 @@ public class CashierView extends BorderPane implements View{
 				returnItem.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				returnItem.getStyleClass().add("LeftButton");
 				
-				serviceWorker = new Button ("Service Worker");
+				serviceWorker = new Button ("Service Workers");
 				serviceWorker.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				serviceWorker.getStyleClass().add("LeftButton");
 				
@@ -449,8 +449,9 @@ public class CashierView extends BorderPane implements View{
 		overridePriceButton.setOnAction(e -> {
 			
 				ObservableList<String> row = cvtp.getOngoingCartView().getSelectedItem();
+				if(row != null){
 				if(row.get(CartView.TYPE).equals("ITEM")){
-					if(row != null){
+					
 						ManagerPopup pop = new ManagerPopup (cvc);
 						if(pop.getAccess()){
 							new OverridePricePopup(cvc, row.get(CartView.ITEM_CODE));
@@ -458,11 +459,12 @@ public class CashierView extends BorderPane implements View{
 							if(!pop.isCanceled())
 								new AlertBoxPopup("Access", "Access Denied.");
 						}
-					}else{
-						new AlertBoxPopup("Error", "No selected cart item.");
-					}
+					
 				}else{
 					new AlertBoxPopup("Error", "Can't override services.");
+				}
+				}else{
+					new AlertBoxPopup("Error", "No selected cart item.");
 				}
 		
 		});

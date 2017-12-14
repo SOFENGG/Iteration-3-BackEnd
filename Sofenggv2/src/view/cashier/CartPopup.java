@@ -38,12 +38,15 @@ public class CartPopup extends Popup{
 			private Button okayButton;
 			private Button cancelButton;
 	
+	private boolean added;
+	
 	public CartPopup(CashierViewController cvc, ObservableList<String> row) {
 		super(TITLE);
 		
 		this.cvc = cvc;
 		this.row = row;
 		qty = 1;
+		added = false;
 		
 		initScene();
 		initHandlers ();
@@ -117,6 +120,7 @@ public class CartPopup extends Popup{
 				closePopup();
 				new AlertBoxPopup("Stock", "Not enough stock");
 			}else{
+				added = true;
 				closePopup();
 			}
 		});
@@ -127,7 +131,10 @@ public class CartPopup extends Popup{
 	}
 	
 	public int getQuantity(){
-		return qty;
+		if(added)
+			return qty;
+		else
+			return 0;
 	}
 
 	

@@ -98,7 +98,7 @@ import model.Database;
 			
 				filterComboBox = new ComboBox<String> ();
 				filterComboBox.getStyleClass().add("ComboBox");
-				filterComboBox.getItems().add("ID");
+				filterComboBox.getItems().add("Account ID");
 				filterComboBox.getItems().add("Name");
 				filterComboBox.getItems().add("Address");
 				
@@ -132,11 +132,27 @@ import model.Database;
 	private void initHandlers() {
 		searchButton.setOnAction(e -> {
 			switch(filterComboBox.getValue()){
-				case "ID": cvc.searchCustomer(Integer.parseInt(searchTextField.getText().toString()));
+				case "Account ID": 
+					try{
+						cvc.searchCustomer(Integer.parseInt(searchTextField.getText().toString()));
+					}catch(NumberFormatException nfe){
+						if(!searchTextField.getText().equals(""))
+							new AlertBoxPopup("Input Error", "Enter a number.");
+						else
+							cvc.getAllCustomers();
+					}
 					break;
-				case "Name": cvc.searchCustomerName(searchTextField.getText().toString());
+				case "Name": 
+					if(!searchTextField.getText().equals(""))
+						cvc.searchCustomerName(searchTextField.getText().toString());
+					else
+						cvc.getAllCustomers();
 					break;
-				case "Address": cvc.searchCustomerAddress(searchTextField.getText().toString());
+				case "Address": 
+					if(!searchTextField.getText().equals(""))
+						cvc.searchCustomerAddress(searchTextField.getText().toString());
+					else
+						cvc.getAllCustomers();
 					break;
 			}
 		});
@@ -206,25 +222,25 @@ import model.Database;
 			}else{
 				try{
 					float input = Float.parseFloat(amountTextField.getText());
-					if(BigDecimal.valueOf(input).doubleValue() >= cvc.getCart().getTotalPrice().doubleValue()){
+					double total = cvc.getCart().getTotalPrice().doubleValue();
+					if(BigDecimal.valueOf(input).doubleValue() >= total){
 						success = cvc.buyItems(CashierView.transaction, isloan, null);
-						new AlertBoxPopup("Transaction Success", "Purchase Complete!");
+						detach();
+						closePopup();
+						new AlertBoxPopup("Transaction Success", "The change is: " + (input - total) + "php");
 					}else{
 						detach();
 						closePopup();
-						new AlertBoxPopup("Error", "gg xd");
+						new AlertBoxPopup("Error", "Cash received was not enough.");
 					}
 					
 				}catch(NumberFormatException ex){
 					detach();
 					closePopup();
-					new AlertBoxPopup("Error", "Enter a number.");
+					new AlertBoxPopup("Error", "Enter an amount.");
 				}
 				
 			}
-			
-			detach();
-			closePopup();
 			
 		});
 		
