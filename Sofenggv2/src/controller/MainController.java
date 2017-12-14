@@ -15,7 +15,7 @@ public class MainController extends Controller {
 	public MainController(Stage stage) {
 		super(stage);
 		mainStage.setTitle("POS System");
-		scene.getStylesheets ().add ("./StyleSheet.css");
+		scene.getStylesheets().add ("./StyleSheet.css");
 		
 		stage.setFullScreenExitHint ("Press ESC to Exit Full Screen");
 		stage.maximizedProperty ().addListener ((a,b,c) -> {

@@ -33,6 +33,8 @@ public class ManagerViewController {
 	
 	private User user;
 	
+	private String filter = "";
+	
 	public ManagerViewController (MainController mc) {
 		this.mc = mc;
 		mv = new ManagerView (this);
@@ -230,7 +232,8 @@ public class ManagerViewController {
 		
 		Database.getInstance().query(keys, 
 				"select * from " + Transaction.TABLE +
-				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "';");
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "'" +
+				" order by ASC " + Transaction.COLUMN_TRANSACTION_ID + ";");
 	}
 	
 	public void searchCurrentTransactionsByNumber(String[] keys, int transactionID){
@@ -239,10 +242,15 @@ public class ManagerViewController {
 		
 		Database.getInstance().query(keys,
 				"select * from " + Supplier.TABLE +
-				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "';");
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "'" +
+				" order by ASC " + Transaction.COLUMN_TRANSACTION_ID + ";");
 	}
 	
 	//todo filters w/ jesin
+	public void setFilter() {
+		
+	}
+	
 	public void getFilteredTransactions(String[] keys){
 		Database.getInstance().query(keys, 
 				"select * from " + Transaction.TABLE);
@@ -250,7 +258,7 @@ public class ManagerViewController {
 	
 	public void searchFilteredTransactionsByNumber(String[] keys, int transactionID){
 		Database.getInstance().query(keys,
-				"select * from " + Supplier.TABLE +
+				"select * from " + Transaction.TABLE +
 				" where " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "';");
 	}
 	
