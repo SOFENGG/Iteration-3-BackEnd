@@ -1,7 +1,5 @@
 package view.manager.ui;
 
-import java.math.BigDecimal;
-
 import controller.ManagerViewController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

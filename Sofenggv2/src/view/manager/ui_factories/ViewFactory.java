@@ -22,7 +22,17 @@ public class ViewFactory {
 	public static MainView getView(int code, ManagerViewController mvc) {
 		switch(code) {
 		case TRANSACTION_CODE:
-			return new TransactionView();
+			//tries to detach view first (if there are any previous transaction view)
+			Database.getInstance().detach(InventoryView.KEY);
+			
+			TransactionView tv = new TransactionView(mvc);
+			
+			//attach view to database
+			Database.getInstance().attach(TransactionView.KEY, tv);
+			
+			//puts the inital contents of the table
+			mvc.getCurrentTransactions(new String[]{TransactionView.KEY});
+			return tv;
 		case CUSTOMER_CODE:
 			//tries to detach view first (if there are any previous customer view)
 			Database.getInstance().detach(CustomerView.KEY);
@@ -60,11 +70,11 @@ public class ViewFactory {
 			mvc.getAllSuppliers(new String[]{SupplierView.KEY});
 			return sv;
 		case PURCHASE_ORDER_CODE:
-			return new PurchaseOrderView();
+			return new PurchaseOrderView(mvc);
 		case SALES_REPORT_CODE:
-			return new SalesReportView();
+			return new SalesReportView(mvc);
 		default:
-			return new TransactionView();
+			return new TransactionView(mvc);
 		}
 	}
 }

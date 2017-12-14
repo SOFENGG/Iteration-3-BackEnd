@@ -2,7 +2,6 @@ package controller;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,16 +13,10 @@ import model.Customer;
 import model.Database;
 import model.Item;
 import model.Service;
-import model.ServiceLog;
 import model.Supplier;
 import model.Transaction;
 import model.User;
 import model.Worker;
-import util.Query;
-import view.cashier.CashierView;
-import view.cashier.CustomerView;
-import view.cashier.ServiceView;
-import view.cashier.ServiceWorkerView;
 import view.manager.ui.ManagerView;
 
 public class ManagerViewController {
@@ -33,7 +26,7 @@ public class ManagerViewController {
 	
 	private User user;
 	
-	private String filter = "";
+	private String filter = "" + Transaction.COLUMN_DATE_SOLD + " > date_add(curdate(), interval -7 day) order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;";
 	
 	public ManagerViewController (MainController mc) {
 		this.mc = mc;
@@ -74,6 +67,11 @@ public class ManagerViewController {
 		this.user = user;
 		System.out.println("Welcome Manager " + user.getName());
 	}
+	
+	public User getUser() {
+		return user;
+	}
+	
 	//manager view services
 	
 	//customers
@@ -233,7 +231,7 @@ public class ManagerViewController {
 		Database.getInstance().query(keys, 
 				"select * from " + Transaction.TABLE +
 				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "'" +
-				" order by ASC " + Transaction.COLUMN_TRANSACTION_ID + ";");
+				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
 	}
 	
 	public void searchCurrentTransactionsByNumber(String[] keys, int transactionID){
@@ -241,25 +239,141 @@ public class ManagerViewController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		Database.getInstance().query(keys,
-				"select * from " + Supplier.TABLE +
+				"select * from " + Transaction.TABLE +
 				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "'" +
-				" order by ASC " + Transaction.COLUMN_TRANSACTION_ID + ";");
+				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
 	}
 	
-	//todo filters w/ jesin
-	public void setFilter() {
+	public void setFilter(ArrayList<Object> filters) {
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
 		
+		//parse where clause
+		//parse whether preset or custom is selected
+		//0 = preset, 1 = custom
+		System.out.println(i + " preset/custom");
+		if ((Integer) filters.get(i) == 0) {
+			i++;
+			//preset selected
+			//get index of selected time frame
+			//0 = 7 days, 1 = 5 days, 2 = 3 months, 3 = 6 months, 4 = 1 year
+			System.out.println(i + " preset -> time frame");
+			switch ((Integer) filters.get(i)) {
+			case 0:
+				sb.append("" + Transaction.COLUMN_DATE_SOLD + " > date_add(curdate(), interval -7 day)");
+				break;
+			case 1:
+				sb.append("" + Transaction.COLUMN_DATE_SOLD + " > date_add(curdate(), interval -5 day)");
+				break;
+			case 2:
+				sb.append("" + Transaction.COLUMN_DATE_SOLD + " > date_add(curdate(), interval -3 month)");
+				break;
+			case 3:
+				sb.append("" + Transaction.COLUMN_DATE_SOLD + " > date_add(curdate(), interval -6 month)");
+				break;
+			case 4:
+				sb.append("" + Transaction.COLUMN_DATE_SOLD + " > date_add(curdate(), interval -1 year)");
+				break;
+			}
+			
+			//append default order by clause
+			//ascending transaction #
+			sb.append(" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
+		} else {
+			i++;
+			//custom selected
+			//get start and end date - using prefix increment - then set as bounds for inclusive between
+			System.out.println(i + " start date / " + (i + 1) + " end date");
+			sb.append("" + Transaction.COLUMN_DATE_SOLD + " between '" + filters.get(i) + "' and '" + filters.get(++i) + "'");
+			i++;
+			//parse whether all week or select days is selected
+			//0 = all week, 1 = select days
+			System.out.println(i + " all week/select days");
+			if ((Integer) filters.get(i) == 0) {
+				//all week selected
+				//do nothing, since all days are included
+			} else {
+				i++;
+				//select days selected
+				//add in clause with day indeces to be used with sql dayofweek()
+				@SuppressWarnings("unchecked")
+				ArrayList<Integer> selectedDays = (ArrayList<Integer>) filters.get(i);
+				sb.append(" and dayofweek(" + Transaction.COLUMN_DATE_SOLD + ") in (");
+				System.out.println(i + " select days");
+				for (int j = 0; j < selectedDays.size(); j++) {
+					sb.append(selectedDays.get(j));
+					if ((j + 1) != selectedDays.size())
+						sb.append(", ");
+				}
+				sb.append(")");
+			}
+			
+			i++;
+			sb.append(" order by ");
+			//parse order by clause
+			//parse whether ascending or descending is selected
+			//0 = ascending, 1 = descending
+			if ((Integer) filters.get(i) == 0) {
+				i++;
+				//ascending selected
+				//get criterion
+				////0 = month, 1 = year, 2 = cost, 3 = transaction #
+				switch ((Integer) filters.get(i)) {
+				case 0:
+					sb.append("month(" + Transaction.COLUMN_DATE_SOLD + ")");
+					break;
+				case 1:
+					sb.append("" + Transaction.COLUMN_DATE_SOLD);
+					break;
+				case 2:
+					sb.append("" + Transaction.COLUMN_TOTAL_PRICE);
+					break;
+				case 3:
+					sb.append("" + Transaction.COLUMN_TRANSACTION_ID);
+					break;
+				}
+				
+				sb.append(" ASC;");
+			} else {
+				i++;
+				//descending selected
+				//get criterion
+				////0 = month, 1 = year, 2 = cost, 3 = transaction #
+				switch ((Integer) filters.get(i)) {
+				case 0:
+					sb.append("month(" + Transaction.COLUMN_DATE_SOLD + ")");
+					break;
+				case 1:
+					sb.append("" + Transaction.COLUMN_DATE_SOLD);
+					break;
+				case 2:
+					sb.append("" + Transaction.COLUMN_TOTAL_PRICE);
+					break;
+				case 3:
+					sb.append("" + Transaction.COLUMN_TRANSACTION_ID);
+					break;
+				}
+				
+				sb.append(" DESC;");
+			}
+		}
+		
+		filter = sb.toString();
+		System.out.println(filter);
 	}
 	
 	public void getFilteredTransactions(String[] keys){
+		System.out.println(filter);
 		Database.getInstance().query(keys, 
-				"select * from " + Transaction.TABLE);
+				"select * from " + Transaction.TABLE +
+				" where " + filter);
 	}
 	
 	public void searchFilteredTransactionsByNumber(String[] keys, int transactionID){
+		System.out.println(filter);
 		Database.getInstance().query(keys,
 				"select * from " + Transaction.TABLE +
-				" where " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "';");
+				" where " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "' and " + filter);
 	}
 	
 	//
