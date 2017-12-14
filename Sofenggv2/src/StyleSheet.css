@@ -320,3 +320,23 @@
 	-fx-font-family: "Source Sans Pro", sans-serif;
 	-fx-text-fill: #000;
 }
+
+
+
+
+
+#Banner {
+    -fx-border-color: #000000;
+}
+
+#View {
+    -fx-border-color: #000000;
+}
+
+#NavMenu {
+    -fx-border-color: #000000;
+}
+
+#HeaderPane {
+    -fx-border-color: #000000;
+}

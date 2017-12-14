@@ -12,13 +12,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 public class FilterPopup extends Popup {
 	
 	private VBox layout;
 		private Label filterFromLabel;
 		private HBox optionHBox;
-			protected RadioButton presetRadioButton;
-			protected RadioButton customRadioButton;
+			private RadioButton presetRadioButton;
+			private RadioButton customRadioButton;
 			private ToggleGroup filterTypeGroup;
 		private VBox presetHBox;
 			private ComboBox<String> presetComboBox;
@@ -179,7 +182,7 @@ public class FilterPopup extends Popup {
 					
 				customOrderHBox.getChildren().addAll(monthRadioButton, yearRadioButton, costRadioButton, transactionNumRadioButton);
 			
-			customFilterVBox.getChildren().addAll(dateAndYearLabel, dateAndYearHBox, weekLabel, weekHBox, dayHBox, orderLabel, ascDescHBox, customOrderHBox, applyFilterButton);
+			customFilterVBox.getChildren().addAll(dateAndYearLabel, dateAndYearHBox, weekLabel, weekHBox, dayHBox, orderLabel, ascDescHBox, customOrderHBox);
 			
 		layout.getChildren().addAll(filterFromLabel, optionHBox, presetHBox);
 		
@@ -195,6 +198,7 @@ public class FilterPopup extends Popup {
 				layout.getChildren().removeAll(layout.getChildren());
 			
 			layout.getChildren().addAll(filterFromLabel, optionHBox, presetHBox);
+			presetHBox.getChildren().add(applyFilterButton);
 			
 			resizeScene();
 		});
@@ -206,6 +210,7 @@ public class FilterPopup extends Popup {
 				layout.getChildren().removeAll(layout.getChildren());
 			
 			layout.getChildren().addAll(filterFromLabel, optionHBox, customFilterVBox);
+			customFilterVBox.getChildren().add(applyFilterButton);
 			
 			resizeScene();
 		});
@@ -226,6 +231,57 @@ public class FilterPopup extends Popup {
 				dayHBox.getChildren().removeAll(dayHBox.getChildren());
 			
 			dayHBox.getChildren().addAll(sundayCheckBox, mondayCheckBox, tuesdayCheckBox, wednesdayCheckBox, thursdayCheckBox, fridayCheckBox, saturdayCheckBox);
+		});
+		
+		//for passing filters to manager view controller
+		applyFilterButton.setOnAction(e -> {
+			ArrayList<Object> filters = new ArrayList<>();
+			
+			//determine if preset or custom is selected
+			if (presetRadioButton.isSelected()) {
+				//0 = preset selected
+				 filters.add((Integer) 0); 
+				 
+				//if preset, get and add index of selected time frame
+				//0 = 7 days, 1 = 5 days, 2 = 3 months, 3 = 6 months, 4 = 1 year
+				System.out.println(presetComboBox.getSelectionModel().getSelectedIndex());
+				filters.add((Integer) presetComboBox.getSelectionModel().getSelectedIndex());
+			} else {
+				//1 = custom selected
+				filters.add((Integer) 1);
+				
+				//get start and end dates as date class
+				Date startDate = java.sql.Date.valueOf(startDatePicker.getValue());
+				Date endDate = java.sql.Date.valueOf(startDatePicker.getValue());
+				//add start and end dates as strings of db format (yyyy-MM-dd)
+				filters.add((String) startDate.toString());
+				filters.add((String) endDate.toString());
+				
+				//determine if all week or select days is selected
+				if (allWeekRadioButton.isSelected()) {
+					//0 = all week selected
+					filters.add((Integer) 0);
+				} else {
+					//1 = select days selected
+					filters.add((Integer) 1);
+					
+					//get integers of days selected to be used by sql DAYOFWEEK()
+					ArrayList<Integer> selectedDays = new ArrayList<>();
+					if (sundayCheckBox.isSelected()) selectedDays.add(1);
+					if (mondayCheckBox.isSelected()) selectedDays.add(2);
+					if (tuesdayCheckBox.isSelected()) selectedDays.add(3);
+					if (wednesdayCheckBox.isSelected()) selectedDays.add(4);
+					if (thursdayCheckBox.isSelected()) selectedDays.add(5);
+					if (fridayCheckBox.isSelected()) selectedDays.add(6);
+					if (saturdayCheckBox.isSelected()) selectedDays.add(7);
+					
+					//add integers as arraylist of integer
+					filters.add(selectedDays);
+				}
+				
+				
+			}
+			
 		});
 	}
 
