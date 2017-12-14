@@ -212,7 +212,7 @@ import model.Database;
 					}else{
 						detach();
 						closePopup();
-						new AlertBoxPopup("Error", "gg xd");
+						new AlertBoxPopup("Error", "Transaction Failed");
 					}
 					
 				}catch(NumberFormatException ex){

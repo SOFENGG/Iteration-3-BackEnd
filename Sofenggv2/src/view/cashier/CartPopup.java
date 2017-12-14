@@ -24,16 +24,31 @@ public class CartPopup extends Popup{
 	ObservableList<String> row;
 	
 	private VBox layout;
-		private Label itemCodeLabel;
-		private Label descriptionLabel;
-		private Label unitPriceLabel;
-		private HBox quantityHBox;
-			private Label quantityLabel;
-			private Spinner<Integer> integerSpin;
-			private SpinnerValueFactory<Integer> valueFactory;
-			private int qty;
-			private double price;
-			private Label totalLabel;
+		private VBox itemDetailsVBox;
+			private Label itemDetailsLabel;
+			private HBox itemCodeHBox;
+				private Label itemCodeLabel;
+				private Label itemCode;
+			private HBox nameHBox;
+				private Label nameLabel;
+				private Label name;
+			private HBox descriptionHBox;
+				private Label descriptionLabel;
+				private Label description;
+			private HBox unitPriceHBox;
+				private Label unitPriceLabel;
+				private Label unitPrice;
+		private VBox priceDetailsVBox;
+			private Label priceDetailsLabel;
+			private HBox quantityHBox;
+				private Label quantityLabel;
+				private Spinner<Integer> integerSpin;
+				private SpinnerValueFactory<Integer> valueFactory;
+				private int qty;
+				private double price;
+			private HBox totalHBox;
+				private Label totalLabel;
+				private Label total;
 		private HBox buttonsHBox;
 			private Button okayButton;
 			private Button cancelButton;
@@ -55,42 +70,97 @@ public class CartPopup extends Popup{
 		layout = new VBox (20);
 		layout.setId("Popup");
 		
-			itemCodeLabel = new Label ("Item Code: " + row.get(0));
-			itemCodeLabel.setId("DefaultLabel");
-			
-			descriptionLabel = new Label ("Description: " + row.get(3));
-			descriptionLabel.setId("DefaultLabel");
-			
-			unitPriceLabel = new Label ("Unit Price: " + row.get(6));
-			unitPriceLabel.setId("DefaultLabel");
-			
-			quantityHBox = new HBox (10);
-			
-				quantityLabel = new Label ("Quantity:");
-				quantityLabel.setId("DefaultLabel");
+			itemDetailsVBox = new VBox (10);
+			itemDetailsVBox.setId("PopupDetails");
 				
-				qty = Integer.parseInt(row.get(1));
-				price = Double.parseDouble(row.get(6));
+				itemDetailsLabel = new Label ("Item Details");
+				itemDetailsLabel.setId("LabelTitle");
 				
-				valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, qty, 1);
+				itemCodeHBox = new HBox (20);
 				
-				integerSpin = new Spinner<Integer>();
-				integerSpin.setValueFactory(valueFactory);
-				integerSpin.valueProperty().addListener(new ChangeListener<Integer>(){
-					@Override
-					public void changed(ObservableValue<? extends Integer> arg0, Integer oldVal, Integer newVal) {
-						totalLabel.setText("Total Price: " + Double.toString(price * newVal));
-						qty = newVal;
-						resizeScene();
-					}
-				});
-				//sets intinial qty to 1
-				qty = 1;
+					itemCodeLabel = new Label ("Item Code:");
+					itemCodeLabel.setId("LabelGray");
+					
+					itemCode = new Label (row.get(0));
+					itemCode.setId("DefaultLabel");
 				
-				totalLabel = new Label ("Total Price:");
-				totalLabel.setId("DefaultLabel");
+				itemCodeHBox.getChildren().addAll(itemCodeLabel, itemCode);
+				
+				nameHBox = new HBox (20);
+				
+					nameLabel = new Label ("Name:");
+					nameLabel.setId("LabelGray");
+					
+					name = new Label (row.get(2));
+					name.setId("DefaultLabel");
 			
-			quantityHBox.getChildren().addAll(quantityLabel, integerSpin, totalLabel);
+				nameHBox.getChildren().addAll(nameLabel, name);
+				
+				descriptionHBox = new HBox (20);
+				
+					descriptionLabel = new Label ("Description:");
+					descriptionLabel.setId("LabelGray");
+					
+					description = new Label (row.get(3));
+					description.setId("DefaultLabel");
+			
+				descriptionHBox.getChildren().addAll(descriptionLabel, description);
+				
+				unitPriceHBox = new HBox (20);
+				
+					unitPriceLabel = new Label ("Unit Price:");
+					unitPriceLabel.setId("LabelGray");
+					
+					unitPrice = new Label ("PHP " + row.get(6));
+					unitPrice.setId("DefaultLabel");
+			
+				unitPriceHBox.getChildren().addAll(unitPriceLabel, unitPrice);
+			
+			itemDetailsVBox.getChildren().addAll(itemDetailsLabel, itemCodeHBox, nameHBox, descriptionHBox, unitPriceHBox);
+
+			priceDetailsVBox = new VBox (10);
+			priceDetailsVBox.setId("PopupDetails");
+			
+				quantityHBox = new HBox (20);
+					
+					priceDetailsLabel = new Label ("Price Details");
+					priceDetailsLabel.setId("LabelTitle");
+					
+					quantityLabel = new Label ("Quantity:");
+					quantityLabel.setId("LabelGray");
+					
+					qty = Integer.parseInt(row.get(1));
+					price = Double.parseDouble(row.get(6));
+					
+					valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, qty, 1);
+					
+					integerSpin = new Spinner<Integer>();
+					integerSpin.setValueFactory(valueFactory);
+					integerSpin.valueProperty().addListener(new ChangeListener<Integer>(){
+						@Override
+						public void changed(ObservableValue<? extends Integer> arg0, Integer oldVal, Integer newVal) {
+							total.setText("PHP " + Double.toString(price * newVal));
+							qty = newVal;
+							resizeScene();
+						}
+					});
+					//sets intinial qty to 1
+					qty = 1;
+					
+				
+				quantityHBox.getChildren().addAll(quantityLabel, integerSpin);
+				
+				totalHBox = new HBox (20);
+				
+					totalLabel = new Label ("Total Price:");
+					totalLabel.setId("LabelGray");
+					
+					total = new Label ("PHP 0");
+					total.setId("DefaultLabel");
+				
+				totalHBox.getChildren().addAll(totalLabel, total);
+			
+			priceDetailsVBox.getChildren().addAll(priceDetailsLabel, quantityHBox, totalHBox);
 		
 			buttonsHBox = new HBox (20);
 			buttonsHBox.setAlignment(Pos.CENTER_RIGHT);
@@ -103,7 +173,7 @@ public class CartPopup extends Popup{
 			
 			buttonsHBox.getChildren().addAll (cancelButton, okayButton);
 		
-		layout.getChildren().addAll(itemCodeLabel, descriptionLabel, unitPriceLabel, quantityHBox, buttonsHBox);
+		layout.getChildren().addAll(itemDetailsVBox, priceDetailsVBox, buttonsHBox);
 	}
 
 	private void initHandlers() {
