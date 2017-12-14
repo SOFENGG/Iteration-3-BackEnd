@@ -17,8 +17,8 @@ public class FilterPopup extends Popup {
 	private VBox layout;
 		private Label filterFromLabel;
 		private HBox optionHBox;
-			private RadioButton presetRadioButton;
-			private RadioButton customRadioButton;
+			protected RadioButton presetRadioButton;
+			protected RadioButton customRadioButton;
 			private ToggleGroup filterTypeGroup;
 		private VBox presetHBox;
 			private ComboBox<String> presetComboBox;
