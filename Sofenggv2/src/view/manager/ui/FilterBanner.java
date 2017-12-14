@@ -59,4 +59,52 @@ public class FilterBanner extends Banner {
 		
 	}
 	
+	public Label getDateYearTitleLbl() {
+		return dateYearTitleLbl;
+	}
+
+	public void setDateYearTitleLbl(Label dateYearTitleLbl) {
+		this.dateYearTitleLbl = dateYearTitleLbl;
+	}
+
+	public Label getDateYearFilterLbl() {
+		return dateYearFilterLbl;
+	}
+
+	public void setDateYearFilterLbl(Label dateYearFilterLbl) {
+		this.dateYearFilterLbl = dateYearFilterLbl;
+	}
+
+	public Label getWeekTitleLbl() {
+		return weekTitleLbl;
+	}
+
+	public void setWeekTitleLbl(Label weekTitleLbl) {
+		this.weekTitleLbl = weekTitleLbl;
+	}
+
+	public Label getWeekFilterLbl() {
+		return weekFilterLbl;
+	}
+
+	public void setWeekFilterLbl(Label weekFilterLbl) {
+		this.weekFilterLbl = weekFilterLbl;
+	}
+
+	public Label getOrderTitleLbl() {
+		return orderTitleLbl;
+	}
+
+	public void setOrderTitleLbl(Label orderTitleLbl) {
+		this.orderTitleLbl = orderTitleLbl;
+	}
+
+	public Label getOrderFilterLbl() {
+		return orderFilterLbl;
+	}
+
+	public void setOrderFilterLbl(Label orderFilterLbl) {
+		this.orderFilterLbl = orderFilterLbl;
+	}
+	
 }

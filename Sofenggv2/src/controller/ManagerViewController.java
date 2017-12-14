@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -14,6 +16,7 @@ import model.Item;
 import model.Service;
 import model.ServiceLog;
 import model.Supplier;
+import model.Transaction;
 import model.User;
 import model.Worker;
 import util.Query;
@@ -220,4 +223,36 @@ public class ManagerViewController {
 				" where " + "concat("+ Supplier.COLUMN_NAME + ", " + Supplier.COLUMN_CONTACT_PERSON + ")" + " like '%" + name + "%';");
 	}
 	
+	//transactions
+	public void getCurrentTransactions(String[] keys){
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Database.getInstance().query(keys, 
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "';");
+	}
+	
+	public void searchCurrentTransactionsByNumber(String[] keys, int transactionID){
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Database.getInstance().query(keys,
+				"select * from " + Supplier.TABLE +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "';");
+	}
+	
+	//todo filters w/ jesin
+	public void getFilteredTransactions(String[] keys){
+		Database.getInstance().query(keys, 
+				"select * from " + Transaction.TABLE);
+	}
+	
+	public void searchFilteredTransactionsByNumber(String[] keys, int transactionID){
+		Database.getInstance().query(keys,
+				"select * from " + Supplier.TABLE +
+				" where " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "';");
+	}
+	
+	//
 }
