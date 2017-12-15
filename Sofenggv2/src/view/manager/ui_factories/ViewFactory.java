@@ -42,8 +42,6 @@ public class ViewFactory {
 			//attach view to database
 			Database.getInstance().attach(PurchaseOrderView.KEY, pov);
 			
-			//puts the inital contents of the table
-			mvc.getAllPurchaseOrders(new String[]{PurchaseOrderView.KEY});
 			return pov;
 		case CUSTOMER_CODE:
 			//tries to detach view first (if there are any previous customer view)

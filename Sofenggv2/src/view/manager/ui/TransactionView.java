@@ -59,58 +59,46 @@ public class TransactionView extends MainView implements View{
 			try {
 				if (isToday) {
 					//monitor tab
- 					switch (searchColumns.getSelectionModel().getSelectedIndex()) {
- 					case 0:
- 						//transaction #
+ 					switch (searchColumns.getValue()) {
+ 					case "Transaction ID":
  						mvc.searchCurrentTransactionsByTransactionID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
  						break;
- 					case 1:
- 						//user id
+ 					case "User ID":
  						mvc.searchCurrentTransactionsByUserID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
  						break;
- 					case 2:
- 						//transaction type
+ 					case "Transaction Type":
  						mvc.searchCurrentTransactionsByTransactionType(new String[] {KEY}, searchField.getText());
  						break;
- 					case 3:
- 						//is loan
+ 					case "Is Loan":
  						mvc.searchCurrentTransactionsByIsLoan(new String[] {KEY}, Integer.parseInt(searchField.getText()));
  						break;
- 					case 4:
- 						//date sold
+ 					case "Date Sold":
  						mvc.searchCurrentTransactionsByDateSold(new String[] {KEY}, searchField.getText());
  						break;
- 					case 5:
- 						//total cost
+ 					case "Total Cost":
  						mvc.searchCurrentTransactionsByTotalPrice(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
  						break;
  					}
  				}
  				else {
  					//history tab
- 					switch (searchColumns.getSelectionModel().getSelectedIndex()) {
- 					case 0:
- 						//transaction #
+ 					switch (searchColumns.getValue()) {
+ 					case "Transaction ID":
  						mvc.searchFilteredTransactionsByTransactionID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
  						break;
- 					case 1:
- 						//user id
+ 					case "User ID":
  						mvc.searchFilteredTransactionsByUserID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
  						break;
- 					case 2:
- 						//transaction type
+ 					case "Transaction Type":
  						mvc.searchFilteredTransactionsByTransactionType(new String[] {KEY}, searchField.getText());
  						break;
- 					case 3:
- 						//is loan
+ 					case "Is Loan":
  						mvc.searchFilteredTransactionsByIsLoan(new String[] {KEY}, Integer.parseInt(searchField.getText()));
  						break;
- 					case 4:
- 						//date sold
+ 					case "Date Sold":
  						mvc.searchFilteredTransactionsByDateSold(new String[] {KEY}, searchField.getText());
  						break;
- 					case 5:
- 						//total cost
+ 					case "Total Cost":
  						mvc.searchFilteredTransactionsByTotalPrice(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
  						break;
  					}
@@ -214,9 +202,6 @@ public class TransactionView extends MainView implements View{
 	private ObservableList<String> fillComboBox() {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
-		//indeces are as follows:
-		//0 = transaction #, 1 = user id, 2 = transaction type
-		//3 = is loan, 4 = date sold, 5 = total price
 		list.addAll("Transaction ID",
 					"User ID",
 					"Transaction Type", 

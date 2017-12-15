@@ -41,41 +41,46 @@ public class InventoryView extends MainView implements View {
 	public void init(){
 		col = new ArrayList<TableColumn>();
 		data = FXCollections.observableArrayList();
-		searchColumns.setVisible(false);
 	}
 	
 	public void initHandler(){
 		searchButton.setOnAction(e -> {
-			try {
-				switch (searchColumns.getSelectionModel().getSelectedIndex()) {
-				case 0:
-					//transaction #
-					mvc.searchCurrentTransactionsByTransactionID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
-					break;
-				case 1:
-					//user id
-					mvc.searchCurrentTransactionsByUserID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
-					break;
-				case 2:
-					//transaction type
-					mvc.searchCurrentTransactionsByTransactionType(new String[] {KEY}, searchField.getText());
-					break;
-				case 3:
-					//is loan
-					mvc.searchCurrentTransactionsByIsLoan(new String[] {KEY}, Integer.parseInt(searchField.getText()));
-					break;
-				case 4:
-					//date sold
-					mvc.searchCurrentTransactionsByDateSold(new String[] {KEY}, searchField.getText());
-					break;
-				case 5:
-					//total cost
-					mvc.searchCurrentTransactionsByTotalPrice(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
-					break;
+			try{
+				switch(searchColumns.getValue()){
+					case "Item Code":
+						mvc.searchItemsByItemCode(new String[] {KEY}, searchField.getText());
+						break;
+					case "Name":
+						mvc.searchItemsByName(new String[] {KEY}, searchField.getText());
+						break;
+					case "Description":
+						mvc.searchItemsByDescription(new String[] {KEY}, searchField.getText());
+						break;
+					case "Category":
+						mvc.searchItemsByCategory(new String[] {KEY}, searchField.getText());
+						break;
+					case "Manufacturer":
+						mvc.searchItemsByManufacturer(new String[] {KEY}, searchField.getText());
+						break;
+					case "Supplier Code":
+						mvc.searchItemsBySupplierCode(new String[] {KEY}, searchField.getText());
+						break;
+					case "Stock":
+						mvc.searchItemsByStock(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+						break;
+					case "Date Purchased":
+						mvc.searchItemsByDatePurchase(new String[] {KEY}, searchField.getText());
+						break;
+					case "Price Supplier":
+						mvc.searchItemsByPriceSupplier(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+						break;
+					case "Price Customer":
+						mvc.searchItemsByPriceCustomer(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+						break;
 				}
-			} catch (NumberFormatException nfe) {
+			}catch(NumberFormatException nfe){
 				if (searchField.getText().equals(""))
- 					mvc.getCurrentTransactions(new String[] {KEY});
+ 					mvc.getAllItems(new String[] {KEY});
  				else
  					new AlertBoxPopup("Input Error", "Enter a number.");
 			}
@@ -89,14 +94,23 @@ public class InventoryView extends MainView implements View {
 	private void setUniqueToViewTableAndFilter() {
 		searchColumns.setItems(fillComboBox());
 		//tableView.getColumns().setAll(fillColumns());
+		searchColumns.getSelectionModel().selectFirst();
 	}
 	
 	/* This function is for the Back End Developers */
 	private ObservableList<String> fillComboBox() {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
-		/* Test Cases */
-			list.addAll("Item Code", "Description");
+		list.addAll("Item Code",
+					"Name",
+					"Description",
+					"Category",
+					"Manufacturer",
+					"Supplier Code",
+					"Stock",
+					"Date Purchased",
+					"Price Supplier",
+					"Price Customer");
 		
 		return list;
 	}

@@ -35,7 +35,6 @@ public class PurchaseOrderView extends MainView implements View{
 	
 	private ResultSet rs = null;
 	
-	
 	private TabPane tabbedPane;
 		private Tab currentTab;
 			private Button addItemBtn;
@@ -44,8 +43,6 @@ public class PurchaseOrderView extends MainView implements View{
 		private Tab pendingTab;
 			private Button receiveOrderBtn;
 		private Tab receivedTab;
-	
-
 
 	private int orderID;
 	private String supplierCode;
@@ -64,7 +61,6 @@ public class PurchaseOrderView extends MainView implements View{
 		data = FXCollections.observableArrayList();
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void initHandlers() {
 		addItemBtn.setOnMouseClicked(e -> {
 			AddItemPopupView ap = new AddItemPopupView(Values.ADD_ITEM_POPUP_TITLE, mvc, orderID, supplierCode);
@@ -78,35 +74,57 @@ public class PurchaseOrderView extends MainView implements View{
 		
 		searchButton.setOnAction(e -> {
 			try {
-				switch (searchColumns.getSelectionModel().getSelectedIndex()) {
-				case 0:
-					//order id
-					mvc.searchPurchaseOrdersByOrderID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+				if (tabbedPane.getSelectionModel().getSelectedIndex() == 1) {
+					//pending tab
+					switch (searchColumns.getValue()) {
+					case "Order ID":
+						mvc.searchPendingPurchaseOrdersByOrderID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
 					break;
-				case 1:
-					//supplier code
-					mvc.searchPurchaseOrdersBySupplierCode(new String[] {KEY}, searchField.getText());
+					case "Supplier Code":
+						mvc.searchPendingPurchaseOrdersBySupplierCode(new String[] {KEY}, searchField.getText());
+						break;
+					case "Total Price":
+						mvc.searchPendingPurchaseOrdersByTotalPrice(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+						break;
+					case "Date Ordered":
+						mvc.searchPendingPurchaseOrdersByDateOrdered(new String[] {KEY}, searchField.getText());
+						break;
+					case "Date Received":
+						mvc.searchPendingPurchaseOrdersByDateReceived(new String[] {KEY}, searchField.getText());
+						break;
+					}
+				} else {
+					//received tab
+					switch (searchColumns.getValue()) {
+					case "Order ID":
+						mvc.searchReceivedPurchaseOrdersByOrderID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
 					break;
-				case 2:
-					//total price
-					mvc.searchPurchaseOrdersByTotalPrice(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
-					break;
-				case 3:
-					//date ordered
-					mvc.searchPurchaseOrdersByDateOrdered(new String[] {KEY}, searchField.getText());
-					break;
-				case 4:
-					//is pending
-					mvc.searchPurchaseOrdersByIsPending(new String[] {KEY}, Integer.parseInt(searchField.getText()));
-					break;
-				case 5:
-					//date received
-					mvc.searchPurchaseOrdersByDateReceived(new String[] {KEY}, searchField.getText());
-					break;
+					case "Supplier Code":
+						mvc.searchReceivedPurchaseOrdersBySupplierCode(new String[] {KEY}, searchField.getText());
+						break;
+					case "Total Price":
+						mvc.searchReceivedPurchaseOrdersByTotalPrice(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+						break;
+					case "Date Ordered":
+						mvc.searchReceivedPurchaseOrdersByDateOrdered(new String[] {KEY}, searchField.getText());
+						break;
+					case "Date Received":
+						mvc.searchReceivedPurchaseOrdersByDateReceived(new String[] {KEY}, searchField.getText());
+						break;
+					}
 				}
 			}  catch (NumberFormatException nfe) {
 				if (searchField.getText().equals(""))
- 					mvc.getAllPurchaseOrders(new String[] {PurchaseOrderView.KEY});
+					switch (tabbedPane.getSelectionModel().getSelectedIndex()) {
+					case 1:
+						//pending tab
+						mvc.getPendingPurchaseOrders(new String[] {KEY});
+						break;
+					case 2:
+						//received tab
+						mvc.getReceivedPurchaseOrders(new String[] {KEY});
+						break;
+					}
  				else
  					new AlertBoxPopup("Input Error", "Enter a number.");
 			}
@@ -169,8 +187,6 @@ public class PurchaseOrderView extends MainView implements View{
 					/* Banner Switching */
 					ManagerView.reinitBanner(05);
 					
-					
-					
 				} else  if (tabbedPane.getSelectionModel().getSelectedIndex() == 1){
 					mvc.getCurrentTransactions(new String[] {KEY});
 					currentTab.setContent(null);
@@ -184,6 +200,7 @@ public class PurchaseOrderView extends MainView implements View{
 					
 					/* Banner Switching */
 					ManagerView.reinitBanner(00);
+					mvc.getPendingPurchaseOrders(new String[] {KEY});
 					
 					
 				} else if (tabbedPane.getSelectionModel().getSelectedIndex() == 2) {
@@ -196,6 +213,7 @@ public class PurchaseOrderView extends MainView implements View{
 					actionButtons.getChildren().remove(receiveOrderBtn);
 					
 					ManagerView.reinitBanner(00);
+					mvc.getReceivedPurchaseOrders(new String[] {KEY});
 				}
 			}
 		});
@@ -216,14 +234,10 @@ public class PurchaseOrderView extends MainView implements View{
 	private ObservableList<String> fillComboBox() {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
-		//indeces are as follows:
-		//0 = order id, 1 = supplier code, 2 = total price
-		//3 = date ordered, 4 = is pending, 5 = date received
 		list.addAll("Order ID",
 					"Supplier Code",
 					"Total Price",
 					"Date Ordered",
-					"Is Pending",
 					"Date Received");
 		
 		return list;

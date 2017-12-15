@@ -46,13 +46,27 @@ public class SupplierView extends MainView implements View {
 		searchButton.setOnAction(e -> {
 			try{
 				switch(searchColumns.getValue()){
-					case "Supplier Code": mvc.searchSupplierByCode(new String[] {KEY}, searchField.getText());
+					case "Supplier Code":
+						mvc.searchSuppliersBySupplierCode(new String[] {KEY}, searchField.getText());
 						break;
-					case "Name": mvc.searchSupplierByName(new String[] {KEY}, searchField.getText());
+					case "Name":
+						mvc.searchSuppliersByName(new String[] {KEY}, searchField.getText());
+						break;
+					case "Contact Person":
+						mvc.searchSuppliersByContactPerson(new String[] {KEY}, searchField.getText());
+						break;
+					case "Contact Number":
+						mvc.searchSuppliersByContactNumber(new String[] {KEY}, searchField.getText());
+						break;
+					case "Tax ID":
+						mvc.searchSuppliersByTaxID(new String[] {KEY}, searchField.getText());
 						break;
 				}
 			}catch(NumberFormatException nfe){
-				new AlertBoxPopup("Input Error", "Enter a number.");
+				if (searchField.getText().equals(""))
+ 					mvc.getAllSuppliers(new String[] {KEY});
+ 				else
+ 					new AlertBoxPopup("Input Error", "Enter a number.");
 			}
 		});
 	}
@@ -64,15 +78,18 @@ public class SupplierView extends MainView implements View {
 	private void setUniqueToViewTableAndFilter() {
 		searchColumns.setItems(fillComboBox());
 		//tableView.getColumns().setAll(fillColumns());
+		searchColumns.getSelectionModel().selectFirst();
 	}
 	
-
 	/* This function is for the Back End Developers */
 	private ObservableList<String> fillComboBox() {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
-		/* Test Cases */
-			list.addAll("Supplier Code", "Name");
+		list.addAll("Supplier Code",
+					"Name",
+					"Contact Person",
+					"Contact Number",
+					"Tax ID");
 		
 		return list;
 	}

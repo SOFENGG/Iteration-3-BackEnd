@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
@@ -39,7 +41,8 @@ public class TransactionDetailsPopupView extends Popup implements View {
 
 	private VBox layout;
 	private HBox searchHBox;
-		private TextField searchTextField;
+		private ComboBox<String> searchColumns;
+		private TextField searchField;
 		private Button searchButton;
 	private HBox labelsHBox;
 		private Label dateTransactedLabel;
@@ -67,7 +70,7 @@ public class TransactionDetailsPopupView extends Popup implements View {
 		Database.getInstance().attach(KEY, this);
 		
 		//puts the inital contents of the table
-		mvc.getTransactionDetails(new String[]{TransactionDetailsPopupView.KEY}, transactionID);
+		mvc.getTransactionDetails(new String[]{KEY}, transactionID);
 		
 		setScene(layout);
 	}
@@ -84,15 +87,26 @@ public class TransactionDetailsPopupView extends Popup implements View {
 		
 			searchHBox = new HBox (30);
 			searchHBox.setAlignment(Pos.CENTER);
+
+			searchColumns = new ComboBox<String> ();
+			searchColumns.getStyleClass().add("ComboBox");
+			searchColumns.getItems().add("Sale ID");
+			searchColumns.getItems().add("Item Code");
+			searchColumns.getItems().add("Type");
+			searchColumns.getItems().add("Quantity Sold");
+			searchColumns.getItems().add("Original Price");
+			searchColumns.getItems().add("Price Sold");
+			
+			searchColumns.getSelectionModel().selectFirst();
 				
-				searchTextField = new TextField ();
-				searchTextField.setId ("TextField");
+				searchField = new TextField ();
+				searchField.setId ("TextField");
 				
 				searchButton = new Button ();
 				searchButton.getStyleClass ().add("SearchButton");
 				searchButton.setMinSize(40, 40);
 					
-			searchHBox.getChildren().addAll(searchTextField, searchButton);
+			searchHBox.getChildren().addAll(searchColumns, searchField, searchButton);
 			
 			itemTable = new Table();
 			
@@ -112,10 +126,32 @@ public class TransactionDetailsPopupView extends Popup implements View {
 	// BACKEND STUFF
 	private void initHandlers() {
 		searchButton.setOnAction(e -> {
-			try{
-				mvc.searchTransactionDetails(new String[] {TransactionDetailsPopupView.KEY}, transactionID, searchTextField.getText());
-			}catch(NumberFormatException nfe){
-				new AlertBoxPopup("Input Error", "Enter a number.");
+			try {
+ 				switch (searchColumns.getValue()) {
+ 				case "Sale ID":
+ 					mvc.searchTransactionDetailsBySaleID(new String[] {KEY}, transactionID, Integer.parseInt(searchField.getText()));
+ 					break;
+ 				case "Item Code":
+ 					mvc.searchTransactionDetailsByItemCode(new String[] {KEY}, transactionID, searchField.getText());
+ 					break;
+ 				case "Type":
+ 					mvc.searchTransactionDetailsByType(new String[] {KEY}, transactionID, searchField.getText());
+ 					break;
+ 				case "Quantity Sold":
+ 					mvc.searchTransactionDetailsByQuantitySold(new String[] {KEY}, transactionID, Integer.parseInt(searchField.getText()));
+ 					break;
+ 				case "Original Price":
+ 					mvc.searchTransactionDetailsByOriginalPrice(new String[] {KEY}, transactionID, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+ 					break;
+ 				case "Price Sold":
+ 					mvc.searchTransactionDetailsByPriceSold(new String[] {KEY}, transactionID, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+ 					break;
+ 				}
+			} catch (NumberFormatException nfe) {
+				if (searchField.getText().equals(""))
+ 					mvc.getCurrentTransactions(new String[] {KEY});
+ 				else
+ 					new AlertBoxPopup("Input Error", "Enter a number.");
 			}
 		});
 	}

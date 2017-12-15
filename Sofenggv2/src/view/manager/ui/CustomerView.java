@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,31 +47,33 @@ public class CustomerView extends MainView implements View {
 		searchButton.setOnAction(e -> {
 			try{
 				switch(searchColumns.getValue()){
-					case "Account ID": 
-						try{
-							mvc.searchCustomer(new String[] {KEY}, Integer.parseInt(searchField.getText().toString()));
-						}catch(NumberFormatException nfe){
-							if(!searchField.getText().equals(""))
-								new AlertBoxPopup("Input Error", "Enter a number.");
-							else
-								mvc.getAllCustomers(new String[]{KEY});
-						}
+					case "Account ID":
+						mvc.searchCustomersByAccountID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
 						break;
 					case "Name":
-						if(!searchField.getText().equals(""))
-							mvc.searchCustomerName(new String[] {KEY}, searchField.getText().toString());
-						else
-							mvc.getAllCustomers(new String[]{KEY});
+						mvc.searchCustomersByName(new String[] {KEY}, searchField.getText());
 						break;
 					case "Address":
-						if(!searchField.getText().equals(""))
-							mvc.searchCustomerAddress(new String[] {KEY}, searchField.getText().toString());
-						else
-							mvc.getAllCustomers(new String[]{KEY});
+						mvc.searchCustomersByAddress(new String[] {KEY}, searchField.getText());
+						break;
+					case "Contact Number":
+						mvc.searchCustomersByContactNumber(new String[] {KEY}, searchField.getText());
+						break;
+					case "Total Visits":
+						mvc.searchCustomersByTotalVisits(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+						break;
+					case "Debt":
+						mvc.searchCustomersByDebt(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+						break;
+					case "Debt Limit":
+						mvc.searchCustomersByDebtLimit(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
 						break;
 				}
 			}catch(NumberFormatException nfe){
-				new AlertBoxPopup("Input Error", "Enter a number.");
+				if (searchField.getText().equals(""))
+ 					mvc.getAllCustomers(new String[] {KEY});
+ 				else
+ 					new AlertBoxPopup("Input Error", "Enter a number.");
 			}
 		});
 	}
@@ -82,14 +85,20 @@ public class CustomerView extends MainView implements View {
 	private void setUniqueToViewTableAndFilter() {
 		searchColumns.setItems(fillComboBox());
 		//tableView.getColumns().setAll(fillColumns());
+		searchColumns.getSelectionModel().selectFirst();
 	}
 	
 	/* This function is for the Back End Developers */
 	private ObservableList<String> fillComboBox() {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
-		/* Test Cases */
-			list.addAll("Account ID", "Name", "Address");
+		list.addAll("Account ID",
+					"Name",
+					"Address",
+					"Contact Number",
+					"Total Visits",
+					"Debt",
+					"Debt Limit");
 		
 		return list;
 	}
