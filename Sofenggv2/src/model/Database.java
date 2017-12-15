@@ -11,7 +11,7 @@ import java.sql.Statement;
 public class Database extends Model{
 	private final String directory = "jdbc:mysql://localhost:3306/autosupply?useSSL=false";
 	private final String user = "root";
-	private final String pass = "1234";
+	private final String pass = "";
 	
 	private static Database instance = new Database();
 	

@@ -83,7 +83,9 @@ public abstract class MainView extends BorderPane{
 		searchButton.setMinSize(40,  40);
 		
 		/* Filter Button Initialization */
-		filterButton = new Button("O " + "Filter"); // the O character to be replaced with the filter icon
+		filterButton = new Button(); // the O character to be replaced with the filter icon
+		filterButton.getStyleClass().add("FilterButton");
+		filterButton.setMinSize(40,  40);
 		
 		/* Assembly of Search Columns, Search Field, Search Button and Filter Button into Filter Options */
 		filterOptions.getChildren().addAll(searchColumns, searchField, searchButton);

@@ -19,7 +19,7 @@ public class NavMenuPane extends BorderPane{
 		
 	public NavMenuPane() {
 		setId("NavMenu");
-		setPrefWidth(180);
+		setPrefWidth(195);
 		initNavMenu();
 		//setWidth(500);
 	}

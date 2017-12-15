@@ -23,6 +23,7 @@ public class PurchaseOrderBanner extends Banner {
 	private DatePicker receiveDatePicker;
 	
 	/* Bottom Buttons */
+		private Button addItemBtn;
 		private Button confirmOrderBtn; 
 	
 	public PurchaseOrderBanner() {
@@ -46,7 +47,10 @@ public class PurchaseOrderBanner extends Banner {
 			sp.show();
 		});
 		*/
-		
+		addItemBtn.setOnMouseClicked(e -> {
+			//AddItemPopupView ap = new AddItemPopupView(Values.ADD_ITEM_POPUP_TITLE, mvc, 0, "supplierCode");
+			//ap.show();
+		});
 		
 	}
 
@@ -93,13 +97,13 @@ public class PurchaseOrderBanner extends Banner {
 		//rightColumn.setPadding(new Insets(20, 0, 0, 0));
 		
 		/* Bottom Buttons */
-		
+		addItemBtn = new Button("Add Item");
 		confirmOrderBtn = new Button("Confirm Order");
 		
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
 		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1],  rightCombos[2]);
-		bottom.getChildren().addAll(confirmOrderBtn);
+		bottom.getChildren().addAll(addItemBtn, confirmOrderBtn);
 	}
 	
 	private void setPositions() {

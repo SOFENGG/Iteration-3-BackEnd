@@ -37,7 +37,6 @@ public class PurchaseOrderView extends MainView implements View{
 	
 	private TabPane tabbedPane;
 		private Tab currentTab;
-			private Button addItemBtn;
 			private Button removeItemBtn;
 			private Button clearAllBtn;
 		private Tab pendingTab;
@@ -60,11 +59,6 @@ public class PurchaseOrderView extends MainView implements View{
 	
 	@SuppressWarnings("unchecked")
 	private void initHandlers() {
-		addItemBtn.setOnMouseClicked(e -> {
-			AddItemPopupView ap = new AddItemPopupView(Values.ADD_ITEM_POPUP_TITLE, mvc, orderID, supplierCode);
-			ap.show();
-		});
-		
 		receiveOrderBtn.setOnAction(e -> {
 			mvc.receivePurchaseOrder(new String[] {KEY}, Integer.parseInt(((ObservableList<String>)tableView.getSelectionModel().getSelectedItem()).get(0)));
 		});
@@ -152,8 +146,6 @@ public class PurchaseOrderView extends MainView implements View{
 		setTop(null);
 		
 		/* Button Initialization */
-		addItemBtn = new Button("Add Item");
-		addItemBtn.getStyleClass().add("GreenButton");
 		
 		removeItemBtn = new Button("Remove Item");
 		removeItemBtn.getStyleClass().add("RedButton");
@@ -165,7 +157,7 @@ public class PurchaseOrderView extends MainView implements View{
 		receiveOrderBtn.getStyleClass().add("GreenButton");
 		
 		/* Assembly */
-		actionButtons.getChildren().addAll(addItemBtn, removeItemBtn, clearAllBtn);
+		actionButtons.getChildren().addAll(removeItemBtn, clearAllBtn);
 		
 		actionButtons.setPrefHeight(Values.ACTION_BUTTONS_PREF_WIDTH);
 		
@@ -182,7 +174,7 @@ public class PurchaseOrderView extends MainView implements View{
 					//tableView.getColumns().setAll(fillColumns());
 					
 					setTop(null);
-					actionButtons.getChildren().addAll(addItemBtn, removeItemBtn, clearAllBtn);
+					actionButtons.getChildren().addAll(removeItemBtn, clearAllBtn);
 					actionButtons.getChildren().remove(receiveOrderBtn);
 					
 					/* Banner Switching */
@@ -196,7 +188,7 @@ public class PurchaseOrderView extends MainView implements View{
 					//tableView.getColumns().setAll(fillColumns());
 					
 					setTop(filterOptions);
-					actionButtons.getChildren().removeAll(addItemBtn, removeItemBtn, clearAllBtn);
+					actionButtons.getChildren().removeAll(removeItemBtn, clearAllBtn);
 					actionButtons.getChildren().addAll(receiveOrderBtn);
 					
 					/* Banner Switching */
@@ -210,7 +202,7 @@ public class PurchaseOrderView extends MainView implements View{
 					receivedTab.setContent(tableView);
 					
 					setTop(filterOptions);
-					actionButtons.getChildren().removeAll(addItemBtn, removeItemBtn, clearAllBtn);
+					actionButtons.getChildren().removeAll(removeItemBtn, clearAllBtn);
 					actionButtons.getChildren().remove(receiveOrderBtn);
 					
 					ManagerView.reinitBanner(00);

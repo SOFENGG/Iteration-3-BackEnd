@@ -290,7 +290,28 @@
 	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
 }
 
-.SearchButton:selected {
+.FilterButton {	
+	-fx-background-image: url("filter-icon.png");
+    -fx-background-size: 32px 32px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, #9E9E9E, 4, 0, 0, 2);
+}
+
+.FilterButton:hover {
+	-fx-opacity: 0.6;
+	-fx-background-color: #D3DCDE;
+}
+
+.FilterButton:pressed {
+	-fx-opacity: 0.8;
+	-fx-background-color: #8994A0;
+	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
+}
+
+.FilterButton:selected {
 	-fx-opacity: 1.0;
 	-fx-background-color: #7A8794;
 	-fx-effect: dropshadow(three-pass-box, transparent, 0, 0, 0, 0);
