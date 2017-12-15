@@ -127,6 +127,40 @@ public class ManagerViewController {
 			}
 		}
 		
+
+		//updates the debt limit of the customer
+		public void updateDebtLimit(int accountId, BigDecimal debtLimit){
+			String update = "update " + Customer.TABLE + 
+					" set "+ Customer.COLUMN_DEBT_LIMIT + " = ?"+
+					" where " + Customer.COLUMN_ACCOUNT_ID + " = ?";
+			
+			try{
+				PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(update);
+				statement.setBigDecimal(1, debtLimit); 
+				statement.setInt(2, accountId);
+				Database.getInstance().executeUpdate(statement);
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+
+		}
+		
+		//updates the current debt of the customer
+		public void updateDebt(int accountId, BigDecimal debt){
+			String update = "update " + Customer.TABLE + 
+					" set "+ Customer.COLUMN_DEBT + " = ?"+
+					" where " + Customer.COLUMN_ACCOUNT_ID + " = ?";
+			
+			try{
+				PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(update);
+				statement.setBigDecimal(1, debt); 
+				statement.setInt(2, accountId);
+				Database.getInstance().executeUpdate(statement);
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
 		//items
 		public void getAllItems(String[] keys) {
 			Database.getInstance().query(keys,
@@ -467,5 +501,4 @@ public class ManagerViewController {
 				"' and concat("+ItemLog.COLUMN_SALE_ID+", "+ItemLog.COLUMN_ITEM_CODE+", "+ItemLog.COLUMN_TYPE+", "+ItemLog.COLUMN_TRANSACTION_ID+", "+ItemLog.COLUMN_QUANTITY_SOLD+", "+ItemLog.COLUMN_ORIGINAL_SOLD+", " +ItemLog.COLUMN_PRICE_SOLD+") like '%" + search + "%';");
 	}
 	
-	//
 }
