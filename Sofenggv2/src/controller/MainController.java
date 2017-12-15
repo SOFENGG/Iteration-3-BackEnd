@@ -16,14 +16,6 @@ public class MainController extends Controller {
 		super(stage);
 		mainStage.setTitle("POS System");
 		scene.getStylesheets().add ("./StyleSheet.css");
-		
-		stage.setFullScreenExitHint ("Press ESC to Exit Full Screen");
-		stage.maximizedProperty ().addListener ((a,b,c) -> {
-			if (c) {
-				stage.setMaximized (false);
-				stage.setFullScreen (true);
-			}
-		});
 	}
 
 	@Override
@@ -40,14 +32,16 @@ public class MainController extends Controller {
 				lc.attach();
 				break;
 			case Code.CVC_CODE: scene.setRoot(cvc.getView(view));
-				mainStage.sizeToScene();
+				if (!mainStage.isMaximized())
+					mainStage.sizeToScene();
 				cvc.attach();
 				lc.detach();
 				cvc.getAllItems(new String[]{InventoryView.KEY});
 				cvc.getAllServices();
 				break;
 			case Code.MVC_CODE: scene.setRoot(mvc.getView(view));
-				mainStage.sizeToScene();
+				if (!mainStage.isMaximized())
+					mainStage.sizeToScene();
 				mvc.attach();
 				lc.detach();
 				break;
