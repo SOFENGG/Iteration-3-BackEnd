@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import model.Customer;
 import model.Database;
 import model.Item;
+import model.ItemLog;
 import model.Service;
 import model.Supplier;
 import model.Transaction;
@@ -375,6 +376,20 @@ public class ManagerViewController {
 		Database.getInstance().query(keys,
 				"select * from " + Transaction.TABLE +
 				" where " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "' and " + filter);
+	}
+	
+	public void getTransactionDetails(String[] keys, int transactionID) {
+		Database.getInstance().query(keys,
+				"select * from " + ItemLog.TABLE +
+				" where " + ItemLog.COLUMN_TRANSACTION_ID + " like '" + transactionID + "'" +
+				" order by " + ItemLog.COLUMN_TRANSACTION_ID + ";");
+	}
+	
+	public void searchTransactionDetails(String[] keys, int transactionID, String search) {
+		Database.getInstance().query(keys,
+				"select * from " + ItemLog.TABLE +
+				" where " + ItemLog.COLUMN_TRANSACTION_ID + " like '" + transactionID +
+				"' and concat("+ItemLog.COLUMN_SALE_ID+", "+ItemLog.COLUMN_ITEM_CODE+", "+ItemLog.COLUMN_TYPE+", "+ItemLog.COLUMN_TRANSACTION_ID+", "+ItemLog.COLUMN_QUANTITY_SOLD+", "+ItemLog.COLUMN_ORIGINAL_SOLD+", " +ItemLog.COLUMN_PRICE_SOLD+") like '%" + search + "%';");
 	}
 	
 	//
