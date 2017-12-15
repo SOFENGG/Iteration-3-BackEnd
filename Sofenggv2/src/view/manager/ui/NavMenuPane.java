@@ -35,7 +35,7 @@ public class NavMenuPane extends BorderPane{
 		purchaseOrdBtn  = new Button("Purchase Orders");
 		salesReportBtn  = new Button("Sales Reports");
 		inventoryBtn  = new Button("Inventory");
-		custDebtsBtn  = new Button("Customers / Debts");
+		custDebtsBtn  = new Button("Customers");
 		suppliersBtn = new Button("Suppliers");
 		logoutBtn = new Button("Logout");
 		

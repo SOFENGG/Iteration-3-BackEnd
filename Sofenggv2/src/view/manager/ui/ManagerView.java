@@ -135,6 +135,10 @@ public class ManagerView extends BorderPane implements View {
 		setCenter(midBox);
 	}
 	
+	protected Banner getBanner() {
+		return banner;
+	}
+	
 	protected void setBanner(int code) {
 		reinitBanner(code);
 	}

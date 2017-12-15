@@ -57,7 +57,7 @@ public class PurchaseOrderBanner extends Banner {
 		/*Supplier Code Combination*/
 		leftCombos[0] = new VBox();
 		orderIdField = new TextField();
-		orderIdField.setEditable(false);
+		//orderIdField.setEditable(false);
 		leftCombos[0].getChildren().addAll(new Label("Order ID:"), orderIdField);
 		
 		/*Invoice Combination*/
@@ -74,7 +74,7 @@ public class PurchaseOrderBanner extends Banner {
 		
 		rightCombos[0] = new VBox();
 		supplierCodeField = new TextField();
-		supplierCodeField.setEditable(false);
+		//supplierCodeField.setEditable(false);
 		rightCombos[0].getChildren().addAll(new Label("Supplier Code:"), supplierCodeField);
 		
 		/*Supplier Combination*/

@@ -43,9 +43,6 @@ public class PurchaseOrderView extends MainView implements View{
 		private Tab pendingTab;
 			private Button receiveOrderBtn;
 		private Tab receivedTab;
-
-	private int orderID;
-	private String supplierCode;
 	
 	public PurchaseOrderView(ManagerViewController mvc) {
 		super(mvc);
@@ -61,6 +58,7 @@ public class PurchaseOrderView extends MainView implements View{
 		data = FXCollections.observableArrayList();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void initHandlers() {
 		addItemBtn.setOnMouseClicked(e -> {
 			AddItemPopupView ap = new AddItemPopupView(Values.ADD_ITEM_POPUP_TITLE, mvc, orderID, supplierCode);
@@ -68,8 +66,7 @@ public class PurchaseOrderView extends MainView implements View{
 		});
 		
 		receiveOrderBtn.setOnAction(e -> {
-			ReceiveOrderPopup roP = new ReceiveOrderPopup("Receive Orders");
-			roP.show();
+			mvc.receivePurchaseOrder(new String[] {KEY}, Integer.parseInt(((ObservableList<String>)tableView.getSelectionModel().getSelectedItem()).get(0)));
 		});
 		
 		searchButton.setOnAction(e -> {
