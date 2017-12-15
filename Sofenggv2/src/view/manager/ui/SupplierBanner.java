@@ -107,7 +107,7 @@ public class SupplierBanner extends Banner{
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
 		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1]);
-		bottomButtons.getChildren().addAll(addConfirmBtn);
+		bottom.getChildren().addAll(addConfirmBtn);
 	}
 	
 	private void setPositions() {

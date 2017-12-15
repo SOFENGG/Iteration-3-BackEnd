@@ -108,7 +108,7 @@ public class InventoryBanner extends Banner{
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
 		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1]);
-		bottomButtons.getChildren().addAll(editConfirmBtn);
+		bottom.getChildren().addAll(editConfirmBtn);
 	}
 	
 	private void setPositions() {

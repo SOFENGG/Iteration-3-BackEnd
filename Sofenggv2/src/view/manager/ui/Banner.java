@@ -15,7 +15,7 @@ public abstract class Banner extends BorderPane {
 		protected HBox bannerContents;
 			protected VBox leftColumn;
 			protected VBox rightColumn;
-		protected HBox bottomButtons;
+		protected HBox bottom;
 				
 	public Banner() {
 		setId("Banner");
@@ -41,7 +41,7 @@ public abstract class Banner extends BorderPane {
 		rightColumn = new VBox(Values.RIGHT_ITEM_SPACING);
 		
 		/* Bottom Buttons Initialization */
-		bottomButtons = new HBox(10);
+		bottom = new HBox(10);
 		
 		/* Assembly */
 		bannerContents.getChildren().addAll(leftColumn, rightColumn);
@@ -50,12 +50,12 @@ public abstract class Banner extends BorderPane {
 		
 		setTop(bannerDetails);
 		
-		setBottom(bottomButtons);
+		setBottom(bottom);
 	}
 	
 	private void setPositions() {
-		setAlignment(bottomButtons, Pos.BOTTOM_RIGHT);
-		setMargin(bottomButtons, new Insets(0, 0, 20, 20));
+		setAlignment(bottom, Pos.BOTTOM_RIGHT);
+		setMargin(bottom, new Insets(0, 0, 20, 20));
 	}
 	
 	

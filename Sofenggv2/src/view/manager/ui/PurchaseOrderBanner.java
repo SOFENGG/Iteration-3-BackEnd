@@ -12,13 +12,14 @@ import view.manager.final_values.Values;
 public class PurchaseOrderBanner extends Banner {
 	
 	/* Left Section */
-	private TextField supplierNameField;
-	private TextField invoiceField;
-	private TextField requisitionerField;
+	private TextField orderIdField;
+	private TextField totalPriceField;
+	private DatePicker dateOrderedField;
 	
 	/* Right Section */
-	private Button suppliersBtn;
-	private TextField documentTitleField;
+	//private Button suppliersBtn;
+	private TextField supplierCodeField;
+	private TextField isPendingField;
 	private DatePicker receiveDatePicker;
 	
 	/* Bottom Buttons */
@@ -39,10 +40,12 @@ public class PurchaseOrderBanner extends Banner {
 	}
 	
 	private void initHandlers() {
+		/*
 		suppliersBtn.setOnMouseClicked(e -> {
 			SupplierPopup sp = new SupplierPopup(Values.SUPPLIER_POPUP_TITLE);
 			sp.show();
 		});
+		*/
 		
 		receiveOrderBtn.setOnAction(e -> {
 			ReceiveOrderPopup roP = new ReceiveOrderPopup("Receive Orders");
@@ -54,38 +57,43 @@ public class PurchaseOrderBanner extends Banner {
 		/*Contains the label and textfield combinations for left box*/
 		VBox[] leftCombos = new VBox[3];
 		
-		/*Supplier Name Combination*/
+		/*Supplier Code Combination*/
 		leftCombos[0] = new VBox();
-		supplierNameField = new TextField();
-		supplierNameField.setEditable(false);
-		leftCombos[0].getChildren().addAll(new Label("Supplier Name:"), supplierNameField);
+		orderIdField = new TextField();
+		orderIdField.setEditable(false);
+		leftCombos[0].getChildren().addAll(new Label("Order ID:"), orderIdField);
 		
 		/*Invoice Combination*/
 		leftCombos[1] = new VBox();
-		invoiceField = new TextField();
-		leftCombos[1].getChildren().addAll(new Label("Invoice No:"), invoiceField);
+		totalPriceField = new TextField();
+		leftCombos[1].getChildren().addAll(new Label("Total Price:"), totalPriceField);
 		
 		leftCombos[2] = new VBox();
-		requisitionerField = new TextField();
-		leftCombos[2].getChildren().addAll(new Label("Requisitioner: "), requisitionerField);
+		dateOrderedField = new DatePicker();
+		leftCombos[2].getChildren().addAll(new Label("Date Ordered: "), dateOrderedField);
 		
 		/*Contains the label and textfield combinations for right box*/
-		VBox[] rightCombos = new VBox[2];
+		VBox[] rightCombos = new VBox[3];
+		
+		rightCombos[0] = new VBox();
+		supplierCodeField = new TextField();
+		supplierCodeField.setEditable(false);
+		rightCombos[0].getChildren().addAll(new Label("Supplier Code:"), supplierCodeField);
 		
 		/*Supplier Combination*/
-		rightCombos[0] = new VBox();
-		documentTitleField = new TextField();
-		rightCombos[0].getChildren().addAll(new Label("Document Title:"), documentTitleField);
-		
 		rightCombos[1] = new VBox();
+		isPendingField = new TextField();
+		rightCombos[1].getChildren().addAll(new Label("Is Pending:"), isPendingField);
+		
+		rightCombos[2] = new VBox();
 		receiveDatePicker = new DatePicker();
-		rightCombos[1].getChildren().addAll(new Label("Date To Receive"), receiveDatePicker);
+		rightCombos[2].getChildren().addAll(new Label("Date To Receive"), receiveDatePicker);
 		
 		/*Edit Button initialization*/
-		suppliersBtn = new Button("Suppliers");
+		//suppliersBtn = new Button("Suppliers");
 
 		/* Align Right Side */
-		rightColumn.setPadding(new Insets(20, 0, 0, 0));
+		//rightColumn.setPadding(new Insets(20, 0, 0, 0));
 		
 		/* Bottom Buttons */
 		receiveOrderBtn = new Button("Receive Order");
@@ -94,8 +102,8 @@ public class PurchaseOrderBanner extends Banner {
 		
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
-		rightColumn.getChildren().addAll(suppliersBtn, rightCombos[0], rightCombos[1]);
-		bottomButtons.getChildren().addAll(receiveOrderBtn, confirmOrderBtn);
+		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1],  rightCombos[2]);
+		bottom.getChildren().addAll(receiveOrderBtn, confirmOrderBtn);
 	}
 	
 	private void setPositions() {
