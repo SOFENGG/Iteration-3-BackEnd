@@ -134,6 +134,7 @@ public class PurchaseOrderView extends MainView implements View{
 		
 		tabbedPane.getTabs().addAll(currentTab, pendingTab, receivedTab);
 		setCenter(tabbedPane);
+		setTop(null);
 		
 		/* Button Initialization */
 		addItemBtn = new Button("Add Item");
@@ -160,7 +161,8 @@ public class PurchaseOrderView extends MainView implements View{
 					currentTab.setContent(tableView);
 
 					//tableView.getColumns().setAll(fillColumns());
-			
+					
+					setTop(null);
 					actionButtons.getChildren().addAll(addItemBtn, removeItemBtn, clearAllBtn);
 					actionButtons.getChildren().remove(receiveOrderBtn);
 					
@@ -176,6 +178,7 @@ public class PurchaseOrderView extends MainView implements View{
 					pendingTab.setContent(tableView);
 					//tableView.getColumns().setAll(fillColumns());
 					
+					setTop(filterOptions);
 					actionButtons.getChildren().removeAll(addItemBtn, removeItemBtn, clearAllBtn);
 					actionButtons.getChildren().addAll(receiveOrderBtn);
 					
@@ -188,6 +191,7 @@ public class PurchaseOrderView extends MainView implements View{
 					pendingTab.setContent(null);
 					receivedTab.setContent(tableView);
 					
+					setTop(filterOptions);
 					actionButtons.getChildren().removeAll(addItemBtn, removeItemBtn, clearAllBtn);
 					actionButtons.getChildren().remove(receiveOrderBtn);
 					

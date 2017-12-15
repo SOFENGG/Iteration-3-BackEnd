@@ -1,9 +1,11 @@
 package view.manager.ui;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class CreateReportPopup extends Popup {
@@ -15,10 +17,12 @@ public class CreateReportPopup extends Popup {
 			private RadioButton weeklyRadio;
 			private RadioButton monthlyRadio;
 			private RadioButton yearlyRadio;
-		private HBox datePickers;
+		private HBox datePickerHBox;
 			private DatePicker startDatePicker;
 			private DatePicker endDatePicker;
-	
+		private Button createBtn;
+		
+			
 	public CreateReportPopup(String title) {
 		super(title);
 		
@@ -54,12 +58,25 @@ public class CreateReportPopup extends Popup {
 		
 		typeHBox.getChildren().addAll(dailyRadio, weeklyRadio, monthlyRadio, yearlyRadio);
 		
+		datePickerHBox = new HBox(20);
 		
+			startDatePicker = new DatePicker();
+			
+			endDatePicker = new DatePicker();
+		
+		datePickerHBox.getChildren().addAll(startDatePicker, endDatePicker);
+		
+		createBtn = new Button("Create Report");
+		
+		layout.getChildren().addAll(typeHBox, datePickerHBox, createBtn);
+		VBox.setVgrow(layout, Priority.ALWAYS);
 		
 	}
 	
 	public void initHandlers() {
-		
+		createBtn.setOnAction(e -> {
+			
+		});
 	}
 
 }

@@ -27,6 +27,10 @@ public class SalesReportView extends MainView implements View {
 		/* Button Initialization */
 		//This Button Creates a Report
 		createReportBtn = new Button("Create Report");
+		createReportBtn.setOnAction(e -> {
+			CreateReportPopup crPopup = new CreateReportPopup("Create Report");
+			crPopup.show();
+		});
 		
 		// This Button views the currently selected report in more detail
 		reportDetailsBtn = new Button("Report Details");
