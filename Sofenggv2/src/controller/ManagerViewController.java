@@ -13,6 +13,8 @@ import model.Customer;
 import model.Database;
 import model.Item;
 import model.ItemLog;
+import model.ItemOrder;
+import model.PurchaseOrder;
 import model.Service;
 import model.Supplier;
 import model.Transaction;
@@ -287,13 +289,13 @@ public class ManagerViewController {
 	
 	
 	public void searchCurrentTransactionsByUserID(String[] keys, int userID){
-		 		Date now = new Date();
-		 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		 		
-		 		Database.getInstance().query(keys,
-		 				"select * from " + Transaction.TABLE +
-		 				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_USER_ID + " like '" + userID + "'" +
-		 				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
+		Database.getInstance().query(keys,
+		 		"select * from " + Transaction.TABLE +
+		 		" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_USER_ID + " like '" + userID + "'" +
+		 		" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
  	}
 		 	
 	public void searchCurrentTransactionsByTransactionType(String[] keys, String transactionType){
@@ -373,7 +375,6 @@ public class ManagerViewController {
 			i++;
 			//custom selected
 			//get start and end date - using prefix increment - then set as bounds for inclusive between
-			System.out.println(i + " start date / " + (i + 1) + " end date");
 			sb.append("" + Transaction.COLUMN_DATE_SOLD + " between '" + filters.get(i) + "' and '" + filters.get(++i) + "'");
 			i++;
 			//parse whether all week or select days is selected
@@ -451,59 +452,174 @@ public class ManagerViewController {
 	}
 	
 	public void getFilteredTransactions(String[] keys){
-		System.out.println(filter);
 		Database.getInstance().query(keys, 
-				"select * from " + Transaction.TABLE +
-				" where " + filter);
+			"select * from " + Transaction.TABLE +
+			" where " + filter);
 	}
 	
-	public void searchFilteredTransactionsByTransactionID(String[] keys, int transactionID){Database.getInstance().query(keys,
-				"select * from " + Transaction.TABLE +
-				" where " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "' and " + filter);
+	public void searchFilteredTransactionsByTransactionID(String[] keys, int transactionID){
+		Database.getInstance().query(keys,
+			"select * from " + Transaction.TABLE +
+			" where " + Transaction.COLUMN_TRANSACTION_ID + " like '%" + transactionID + "%' and " + filter);
 	}
 	
 	public void searchFilteredTransactionsByUserID(String[] keys, int userID){
-		 		Database.getInstance().query(keys,
-		 				"select * from " + Transaction.TABLE +
-		 				" where " + Transaction.COLUMN_USER_ID + " like '" + userID + "' and " + filter);
-		 	}
+		 Database.getInstance().query(keys,
+		 	"select * from " + Transaction.TABLE +
+		 	" where " + Transaction.COLUMN_USER_ID + " like '%" + userID + "%' and " + filter);
+	}
 		 	
  	public void searchFilteredTransactionsByTransactionType(String[] keys, String transactionType){
  		Database.getInstance().query(keys,
- 				"select * from " + Transaction.TABLE +
- 				" where " + Transaction.COLUMN_TRANSACTION_TYPE + " like '%" + transactionType + "' and " + filter);
+ 			"select * from " + Transaction.TABLE +
+ 			" where " + Transaction.COLUMN_TRANSACTION_TYPE + " like '%" + transactionType + "%' and " + filter);
  	}
  	
  	public void searchFilteredTransactionsByIsLoan(String[] keys, int isLoan){
  		Database.getInstance().query(keys,
- 				"select * from " + Transaction.TABLE +
- 				" where " + Transaction.COLUMN_IS_LOAN + " like '" + isLoan + "' and " + filter);
+ 			"select * from " + Transaction.TABLE +
+ 			" where " + Transaction.COLUMN_IS_LOAN + " = " + isLoan + " and " + filter);
  	}
  	
  	public void searchFilteredTransactionsByDateSold(String[] keys, String dateSold){
  		Database.getInstance().query(keys,
- 				"select * from " + Transaction.TABLE +
- 				" where " + Transaction.COLUMN_DATE_SOLD + " like '%" + dateSold + "' and " + filter);
+ 			"select * from " + Transaction.TABLE +
+ 			" where " + Transaction.COLUMN_DATE_SOLD + " like '%" + dateSold + "%' and " + filter);
  	}
  	
  	public void searchFilteredTransactionsByTotalPrice(String[] keys, BigDecimal totalPrice){
  		Database.getInstance().query(keys,
- 				"select * from " + Transaction.TABLE +
- 				" where " + Transaction.COLUMN_TOTAL_PRICE + " = " + totalPrice.toString() + " and " + filter);
+ 			"select * from " + Transaction.TABLE +
+ 			" where " + Transaction.COLUMN_TOTAL_PRICE + " = " + totalPrice.toString() + " and " + filter);
  	}
 	
 	public void getTransactionDetails(String[] keys, int transactionID) {
 		Database.getInstance().query(keys,
-				"select * from " + ItemLog.TABLE +
-				" where " + ItemLog.COLUMN_TRANSACTION_ID + " like '" + transactionID + "'" +
-				" order by " + ItemLog.COLUMN_TRANSACTION_ID + ";");
+			"select * from " + ItemLog.TABLE +
+			" where " + ItemLog.COLUMN_TRANSACTION_ID + " like '%" + transactionID + "%'" +
+			" order by " + ItemLog.COLUMN_TRANSACTION_ID + ";");
 	}
 	
 	public void searchTransactionDetails(String[] keys, int transactionID, String search) {
 		Database.getInstance().query(keys,
-				"select * from " + ItemLog.TABLE +
-				" where " + ItemLog.COLUMN_TRANSACTION_ID + " like '" + transactionID +
-				"' and concat("+ItemLog.COLUMN_SALE_ID+", "+ItemLog.COLUMN_ITEM_CODE+", "+ItemLog.COLUMN_TYPE+", "+ItemLog.COLUMN_TRANSACTION_ID+", "+ItemLog.COLUMN_QUANTITY_SOLD+", "+ItemLog.COLUMN_ORIGINAL_SOLD+", " +ItemLog.COLUMN_PRICE_SOLD+") like '%" + search + "%';");
+			"select * from " + ItemLog.TABLE +
+			" where " + ItemLog.COLUMN_TRANSACTION_ID + " like '%" + transactionID + "%'" +
+			"' and concat("+ItemLog.COLUMN_SALE_ID+", "+ItemLog.COLUMN_ITEM_CODE+", "+ItemLog.COLUMN_TYPE+", "+ItemLog.COLUMN_TRANSACTION_ID+", "+ItemLog.COLUMN_QUANTITY_SOLD+", "+ItemLog.COLUMN_ORIGINAL_SOLD+", " +ItemLog.COLUMN_PRICE_SOLD+") like '%" + search + "%';");
+	}
+	
+	//purchase order
+	public void getAllPurchaseOrders(String[] keys){
+		Database.getInstance().query(keys, 
+				"select * from " + PurchaseOrder.TABLE);
+	}
+	
+	public void searchPurchaseOrdersByOrderID(String[] keys, int orderID){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_ORDER_ID + " = " + orderID + ";");
+	}
+	
+	public void searchPurchaseOrdersBySupplierCode(String[] keys, String supplierCode){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_SUPPLIER_CODE + " like '%" + supplierCode + "%';");
+	}
+	
+	public void searchPurchaseOrdersByTotalPrice(String[] keys, BigDecimal totalPrice){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_TOTAL_PRICE + " = " + totalPrice.toString() + ";");
+	}
+	
+	public void searchPurchaseOrdersByDateOrdered(String[] keys, String dateOrdered){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_DATE_ORDERED + " like '%" + dateOrdered + "%';");
+	}
+	
+	public void searchPurchaseOrdersByIsPending(String[] keys, int isPending){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = " + isPending + ";");
+	}
+	
+	public void searchPurchaseOrdersByDateReceived(String[] keys, String dateReceived){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_DATE_RECEIVED + " like '%" + dateReceived + "%';");
+	}
+	
+	public void addPurchaseOrder(PurchaseOrder purchaseOrder){
+		String sql = "insert into " + PurchaseOrder.TABLE + " ("+PurchaseOrder.COLUMN_ORDER_ID+
+				", "+PurchaseOrder.COLUMN_SUPPLIER_CODE+
+				", "+PurchaseOrder.COLUMN_TOTAL_PRICE+
+				", "+PurchaseOrder.COLUMN_DATE_ORDERED+
+				", "+PurchaseOrder.COLUMN_IS_PENDING+
+				", "+PurchaseOrder.COLUMN_DATE_RECEIVED+") values (?, ?, ?, ?, ?, ?)";
+		
+		try{
+			PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(sql);
+			statement.setInt(1, purchaseOrder.getOrderID()); 
+			statement.setString(2, purchaseOrder.getSupplierCode());
+			statement.setBigDecimal(3, purchaseOrder.getTotalPrice());
+			statement.setDate(4, purchaseOrder.getDateOrdered());
+			statement.setInt(5, purchaseOrder.getIsPending());
+			statement.setDate(6, purchaseOrder.getDateReceived());
+			Database.getInstance().execute(statement);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void addItemOrder(ItemOrder itemOrder) {
+		String sql = "insert into " + PurchaseOrder.TABLE + " ("+ItemOrder.COLUMN_ORDER_ID+
+				", "+ItemOrder.COLUMN_ITEM_CODE+
+				", "+ItemOrder.COLUMN_QUANTITY+") values (?, ?, ?)";
+		
+		try{
+			PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(sql);
+			statement.setInt(1, itemOrder.getOrderID()); 
+			statement.setString(2, itemOrder.getItemCode());
+			statement.setInt(3, itemOrder.getQuantity());
+			Database.getInstance().execute(statement);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void addItem(Item item){
+		String sql = "insert into " + Item.TABLE + " ("+Item.COLUMN_ITEM_CODE+
+				", "+Item.COLUMN_NAME+
+				", "+Item.COLUMN_DESCRIPTION+
+				", "+Item.COLUMN_CATEGORY+
+				", "+Item.COLUMN_MANUFACTURER+
+				", "+Item.COLUMN_SUPPLIER_CODE+
+				", "+Item.COLUMN_STOCK+
+				", "+Item.COLUMN_DATE_PURCHASE+
+				", "+Item.COLUMN_PRICE_SUPPLIER+
+				", "+Item.COLUMN_PRICE_CUSTOMER+") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		try{
+			PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(sql);
+			statement.setString(1, item.getItemCode()); 
+			statement.setString(2, item.getName());
+			statement.setString(3, item.getDescription());
+			statement.setString(4, item.getCategory());
+			statement.setString(5, item.getManufacturer());
+			statement.setString(6, item.getSupplierCode());
+			statement.setInt(7, item.getStock());
+			statement.setDate(8, item.getDatePurchase());
+			statement.setBigDecimal(9, item.getPriceSupplier());
+			statement.setBigDecimal(10, item.getPriceCustomer());
+			Database.getInstance().execute(statement);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+
+	public void getSupplierItems(String[] strings, String supplierCode) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

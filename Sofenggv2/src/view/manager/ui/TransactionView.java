@@ -215,14 +215,14 @@ public class TransactionView extends MainView implements View{
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
 		//indeces are as follows:
-		 		//0 = transaction #, 1 = user id, 2 = transaction type
-		 		//3 = is loan, 4 = date sold, 5 = total price
-		 		list.addAll("Transaction ID",
-		 					"User ID",
-		 					"Transaction Type", 
-		 					"Is Loan",
-		 					"Date Sold",
-		 					"Total Price");
+		//0 = transaction #, 1 = user id, 2 = transaction type
+		//3 = is loan, 4 = date sold, 5 = total price
+		list.addAll("Transaction ID",
+					"User ID",
+					"Transaction Type", 
+					"Is Loan",
+					"Date Sold",
+					"Total Price");
 		
 		return list;
 	}

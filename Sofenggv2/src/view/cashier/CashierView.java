@@ -274,7 +274,7 @@ public class CashierView extends BorderPane implements View{
 				
 			checkoutHBox.getChildren ().addAll (checkoutLeftHBox, checkoutRightHBox);
 			
-			cartOptionsHBox = new HBox ();
+			cartOptionsHBox = new HBox (20);
 			cartOptionsHBox.setAlignment(Pos.CENTER);
 			
 				cartOptionsLeftHBox = new HBox (10);
@@ -603,9 +603,6 @@ public class CashierView extends BorderPane implements View{
 			wholeSaleButton.setSelected(true);
 			transaction = "wholesale";
 		}
-		
-		if (!cvc.getMainStage().isMaximized())
-			cvc.getMainStage().sizeToScene();
 	}
 	
 	public void changeCashierName() {

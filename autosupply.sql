@@ -85,6 +85,7 @@ CREATE TABLE `items` (
   `name` varchar(45) NOT NULL,
   `description` varchar(45) NOT NULL,
   `category` varchar(45) NOT NULL,
+  `manufacturer` varchar(45) NOT NULL,
   `supplier_code` varchar(45) NOT NULL,
   `stock` int(11) NOT NULL,
   `date_purchase` date NOT NULL,
@@ -100,7 +101,7 @@ CREATE TABLE `items` (
 
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
-INSERT INTO `items` VALUES ('HWHEEL','Honda Wheel','Wheel from Honda','Wheel','HMAKATI',20,'2017-12-12',15.0000,20.0000),('HWINDOW','Honda Window','Window from Honda','Window','HMAKATI',30,'2017-12-11',10.0000,15.0000),('MPISTON','Mistubishi Piston','Piston from Mistubishi','Piston','MORTIGAS',20,'2017-12-13',20.0000,25.0000),('MPLUG','Mitsubishi Spark Plug','Spark Plug from Mitsubishi','Spark Plug','MORTIGAS',15,'2017-12-10',10.0000,15.0000),('TBATT','Toyota Battery','Car Battery from Toyota','Battery','TBICUTAN',25,'2017-12-14',20.0000,25.0000),('TOIL','Toyota Oil','Oil from Toyota','Oil','TBICUTAN',50,'2017-12-12',5.0000,10.0000);
+INSERT INTO `items` VALUES ('HWHEEL','Honda Wheel','Wheel from Honda','Wheel','Honda Makati','HMAKATI',20,'2017-12-12',15.0000,20.0000),('HWINDOW','Honda Window','Window from Honda','Window','Honda Makati','HMAKATI',30,'2017-12-11',10.0000,15.0000),('MPISTON','Mistubishi Piston','Piston from Mistubishi','Piston','Mitsubishi Ortigas','MORTIGAS',20,'2017-12-13',20.0000,25.0000),('MPLUG','Mitsubishi Spark Plug','Spark Plug from Mitsubishi','Spark Plug','Mitsubishi Ortigas','MORTIGAS',15,'2017-12-10',10.0000,15.0000),('TBATT','Toyota Battery','Car Battery from Toyota','Battery','Toyota Bicutan','TBICUTAN',25,'2017-12-14',20.0000,25.0000),('TOIL','Toyota Oil','Oil from Toyota','Oil','Toyota Bicutan','TBICUTAN',50,'2017-12-12',5.0000,10.0000);
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,7 +171,7 @@ CREATE TABLE `purchase_orders` (
   `total_price` decimal(19,4) NOT NULL,
   `date_ordered` date NOT NULL,
   `is_pending` int(4) NOT NULL,
-  `date_received` date DEFAULT NULL,
+  `date_received` date NOT NULL,
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -181,7 +182,7 @@ CREATE TABLE `purchase_orders` (
 
 LOCK TABLES `purchase_orders` WRITE;
 /*!40000 ALTER TABLE `purchase_orders` DISABLE KEYS */;
-INSERT INTO `purchase_orders` VALUES (0,'HMAKATI',75.0000,'2017-12-14',0,'2017-12-15'),(1,'TBICUTAN',100.0000,'2017-12-15',1,NULL);
+INSERT INTO `purchase_orders` VALUES (0,'HMAKATI',75.0000,'2017-12-14',0,'2017-12-15'),(1,'TBICUTAN',100.0000,'2017-12-13',1,'2017-12-14');
 /*!40000 ALTER TABLE `purchase_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -287,7 +288,7 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-INSERT INTO `transactions` VALUES (0,4,'retail',1,'2017-12-12',45.0000),(1,4,'whole',0,'2017-12-13',400.0000),(2,4,'retail',0,'2017-12-14',30.0000);
+INSERT INTO `transactions` VALUES (0,4,'retail',1,'2017-12-12',45.0000),(1,4,'whole',0,'2017-12-13',400.0000),(2,4,'retail',0,'2017-12-15',30.0000);
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -353,4 +354,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-15 17:59:44
+-- Dump completed on 2017-12-15 20:44:15

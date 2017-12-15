@@ -33,6 +33,18 @@ public class ViewFactory {
 			//puts the inital contents of the table
 			mvc.getCurrentTransactions(new String[]{TransactionView.KEY});
 			return tv;
+		case PURCHASE_ORDER_CODE:
+			//tries to detach view first (if there are any previous transaction view)
+			Database.getInstance().detach(PurchaseOrderView.KEY);
+			
+			PurchaseOrderView pov = new PurchaseOrderView(mvc);
+			
+			//attach view to database
+			Database.getInstance().attach(PurchaseOrderView.KEY, pov);
+			
+			//puts the inital contents of the table
+			mvc.getAllPurchaseOrders(new String[]{PurchaseOrderView.KEY});
+			return pov;
 		case CUSTOMER_CODE:
 			//tries to detach view first (if there are any previous customer view)
 			Database.getInstance().detach(CustomerView.KEY);
@@ -69,8 +81,6 @@ public class ViewFactory {
 			//puts the initial contents of the table
 			mvc.getAllSuppliers(new String[]{SupplierView.KEY});
 			return sv;
-		case PURCHASE_ORDER_CODE:
-			return new PurchaseOrderView(mvc);
 		case SALES_REPORT_CODE:
 			return new SalesReportView(mvc);
 		default:
