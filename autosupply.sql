@@ -288,7 +288,7 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-INSERT INTO `transactions` VALUES (0,4,'retail',1,'2017-12-12',45.0000),(1,4,'whole',0,'2017-12-13',400.0000),(2,4,'retail',0,'2017-12-15',30.0000);
+INSERT INTO `transactions` VALUES (0,4,'retail',1,'2017-12-12',45.0000),(1,4,'wholesale',0,'2017-12-13',400.0000),(2,4,'retail',0,'2017-12-15',30.0000);
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -354,4 +354,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-15 20:44:15
+-- Dump completed on 2017-12-15 22:16:51
