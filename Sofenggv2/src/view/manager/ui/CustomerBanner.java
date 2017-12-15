@@ -171,8 +171,9 @@ public class CustomerBanner extends Banner {
 		BottomBannerContents.getChildren().addAll(BottomLeftColumn, BottomRightColumn);
 		BottomBannerDetails.getChildren().addAll(BottomBannerTitle, BottomBannerContents);
 		
-		bottom.getChildren().addAll(BottomBannerDetails);
-		setMargin(bottom, new Insets(0, 0, 20, 0));
+		//bottom.getChildren().addAll(BottomBannerDetails);
+		setCenter(BottomBannerDetails);
+		setMargin(BottomBannerDetails, new Insets(20, 0, 0, 0));
 	}
 
 	private void setPositions() {

@@ -29,8 +29,8 @@ public class CreateReportPopup extends Popup {
 			private HBox datePickerHBox;
 				private DatePicker startDatePicker;
 				private DatePicker endDatePicker;
-				private ComboBox<String> monthBox;
-				private ComboBox<Integer> yearBox;
+			private ComboBox<String> monthBox;
+			private ComboBox<Integer> yearBox;
 		
 		private Button createBtn;
 		
@@ -144,7 +144,7 @@ public class CreateReportPopup extends Popup {
 			yearlyRadio.setSelected(true);
 			
 			optionsLbl.setText("Select Year:");
-			optionsHBox.getChildren().removeAll(dayPicker, datePickerHBox, monthBox);
+			optionsHBox.getChildren().removeAll(dayPicker, datePickerHBox, monthBox, yearBox);
 			optionsHBox.getChildren().addAll(yearBox);
 		});
 	}

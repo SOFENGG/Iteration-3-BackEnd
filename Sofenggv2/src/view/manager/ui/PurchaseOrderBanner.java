@@ -85,6 +85,7 @@ public class PurchaseOrderBanner extends Banner {
 		rightCombos[1] = new VBox();
 		isPendingField = new TextField();
 		rightCombos[1].getChildren().addAll(new Label("Is Pending:"), isPendingField);
+		rightCombos[1].setVisible(false);
 		
 		rightCombos[2] = new VBox();
 		receiveDatePicker = new DatePicker();

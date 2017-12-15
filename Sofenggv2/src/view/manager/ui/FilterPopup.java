@@ -105,6 +105,7 @@ public class FilterPopup extends Popup {
 				presetComboBox.getSelectionModel().selectFirst();
 			
 				applyFilterButton = new Button("Apply Filter");
+				applyFilterButton.getStyleClass().add("GreenButton");
 			
 			presetHBox.getChildren().addAll(presetComboBox, applyFilterButton);
 			
