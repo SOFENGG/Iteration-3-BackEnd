@@ -340,6 +340,9 @@ public class CashierView extends BorderPane implements View{
 				setLeft(null);
 		});
 		
+		helpButton.setOnAction(e -> {
+			new HelpPopup(cvc);
+		});
 		
 		//center
 		/*filterComboBox.setOnAction(e -> {
@@ -424,6 +427,7 @@ public class CashierView extends BorderPane implements View{
 		});
 		
 		logout.setOnAction(e -> {
+			setLeft(null);
 			cvc.logout();
 		});                   
 		
