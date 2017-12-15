@@ -23,8 +23,7 @@ public class PurchaseOrderBanner extends Banner {
 	private DatePicker receiveDatePicker;
 	
 	/* Bottom Buttons */
-	private Button receiveOrderBtn;
-	private Button confirmOrderBtn; 
+		private Button confirmOrderBtn; 
 	
 	public PurchaseOrderBanner() {
 		super();
@@ -47,10 +46,7 @@ public class PurchaseOrderBanner extends Banner {
 		});
 		*/
 		
-		receiveOrderBtn.setOnAction(e -> {
-			ReceiveOrderPopup roP = new ReceiveOrderPopup("Receive Orders");
-			roP.show();
-		});
+		
 	}
 
 	private void initPurchaseOrders() {
@@ -96,14 +92,13 @@ public class PurchaseOrderBanner extends Banner {
 		//rightColumn.setPadding(new Insets(20, 0, 0, 0));
 		
 		/* Bottom Buttons */
-		receiveOrderBtn = new Button("Receive Order");
 		
 		confirmOrderBtn = new Button("Confirm Order");
 		
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
 		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1],  rightCombos[2]);
-		bottom.getChildren().addAll(receiveOrderBtn, confirmOrderBtn);
+		bottom.getChildren().addAll(confirmOrderBtn);
 	}
 	
 	private void setPositions() {

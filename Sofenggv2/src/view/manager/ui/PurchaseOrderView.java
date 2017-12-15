@@ -9,10 +9,13 @@ import java.util.ArrayList;
 
 import controller.ManagerViewController;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
@@ -32,10 +35,18 @@ public class PurchaseOrderView extends MainView implements View{
 	
 	private ResultSet rs = null;
 	
-	private Button addItemBtn;
-	private Button removeItemBtn;
-	private Button clearAllBtn;
 	
+	private TabPane tabbedPane;
+		private Tab currentTab;
+			private Button addItemBtn;
+			private Button removeItemBtn;
+			private Button clearAllBtn;
+		private Tab pendingTab;
+			private Button receiveOrderBtn;
+		private Tab receivedTab;
+	
+
+
 	private int orderID;
 	private String supplierCode;
 	
@@ -60,7 +71,10 @@ public class PurchaseOrderView extends MainView implements View{
 			ap.show();
 		});
 		
-		
+		receiveOrderBtn.setOnAction(e -> {
+			ReceiveOrderPopup roP = new ReceiveOrderPopup("Receive Orders");
+			roP.show();
+		});
 		
 		searchButton.setOnAction(e -> {
 			try {
@@ -102,6 +116,25 @@ public class PurchaseOrderView extends MainView implements View{
 	private void addUniqueToViewNodes() {
 		
 		/* This View has buttons under the table */
+		
+		tabbedPane = new TabPane();
+		
+		currentTab = new Tab();
+		currentTab.setText("Current");
+		currentTab.setClosable(false);
+		currentTab.setContent(tableView);
+		
+		pendingTab = new Tab();
+		pendingTab.setText("Pending");
+		pendingTab.setClosable(false);
+		
+		receivedTab = new Tab();
+		receivedTab.setText("Received");
+		receivedTab.setClosable(false);
+		
+		tabbedPane.getTabs().addAll(currentTab, pendingTab, receivedTab);
+		setCenter(tabbedPane);
+		
 		/* Button Initialization */
 		addItemBtn = new Button("Add Item");
 		
@@ -109,10 +142,59 @@ public class PurchaseOrderView extends MainView implements View{
 		
 		clearAllBtn = new Button("Clear All");
 		
+		receiveOrderBtn = new Button("Receive Order");
+		
 		/* Assembly */
 		actionButtons.getChildren().addAll(addItemBtn, removeItemBtn, clearAllBtn);
 		
 		actionButtons.setPrefHeight(Values.ACTION_BUTTONS_PREF_WIDTH);
+		
+		tabbedPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+			@Override
+			public void changed(ObservableValue<? extends Tab> arg0, Tab arg1, Tab arg2) {
+				if (tabbedPane.getSelectionModel().getSelectedIndex() == 0) {
+					/* Table Switching */
+					mvc.getFilteredTransactions(new String[] {KEY});
+					receivedTab.setContent(null);
+					pendingTab.setContent(null);
+					currentTab.setContent(tableView);
+
+					//tableView.getColumns().setAll(fillColumns());
+			
+					actionButtons.getChildren().addAll(addItemBtn, removeItemBtn, clearAllBtn);
+					actionButtons.getChildren().remove(receiveOrderBtn);
+					
+					/* Banner Switching */
+					ManagerView.reinitBanner(05);
+					
+					
+					
+				} else  if (tabbedPane.getSelectionModel().getSelectedIndex() == 1){
+					mvc.getCurrentTransactions(new String[] {KEY});
+					currentTab.setContent(null);
+					receivedTab.setContent(null);
+					pendingTab.setContent(tableView);
+					//tableView.getColumns().setAll(fillColumns());
+					
+					actionButtons.getChildren().removeAll(addItemBtn, removeItemBtn, clearAllBtn);
+					actionButtons.getChildren().addAll(receiveOrderBtn);
+					
+					/* Banner Switching */
+					ManagerView.reinitBanner(00);
+					
+					
+				} else if (tabbedPane.getSelectionModel().getSelectedIndex() == 2) {
+					currentTab.setContent(null);
+					pendingTab.setContent(null);
+					receivedTab.setContent(tableView);
+					
+					actionButtons.getChildren().removeAll(addItemBtn, removeItemBtn, clearAllBtn);
+					actionButtons.getChildren().remove(receiveOrderBtn);
+					
+					ManagerView.reinitBanner(00);
+				}
+			}
+		});
 	}
 	
 	/* For the Back End Developers */
