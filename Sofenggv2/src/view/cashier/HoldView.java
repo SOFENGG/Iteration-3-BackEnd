@@ -24,7 +24,7 @@ public class HoldView extends HBox implements View {
 	//indexes
 	public static final int NUMBER = 0;
 	private static final int OWNER = 1;
-	private static final int TRANSACTION = 2;
+	public static final int TRANSACTION = 2;
 	private static final int DATE = 3;
 	private static final int TIME = 4;
 	private static final int TOTAL_PRICE = 5;
