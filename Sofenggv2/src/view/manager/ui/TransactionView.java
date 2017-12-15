@@ -159,6 +159,7 @@ public class TransactionView extends MainView implements View{
 		historyTab.setClosable(false);
 		
 		isToday = true;
+		removeFilterButton();
 		
 		/* Assembly */
 		tabbedPane.getTabs().addAll(todayTab, historyTab);
@@ -180,6 +181,7 @@ public class TransactionView extends MainView implements View{
 					
 					/* Banner Switching */
 					ManagerView.reinitBanner(02);
+					addFilterButton();
 					
 				} else {
 					mvc.getCurrentTransactions(new String[] {KEY});
@@ -190,6 +192,7 @@ public class TransactionView extends MainView implements View{
 					
 					/* Banner Switching */
 					ManagerView.reinitBanner(00);
+					removeFilterButton();
 				}
 			}
 		});
