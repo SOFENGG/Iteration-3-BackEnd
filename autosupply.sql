@@ -130,7 +130,7 @@ CREATE TABLE `items_log` (
 
 LOCK TABLES `items_log` WRITE;
 /*!40000 ALTER TABLE `items_log` DISABLE KEYS */;
-INSERT INTO `items_log` VALUES (0,'TOIL','retail',0,2,10.0000,20.0000),(1,'HWHEEL','whole',1,20,20.0000,400.0000),(2,'MPLUG','retail',2,2,15.0000,30.0000),(3,'TBATT','retail',0,1,25.0000,25.0000);
+INSERT INTO `items_log` VALUES (0,'TOIL','retail',0,2,10.0000,20.0000),(1,'HWHEEL','whole',1,20,20.0000,400.0000),(2,'MPLUG','retail',2,2,15.0000,30.0000),(3,'TBATT','retail',0,1,25.0000,25.0000),(4,'HWINDOW','whole',3,25,15.0000,375.0000);
 /*!40000 ALTER TABLE `items_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,10 +142,12 @@ DROP TABLE IF EXISTS `items_orders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `items_orders` (
+  `item_order_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
   `item_code` varchar(45) NOT NULL,
-  `quantity` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `quantity` int(11) NOT NULL,
+  PRIMARY KEY (`item_order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +156,7 @@ CREATE TABLE `items_orders` (
 
 LOCK TABLES `items_orders` WRITE;
 /*!40000 ALTER TABLE `items_orders` DISABLE KEYS */;
-INSERT INTO `items_orders` VALUES (0,'HWHEEL',3),(1,'HWINDOW',3),(2,'TBATT',5);
+INSERT INTO `items_orders` VALUES (1,0,'HWHEEL',3),(2,1,'HWINDOW',3),(3,2,'TBATT',5);
 /*!40000 ALTER TABLE `items_orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -288,7 +290,7 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-INSERT INTO `transactions` VALUES (0,4,'retail',1,'2017-12-12',45.0000),(1,4,'wholesale',0,'2017-12-13',400.0000),(2,4,'retail',0,'2017-12-15',30.0000);
+INSERT INTO `transactions` VALUES (0,4,'retail',1,'2017-12-12',45.0000),(1,4,'wholesale',0,'2017-12-13',400.0000),(2,4,'retail',0,'2017-12-15',30.0000),(3,4,'wholesale',1,'2017-12-16',50.0000);
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -354,4 +356,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-15 22:16:51
+-- Dump completed on 2017-12-16  6:10:59
