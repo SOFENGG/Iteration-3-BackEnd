@@ -25,7 +25,7 @@ public class ManagerViewController {
 	private MainController mc;
 	private ManagerView mv;
 	
-	private User user;
+	private User manager;
 	
 	private String filter = "" + Transaction.COLUMN_DATE_SOLD + " > date_add(curdate(), interval -7 day) order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;";
 	
@@ -64,13 +64,18 @@ public class ManagerViewController {
 		//mv.detach();
 	}
 	
-	public void setUser(User user){
-		this.user = user;
-		System.out.println("Welcome Manager " + user.getName());
+	public void setUser(User manager){
+		this.manager = manager;
+		System.out.println("Welcome Manager " + manager.getName());
+	}
+	
+	public void logout(){
+		this.manager = null;
+		changeControl(Code.LC_CODE, Code.LOGIN_VIEW);
 	}
 	
 	public User getUser() {
-		return user;
+		return manager;
 	}
 	
 	//manager view services

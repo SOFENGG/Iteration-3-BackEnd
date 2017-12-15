@@ -76,6 +76,11 @@ public class ManagerView extends BorderPane implements View {
 			reinitView(03);
 			reinitBanner(04);
 		});
+		
+		/* Logout Button */
+		navMenu.getLogoutBtn().setOnAction(e -> {
+			mvc.logout();
+		});
 	}
 	
 	private void reinitView(int viewKey) {

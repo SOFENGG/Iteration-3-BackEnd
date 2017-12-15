@@ -15,6 +15,7 @@ public class NavMenuPane extends BorderPane{
 		private Button inventoryBtn;
 		private Button custDebtsBtn;
 		private Button suppliersBtn;
+		private Button logoutBtn;
 		
 	public NavMenuPane() {
 		setId("NavMenu");
@@ -36,9 +37,10 @@ public class NavMenuPane extends BorderPane{
 		inventoryBtn  = new Button("Inventory");
 		custDebtsBtn  = new Button("Customers / Debts");
 		suppliersBtn = new Button("Suppliers");
+		logoutBtn = new Button("Logout");
 		
 		/* Assembly */
-		navMenu.getChildren().addAll(transactionBtn, purchaseOrdBtn, salesReportBtn, inventoryBtn, custDebtsBtn, suppliersBtn);
+		navMenu.getChildren().addAll(transactionBtn, purchaseOrdBtn, salesReportBtn, inventoryBtn, custDebtsBtn, suppliersBtn, logoutBtn);
 		navMenu.getChildren().forEach(node -> {
 			Button button = (Button) node;
 			button.setPrefWidth(navMenu.getPrefWidth());
@@ -71,6 +73,10 @@ public class NavMenuPane extends BorderPane{
 
 	public Button getSuppliersBtn() {
 		return suppliersBtn;
+	}
+	
+	public Button getLogoutBtn(){
+		return logoutBtn;
 	}
 
 }
