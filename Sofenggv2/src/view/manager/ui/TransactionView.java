@@ -81,7 +81,7 @@ public class TransactionView extends MainView implements View{
 	
 	private void addUniqueToViewNodes() {
 		/* This View has a filter Button */
-		addFilterButton();
+		//addFilterButton();
 		addTabbedPane();
 	}
 	
@@ -122,6 +122,8 @@ public class TransactionView extends MainView implements View{
 					/* Banner Switching */
 					ManagerView.reinitBanner(02);
 					
+					addFilterButton();
+					
 				} else {
 					mvc.getCurrentTransactions(new String[] {KEY});
 					historyTab.setContent(null);
@@ -131,6 +133,8 @@ public class TransactionView extends MainView implements View{
 					
 					/* Banner Switching */
 					ManagerView.reinitBanner(00);
+					
+					removeFilterButton();
 				}
 			}
 		});

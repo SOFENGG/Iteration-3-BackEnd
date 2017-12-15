@@ -16,6 +16,7 @@ public class PurchaseOrderView extends MainView implements View{
 	
 	public PurchaseOrderView(ManagerViewController mvc) {
 		super(mvc);
+		addUniqueToViewNodes();
 		setUniqueToViewTableAndFilter();
 		initHandlers();
 	}

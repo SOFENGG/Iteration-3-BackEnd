@@ -28,7 +28,7 @@ public class CustomerBanner extends Banner {
 		super();
 		this.mvc = mvc;
 		updateToCustomerDebts();
-		setPositions();
+		//setPositions();
 		initButtonHandlers();
 	}
 	
@@ -95,7 +95,7 @@ public class CustomerBanner extends Banner {
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1]);
 		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1]);
-		setBottom(addCustomerBtn);
+		bottomButtons.getChildren().addAll(addCustomerBtn);
 	}
 	
 	private void setPositions() {

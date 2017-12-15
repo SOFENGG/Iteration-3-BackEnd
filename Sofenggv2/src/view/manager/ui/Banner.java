@@ -1,6 +1,7 @@
 package view.manager.ui;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -14,11 +15,13 @@ public abstract class Banner extends BorderPane {
 		protected HBox bannerContents;
 			protected VBox leftColumn;
 			protected VBox rightColumn;
+		protected HBox bottomButtons;
 				
 	public Banner() {
 		setId("Banner");
 		setPrefWidth(Values.BANNER_PREF_WIDTH);
 		initBanner();
+		setPositions();
 	}
 	
 	private void initBanner() {
@@ -37,12 +40,22 @@ public abstract class Banner extends BorderPane {
 		leftColumn = new VBox(Values.LEFT_SPACING);
 		rightColumn = new VBox(Values.RIGHT_ITEM_SPACING);
 		
+		/* Bottom Buttons Initialization */
+		bottomButtons = new HBox(10);
+		
 		/* Assembly */
 		bannerContents.getChildren().addAll(leftColumn, rightColumn);
 		
 		bannerDetails.getChildren().addAll(bannerTitle, bannerContents);
 		
 		setTop(bannerDetails);
+		
+		setBottom(bottomButtons);
+	}
+	
+	private void setPositions() {
+		setAlignment(bottomButtons, Pos.BOTTOM_RIGHT);
+		setMargin(bottomButtons, new Insets(0, 0, 20, 20));
 	}
 	
 	

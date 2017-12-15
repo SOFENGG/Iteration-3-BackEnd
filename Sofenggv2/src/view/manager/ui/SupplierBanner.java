@@ -31,7 +31,7 @@ public class SupplierBanner extends Banner{
 		super();
 		this.mvc = mvc;
 		updateToSupplierBanner();
-		setPositions();
+		//setPositions();
 		initHandler();
 	}
 	
@@ -107,7 +107,7 @@ public class SupplierBanner extends Banner{
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
 		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1]);
-		setBottom(addConfirmBtn);	
+		bottomButtons.getChildren().addAll(addConfirmBtn);
 	}
 	
 	private void setPositions() {

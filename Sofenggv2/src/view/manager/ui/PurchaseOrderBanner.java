@@ -20,6 +20,7 @@ public class PurchaseOrderBanner extends Banner {
 	private TextField documentTitleField;
 	
 	/* Bottom Buttons */
+	private Button receiveOrderBtn;
 	private Button confirmOrderBtn; 
 	
 	public PurchaseOrderBanner() {
@@ -32,13 +33,18 @@ public class PurchaseOrderBanner extends Banner {
 		bannerTitle.setText(Values.BANNER_PURCHASE_ORDER);
 		initPurchaseOrders();
 		initHandlers();
-		setPositions();
+		//setPositions();
 	}
 	
 	private void initHandlers() {
 		suppliersBtn.setOnMouseClicked(e -> {
 			SupplierPopup sp = new SupplierPopup(Values.SUPPLIER_POPUP_TITLE);
 			sp.show();
+		});
+		
+		receiveOrderBtn.setOnAction(e -> {
+			ReceiveOrderPopup roP = new ReceiveOrderPopup("Receive Orders");
+			roP.show();
 		});
 	}
 
@@ -76,12 +82,14 @@ public class PurchaseOrderBanner extends Banner {
 		rightColumn.setPadding(new Insets(20, 0, 0, 0));
 		
 		/* Bottom Buttons */
+		receiveOrderBtn = new Button("Receive Order");
+		
 		confirmOrderBtn = new Button("Confirm Order");
 		
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
 		rightColumn.getChildren().addAll(suppliersBtn, rightCombos[0]);
-		setBottom(confirmOrderBtn);	
+		bottomButtons.getChildren().addAll(receiveOrderBtn, confirmOrderBtn);
 	}
 	
 	private void setPositions() {
