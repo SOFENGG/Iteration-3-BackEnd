@@ -2,7 +2,9 @@ package controller;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,11 +17,11 @@ import model.Item;
 import model.ItemLog;
 import model.ItemOrder;
 import model.PurchaseOrder;
-import model.Service;
+//import model.Service;
 import model.Supplier;
 import model.Transaction;
 import model.User;
-import model.Worker;
+//import model.Worker;
 import view.manager.ui.ManagerView;
 
 public class ManagerViewController {
@@ -83,155 +85,265 @@ public class ManagerViewController {
 	//manager view services
 	
 	//customers
-		public void getAllCustomers(String[] keys){
-			Database.getInstance().query(keys,
-					"select * from " + Customer.TABLE);
-		}
-		
-		public void searchCustomer(String[] keys, int accountId){
-			String sql = "";
-			sql = "select * from " + Customer.TABLE +
-					" where " + Customer.COLUMN_ACCOUNT_ID + " = " + accountId + ";";
-			Database.getInstance().query(keys,
-					sql);
-		}
-		
-		public void searchCustomerName(String[] keys, String search){
-			String sql = "";
-			sql = "select * from " + Customer.TABLE +
-					" where " + Customer.COLUMN_NAME + " like '" + search + "%' OR "+Customer.COLUMN_NAME+" like '% "+search+"%';";
-			Database.getInstance().query(keys,
-					sql);
-		}
-
-		public void searchCustomerAddress(String[] keys, String search){
-			String sql = "";
-			sql = "select * from " + Customer.TABLE +
-					" where " + Customer.COLUMN_ADDRESS + " like '" + search + "%' OR "+Customer.COLUMN_ADDRESS+" like '% "+search+"%';";
-			Database.getInstance().query(keys,
-					sql);
-		}
-		
-		public void addCustomer(String name, String contactNumber, String address, BigDecimal debtLimit){
-			String sql = "insert into " + Customer.TABLE + " ("+Customer.COLUMN_NAME+
-					", "+Customer.COLUMN_ADDRESS+
-					", "+Customer.COLUMN_CONTACT_NUMBER+
-					", "+Customer.COLUMN_TOTAL_VISITS+
-					", "+Customer.COLUMN_DEBT+
-					", "+Customer.COLUMN_DEBT_LIMIT+") values (?, ?, ?, ?, ?, ?)";
-			
-			try{
-				PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(sql);
-				statement.setString(1, name); 
-				statement.setString(2, address);
-				statement.setString(3, contactNumber);
-				statement.setInt(4, 0);
-				statement.setBigDecimal(5, BigDecimal.valueOf(0));
-				statement.setBigDecimal(6, debtLimit);
-				Database.getInstance().execute(statement);
-			}catch(SQLException e){
-				e.printStackTrace();
-			}
-		}
-		
-
-		//updates the debt limit of the customer
-		public void updateDebtLimit(int accountId, BigDecimal debtLimit){
-			String update = "update " + Customer.TABLE + 
-					" set "+ Customer.COLUMN_DEBT_LIMIT + " = ?"+
-					" where " + Customer.COLUMN_ACCOUNT_ID + " = ?";
-			
-			try{
-				PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(update);
-				statement.setBigDecimal(1, debtLimit); 
-				statement.setInt(2, accountId);
-				Database.getInstance().executeUpdate(statement);
-			}catch(SQLException e){
-				e.printStackTrace();
-			}
-
-		}
-		
-		//updates the current debt of the customer
-		public void updateDebt(int accountId, BigDecimal debt){
-			String update = "update " + Customer.TABLE + 
-					" set "+ Customer.COLUMN_DEBT + " = ?"+
-					" where " + Customer.COLUMN_ACCOUNT_ID + " = ?";
-			
-			try{
-				PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(update);
-				statement.setBigDecimal(1, debt); 
-				statement.setInt(2, accountId);
-				Database.getInstance().executeUpdate(statement);
-			}catch(SQLException e){
-				e.printStackTrace();
-			}
-		}
-		
-		//items
-		public void getAllItems(String[] keys) {
-			Database.getInstance().query(keys,
-					"select * from " + Item.TABLE);
-		}
-		
-		public void searchItem(String[] keys, String search) {
-			Database.getInstance().query(keys,
-					"select * from "+Item.TABLE+" where concat("+Item.COLUMN_ITEM_CODE+", "+Item.COLUMN_NAME+", "+Item.COLUMN_DESCRIPTION+", "+Item.COLUMN_CATEGORY+", "+Item.COLUMN_MANUFACTURER+") like '%" + search + "%';");
-		}
-		
-		public void editItem(String itemCode, String description, String supplierCode, BigDecimal price){
-			String update = "update " + Item.TABLE + 
-					" set "+ Item.COLUMN_DESCRIPTION + " = ?"+
-					", " + Item.COLUMN_SUPPLIER_CODE + " = ?"+
-					", " + Item.COLUMN_PRICE_CUSTOMER + " = ?" +
-					" where " + Item.COLUMN_ITEM_CODE + " = ?";
-			
-			try{
-				PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(update);
-				statement.setString(1, description); 
-				statement.setString(2, supplierCode);
-				statement.setBigDecimal(3, price);
-				statement.setString(4, itemCode);
-				Database.getInstance().executeUpdate(statement);
-			}catch(SQLException e){
-				e.printStackTrace();
-			}
-
-			
-		}
-
-		//services
-		public void getAllServices(String[] keys){
-			Database.getInstance().query(keys,
-					"select * from " + Service.TABLE);
-		}
-		
-		public void searchService(String[] keys, String search){
-			Database.getInstance().query(keys,
-					"select * from "+Service.TABLE+" where concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '" + search + "%' OR concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '% "+search+"%';");
-		}
-		
-		public void getAllSerivceWorkers(String[] keys){
-			Database.getInstance().query(keys,
-					"select * from " + Worker.TABLE);
-		}
-		
-		public void getServiceWorkerWithID(String[] keys, int id){
-			Database.getInstance().query(keys,
-					"select * from " + Worker.TABLE +
-					" where " + Worker.COLUMN_WORKER_ID + " = " + id + ";");
-		}
-		
-		public void getServiceWorkerWithName(String[] keys, String name){
-			Database.getInstance().query(keys,
-					"select * from " + Worker.TABLE +
-					" where " + Worker.COLUMN_NAME + " like '" + name + "%' OR "+Worker.COLUMN_NAME+" like '% "+name+"%';");
-		}
+	public void getAllCustomers(String[] keys){
+		Database.getInstance().query(keys,
+				"select * from " + Customer.TABLE);
+	}
 	
+	public void searchCustomerByAccountID(String[] keys, int accountId){
+		Database.getInstance().query(keys,
+				"select * from "+Customer.TABLE+
+				" where " + Customer.COLUMN_ACCOUNT_ID + " = " + accountId + ";");
+	}
+	
+	public void searchCustomerByName(String[] keys, String name){
+		Database.getInstance().query(keys,
+				"select * from "+Customer.TABLE+
+				" where " + Customer.COLUMN_NAME + " like '%" + name + "%';");
+	}
+	
+	public void searchCustomerByAddress(String[] keys, String address){
+		Database.getInstance().query(keys,
+				"select * from "+Customer.TABLE+
+				" where " + Customer.COLUMN_ADDRESS + " like '%" + address + "%';");
+	}
+	
+	public void searchCustomerByContactNumber(String[] keys, String contactNumber){
+		Database.getInstance().query(keys,
+				"select * from "+Customer.TABLE+
+				" where " + Customer.COLUMN_CONTACT_NUMBER + " like '%" + contactNumber + "%';");
+	}
+	
+	public void searchCustomerAddress(String[] keys, String search){
+		String sql = "";
+		sql = "select * from " + Customer.TABLE +
+				" where " + Customer.COLUMN_ADDRESS + " like '" + search + "%' OR "+Customer.COLUMN_ADDRESS+" like '% "+search+"%';";
+		Database.getInstance().query(keys,
+				sql);
+	}
+	
+	public void searchCustomerByTotalVisits(String[] keys, int totalVisits){
+		Database.getInstance().query(keys,
+				"select * from "+Customer.TABLE+
+				" where " + Customer.COLUMN_TOTAL_VISITS + " = " + totalVisits + ";");
+	}
+	
+	public void searchCustomerByDebt(String[] keys, BigDecimal debt) {
+		Database.getInstance().query(keys,
+				"select * from "+Customer.TABLE+
+				" where " + Customer.COLUMN_DEBT + " = " + debt.toString() + ";");
+	}
+	
+	public void searchCustomerByDebtLimit(String[] keys, BigDecimal debtLimit) {
+		Database.getInstance().query(keys,
+				"select * from "+Customer.TABLE+
+				" where " + Customer.COLUMN_DEBT_LIMIT + " = " + debtLimit.toString() + ";");
+	}
+	
+	public void addCustomer(String name, String contactNumber, String address, BigDecimal debtLimit){
+		String sql = "insert into " + Customer.TABLE + " ("+Customer.COLUMN_NAME+
+				", "+Customer.COLUMN_ADDRESS+
+				", "+Customer.COLUMN_CONTACT_NUMBER+
+				", "+Customer.COLUMN_TOTAL_VISITS+
+				", "+Customer.COLUMN_DEBT+
+				", "+Customer.COLUMN_DEBT_LIMIT+") values (?, ?, ?, ?, ?, ?)";
+		
+		try{
+			PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(sql);
+			statement.setString(1, name); 
+			statement.setString(2, address);
+			statement.setString(3, contactNumber);
+			statement.setInt(4, 0);
+			statement.setBigDecimal(5, BigDecimal.valueOf(0));
+			statement.setBigDecimal(6, debtLimit);
+			Database.getInstance().execute(statement);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void editCustomer(int accountID, String name, String address, String contactNumber, BigDecimal debt, BigDecimal debtLimit){
+		String update = "update " + Customer.TABLE + 
+				" set "+ Customer.COLUMN_NAME + " = ?"+
+				", " + Customer.COLUMN_ADDRESS + " = ?"+
+				", " + Customer.COLUMN_CONTACT_NUMBER + " = ?"+
+				", " + Customer.COLUMN_DEBT + " = ?"+
+				", " + Customer.COLUMN_DEBT_LIMIT + " = ?"+
+				" where " + Customer.COLUMN_ACCOUNT_ID + " = ?";
+		
+		try{
+			PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(update);
+			statement.setString(1, name); 
+			statement.setString(2, address);
+			statement.setString(3, contactNumber); 
+			statement.setBigDecimal(4, debt);
+			statement.setBigDecimal(5, debtLimit); 
+			statement.setInt(6, accountID);
+			Database.getInstance().executeUpdate(statement);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	//items
+	public void getAllItems(String[] keys) {
+		Database.getInstance().query(keys,
+				"select * from " + Item.TABLE);
+	}
+	
+	public void searchItemByItemCode(String[] keys, String itemCode) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_ITEM_CODE + " like '%" + itemCode + "%';");
+	}
+	
+	public void searchItemByName(String[] keys, String name) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_NAME + " like '%" + name + "%';");
+	}
+	
+	public void searchItemByDescription(String[] keys, String description) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_DESCRIPTION + " like '%" + description + "%';");
+	}
+	
+	public void searchItemByCategory(String[] keys, String category) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_CATEGORY + " like '%" + category + "%';");
+	}
+	
+	public void searchItemByManufacturer(String[] keys, String manufacturer) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_MANUFACTURER + " like '%" + manufacturer + "%';");
+	}
+	
+	public void searchItemBySupplierCode(String[] keys, String supplierCode) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_SUPPLIER_CODE + " like '%" + supplierCode + "%';");
+	}
+	
+	public void searchItemByStock(String[] keys, int stock) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_SUPPLIER_CODE + " = " + stock + ";");
+	}
+	
+	public void searchItemByDatePurchase(String[] keys, String datePurchase) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_DATE_PURCHASE + " like '%" + datePurchase + "%';");
+	}
+	
+	public void searchItemByPriceSupplier(String[] keys, BigDecimal priceSupplier) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_SUPPLIER_CODE + " = " + priceSupplier.toString() + ";");
+	}
+	
+	public void searchItemByPriceCustomer(String[] keys, BigDecimal priceCustomer) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_SUPPLIER_CODE + " = " + priceCustomer.toString() + ";");
+	}
+	
+	public void editItem(String itemCode, String name, String description, String category, String manufacturer, String supplierCode, int stock, java.sql.Date datePurchase, BigDecimal priceSupplier, BigDecimal priceCustomer){
+		String update = "update " + Item.TABLE + 
+				" set "+ Item.COLUMN_NAME + " = ?"+
+				", " + Item.COLUMN_DESCRIPTION + " = ?"+
+				", " + Item.COLUMN_CATEGORY + " = ?"+
+				", " + Item.COLUMN_MANUFACTURER + " = ?"+
+				", " + Item.COLUMN_SUPPLIER_CODE + " = ?"+
+				", " + Item.COLUMN_STOCK + " = ?"+
+				", " + Item.COLUMN_DATE_PURCHASE + " = ?"+
+				", " + Item.COLUMN_PRICE_SUPPLIER + " = ?"+
+				", " + Item.COLUMN_PRICE_CUSTOMER + " = ?" +
+				" where " + Item.COLUMN_ITEM_CODE + " = ?";
+		
+		try{
+			PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(update);
+			statement.setString(1, name); 
+			statement.setString(2, description);
+			statement.setString(3, category); 
+			statement.setString(4, manufacturer);
+			statement.setString(5, supplierCode); 
+			statement.setInt(6, stock);
+			statement.setDate(7, datePurchase);
+			statement.setBigDecimal(8, priceSupplier);
+			statement.setBigDecimal(9, priceCustomer);
+			statement.setString(10, itemCode);
+			Database.getInstance().executeUpdate(statement);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	//services
+	/*public void getAllServices(String[] keys){
+		Database.getInstance().query(keys,
+				"select * from " + Service.TABLE);
+	}
+	
+	public void searchService(String[] keys, String search){
+		Database.getInstance().query(keys,
+				"select * from "+Service.TABLE+" where concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '" + search + "%' OR concat("+Service.COLUMN_SERVICE_NAME+", "+ Service.COLUMN_PRICE + ") like '% "+search+"%';");
+	}
+	
+	public void getAllSerivceWorkers(String[] keys){
+		Database.getInstance().query(keys,
+				"select * from " + Worker.TABLE);
+	}
+	
+	public void getServiceWorkerWithID(String[] keys, int id){
+		Database.getInstance().query(keys,
+				"select * from " + Worker.TABLE +
+				" where " + Worker.COLUMN_WORKER_ID + " = " + id + ";");
+	}
+	
+	public void getServiceWorkerWithName(String[] keys, String name){
+		Database.getInstance().query(keys,
+				"select * from " + Worker.TABLE +
+				" where " + Worker.COLUMN_NAME + " like '" + name + "%' OR "+Worker.COLUMN_NAME+" like '% "+name+"%';");
+	}*/
+
 	//supplier
 	public void getAllSuppliers(String[] keys){
 		Database.getInstance().query(keys, 
 				"select * from " + Supplier.TABLE);
+	}
+	
+	public void searchSupplierBySupplierCode(String[] keys, String supplierCode){
+		Database.getInstance().query(keys,
+				"select * from " + Supplier.TABLE +
+				" where " + Supplier.COLUMN_SUPPLIER_CODE + " like '%" + supplierCode + "%';");
+	}
+	
+	public void searchSupplierByName(String[] keys, String name){
+		Database.getInstance().query(keys,
+				"select * from " + Supplier.TABLE +
+				" where " + Supplier.COLUMN_NAME + " like '%" + name + "%';");
+	}
+	
+	public void searchSupplierByContactPerson(String[] keys, String contactPerson){
+		Database.getInstance().query(keys,
+				"select * from " + Supplier.TABLE +
+				" where " + Supplier.COLUMN_CONTACT_PERSON + " like '%" + contactPerson + "%';");
+	}
+	
+	public void searchSupplierByContactNumber(String[] keys, String contactNumber){
+		Database.getInstance().query(keys,
+				"select * from " + Supplier.TABLE +
+				" where " + Supplier.COLUMN_CONTACT_NUMBER + " like '%" + contactNumber + "%';");
+	}
+	
+	public void searchSupplierByTaxID(String[] keys, String taxID){
+		Database.getInstance().query(keys,
+				"select * from " + Supplier.TABLE +
+				" where " + Supplier.COLUMN_TAX_ID + " like '%" + taxID + "%';");
 	}
 	
 	public void addSupplier(Supplier supplier){
@@ -253,19 +365,7 @@ public class ManagerViewController {
 			e.printStackTrace();
 		}
 	}
-	
-	public void searchSupplierByCode(String[] keys, String supplierCode){
-		Database.getInstance().query(keys,
-				"select * from " + Supplier.TABLE +
-				" where " + Supplier.COLUMN_SUPPLIER_CODE + " like '" + supplierCode + "%';");
-	}
-	
-	public void searchSupplierByName(String[] keys, String name){
-		Database.getInstance().query(keys,
-				"select * from " + Supplier.TABLE +
-				" where " + "concat("+ Supplier.COLUMN_NAME + ", " + Supplier.COLUMN_CONTACT_PERSON + ")" + " like '%" + name + "%';");
-	}
-	
+
 	//transactions
 	public void getCurrentTransactions(String[] keys){
 		Date now = new Date();
@@ -283,10 +383,9 @@ public class ManagerViewController {
 		
 		Database.getInstance().query(keys,
 				"select * from " + Transaction.TABLE +
-				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "'" +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_TRANSACTION_ID + " = " + transactionID +
 				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
 	}
-	
 	
 	public void searchCurrentTransactionsByUserID(String[] keys, int userID){
 		Date now = new Date();
@@ -294,7 +393,7 @@ public class ManagerViewController {
 		 		
 		Database.getInstance().query(keys,
 		 		"select * from " + Transaction.TABLE +
-		 		" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_USER_ID + " like '" + userID + "'" +
+		 		" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_USER_ID + " = " + userID +
 		 		" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
  	}
 		 	
@@ -314,7 +413,7 @@ public class ManagerViewController {
 		
 		Database.getInstance().query(keys,
 				"select * from " + Transaction.TABLE +
-				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_IS_LOAN + " like '" + isLoan + "'" +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_IS_LOAN + " = " + isLoan +
 				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
 	}
 	
@@ -460,13 +559,13 @@ public class ManagerViewController {
 	public void searchFilteredTransactionsByTransactionID(String[] keys, int transactionID){
 		Database.getInstance().query(keys,
 			"select * from " + Transaction.TABLE +
-			" where " + Transaction.COLUMN_TRANSACTION_ID + " like '%" + transactionID + "%' and " + filter);
+			" where " + Transaction.COLUMN_TRANSACTION_ID + " = " + transactionID + " and " + filter);
 	}
 	
 	public void searchFilteredTransactionsByUserID(String[] keys, int userID){
 		 Database.getInstance().query(keys,
 		 	"select * from " + Transaction.TABLE +
-		 	" where " + Transaction.COLUMN_USER_ID + " like '%" + userID + "%' and " + filter);
+		 	" where " + Transaction.COLUMN_USER_ID + " = " + userID + " and " + filter);
 	}
 		 	
  	public void searchFilteredTransactionsByTransactionType(String[] keys, String transactionType){
@@ -496,60 +595,53 @@ public class ManagerViewController {
 	public void getTransactionDetails(String[] keys, int transactionID) {
 		Database.getInstance().query(keys,
 			"select * from " + ItemLog.TABLE +
-			" where " + ItemLog.COLUMN_TRANSACTION_ID + " like '%" + transactionID + "%'" +
+			" where " + ItemLog.COLUMN_TRANSACTION_ID + " = " + transactionID +
 			" order by " + ItemLog.COLUMN_TRANSACTION_ID + ";");
 	}
 	
-	public void searchTransactionDetails(String[] keys, int transactionID, String search) {
+	public void searchTransactionDetailsbySaleID(String[] keys, int transactionID, int saleID) {
 		Database.getInstance().query(keys,
 			"select * from " + ItemLog.TABLE +
-			" where " + ItemLog.COLUMN_TRANSACTION_ID + " like '%" + transactionID + "%'" +
-			"' and concat("+ItemLog.COLUMN_SALE_ID+", "+ItemLog.COLUMN_ITEM_CODE+", "+ItemLog.COLUMN_TYPE+", "+ItemLog.COLUMN_TRANSACTION_ID+", "+ItemLog.COLUMN_QUANTITY_SOLD+", "+ItemLog.COLUMN_ORIGINAL_SOLD+", " +ItemLog.COLUMN_PRICE_SOLD+") like '%" + search + "%';");
+			" where " + ItemLog.COLUMN_TRANSACTION_ID + " = " + transactionID +
+			" and " + ItemLog.COLUMN_SALE_ID + " = " + saleID + ";");
+	}
+	
+	public void searchTransactionDetailsByItemCode(String[] keys, int transactionID, String itemCode) {
+		Database.getInstance().query(keys,
+			"select * from " + ItemLog.TABLE +
+			" where " + ItemLog.COLUMN_TRANSACTION_ID + " = " + transactionID +
+			" and " + ItemLog.COLUMN_ITEM_CODE + " like '%" + itemCode + "%';");
+	}
+	
+	public void searchTransactionDetailsByType(String[] keys, int transactionID, String type) {
+		Database.getInstance().query(keys,
+			"select * from " + ItemLog.TABLE +
+			" where " + ItemLog.COLUMN_TRANSACTION_ID + " = " + transactionID +
+			" and " + ItemLog.COLUMN_TYPE + " like '%" + type + "%';");
+	}
+	
+	public void searchTransactionDetailsByQuantitySold(String[] keys, int transactionID, int quantitySold) {
+		Database.getInstance().query(keys,
+			"select * from " + ItemLog.TABLE +
+			" where " + ItemLog.COLUMN_TRANSACTION_ID + " = " + transactionID +
+			" and " + ItemLog.COLUMN_QUANTITY_SOLD + " = " + quantitySold + ";");
+	}
+	
+	public void searchTransactionDetailsByOriginalPrice(String[] keys, BigDecimal originalPrice) {
+		Database.getInstance().query(keys,
+				"select * from "+ItemLog.TABLE+
+				" where " + ItemLog.COLUMN_ORIGINAL_PRICE + " = " + originalPrice.toString() + ";");
+	}
+	
+	public void searchTransactionDetailsByPriceSold(String[] keys, BigDecimal priceSold) {
+		Database.getInstance().query(keys,
+				"select * from "+ItemLog.TABLE+
+				" where " + ItemLog.COLUMN_PRICE_SOLD + " = " + priceSold.toString() + ";");
 	}
 	
 	//purchase order
-	public void getAllPurchaseOrders(String[] keys){
-		Database.getInstance().query(keys, 
-				"select * from " + PurchaseOrder.TABLE);
-	}
-	
-	public void searchPurchaseOrdersByOrderID(String[] keys, int orderID){
-		Database.getInstance().query(keys,
-			"select * from " + PurchaseOrder.TABLE +
-			" where " + PurchaseOrder.COLUMN_ORDER_ID + " = " + orderID + ";");
-	}
-	
-	public void searchPurchaseOrdersBySupplierCode(String[] keys, String supplierCode){
-		Database.getInstance().query(keys,
-			"select * from " + PurchaseOrder.TABLE +
-			" where " + PurchaseOrder.COLUMN_SUPPLIER_CODE + " like '%" + supplierCode + "%';");
-	}
-	
-	public void searchPurchaseOrdersByTotalPrice(String[] keys, BigDecimal totalPrice){
-		Database.getInstance().query(keys,
-			"select * from " + PurchaseOrder.TABLE +
-			" where " + PurchaseOrder.COLUMN_TOTAL_PRICE + " = " + totalPrice.toString() + ";");
-	}
-	
-	public void searchPurchaseOrdersByDateOrdered(String[] keys, String dateOrdered){
-		Database.getInstance().query(keys,
-			"select * from " + PurchaseOrder.TABLE +
-			" where " + PurchaseOrder.COLUMN_DATE_ORDERED + " like '%" + dateOrdered + "%';");
-	}
-	
-	public void searchPurchaseOrdersByIsPending(String[] keys, int isPending){
-		Database.getInstance().query(keys,
-			"select * from " + PurchaseOrder.TABLE +
-			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = " + isPending + ";");
-	}
-	
-	public void searchPurchaseOrdersByDateReceived(String[] keys, String dateReceived){
-		Database.getInstance().query(keys,
-			"select * from " + PurchaseOrder.TABLE +
-			" where " + PurchaseOrder.COLUMN_DATE_RECEIVED + " like '%" + dateReceived + "%';");
-	}
-	
-	public void addPurchaseOrder(PurchaseOrder purchaseOrder){
+
+	public void addPendingPurchaseOrder(PurchaseOrder purchaseOrder){
 		String sql = "insert into " + PurchaseOrder.TABLE + " ("+PurchaseOrder.COLUMN_ORDER_ID+
 				", "+PurchaseOrder.COLUMN_SUPPLIER_CODE+
 				", "+PurchaseOrder.COLUMN_TOTAL_PRICE+
@@ -563,12 +655,18 @@ public class ManagerViewController {
 			statement.setString(2, purchaseOrder.getSupplierCode());
 			statement.setBigDecimal(3, purchaseOrder.getTotalPrice());
 			statement.setDate(4, purchaseOrder.getDateOrdered());
-			statement.setInt(5, purchaseOrder.getIsPending());
+			statement.setInt(5, 1);
 			statement.setDate(6, purchaseOrder.getDateReceived());
 			Database.getInstance().execute(statement);
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void getSupplierItems(String[] keys, String supplierCode) {
+		Database.getInstance().query(keys,
+				"select * from "+Item.TABLE+
+				" where " + Item.COLUMN_SUPPLIER_CODE + " like '%" + supplierCode + "%';");
 	}
 	
 	public void addItemOrder(ItemOrder itemOrder) {
@@ -585,6 +683,11 @@ public class ManagerViewController {
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void removeItemOrder(String[] keys, int itemOrderID) {
+		Database.getInstance().query(keys, "delete from " + ItemOrder.TABLE +
+				" where " + ItemOrder.COLUMN_ITEM_ORDER_ID + " = " + itemOrderID + ";");
 	}
 	
 	public void addItem(Item item){
@@ -617,9 +720,127 @@ public class ManagerViewController {
 		}
 	}
 
-	public void getSupplierItems(String[] strings, String supplierCode) {
-		// TODO Auto-generated method stub
+	public void receivePurchaseOrder(String[] keys, int orderID) {
+		//set purchase order to not pending
+		String update = "update " + PurchaseOrder.TABLE + 
+				" set "+ PurchaseOrder.COLUMN_IS_PENDING + " = ?"+
+				" where " + PurchaseOrder.COLUMN_ORDER_ID + " = ?";
+		try{
+			PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(update);
+			statement.setInt(1, 0); 
+			statement.setInt(2, orderID);
+			Database.getInstance().executeUpdate(statement);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 		
+		//get item orders as result set
+		ResultSet rs = Database.getInstance().query(keys,
+				"select " + ItemOrder.COLUMN_ITEM_CODE + ", " + ItemOrder.COLUMN_QUANTITY + " from " + ItemOrder.TABLE +
+				" where " + ItemOrder.COLUMN_ORDER_ID + " = " + orderID + ";");
+		
+		//get all items to be incremented and their respectful increments
+		ArrayList<String> itemCodes = new ArrayList<>();
+		ArrayList<Integer> stockAdditions = new ArrayList<>();
+		try {
+			for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+				switch(rs.getMetaData().getColumnType(i)){
+				case Types.VARCHAR: itemCodes.add(rs.getString(i));
+					break;
+				case Types.INTEGER: stockAdditions.add(rs.getInt(i));
+					break;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		//increment all items by their respectful increments
+		for (int i = 0; i < itemCodes.size(); i++) {
+			String increment = "update " + Item.TABLE + 
+					" set "+ Item.COLUMN_STOCK + " = " + Item.COLUMN_STOCK + " + ?"+
+					" where " + Item.COLUMN_ITEM_CODE + " = ?";
+			try{
+				PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(increment);
+				statement.setInt(1, stockAdditions.get(i)); 
+				statement.setString(2, itemCodes.get(i));
+				Database.getInstance().executeUpdate(statement);
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void getPendingPurchaseOrders(String[] keys){
+		Database.getInstance().query(keys, 
+				"select * from " + PurchaseOrder.TABLE +
+				" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 1;");
+	}
+	
+	public void searchPendingPurchaseOrdersByOrderID(String[] keys, int orderID){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 1 and " + PurchaseOrder.COLUMN_ORDER_ID + " = " + orderID + ";");
+	}
+	
+	public void searchPendingPurchaseOrdersBySupplierCode(String[] keys, String supplierCode){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 1 and " + PurchaseOrder.COLUMN_SUPPLIER_CODE + " like '%" + supplierCode + "%';");
+	}
+	
+	public void searchPendingPurchaseOrdersByTotalPrice(String[] keys, BigDecimal totalPrice){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 1 and " + PurchaseOrder.COLUMN_TOTAL_PRICE + " = " + totalPrice.toString() + ";");
+	}
+	
+	public void searchPendingPurchaseOrdersByDateOrdered(String[] keys, String dateOrdered){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 1 and " + PurchaseOrder.COLUMN_DATE_ORDERED + " like '%" + dateOrdered + "%';");
+	}
+	
+	public void searchPendingPurchaseOrdersByDateReceived(String[] keys, String dateReceived){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 1 and " + PurchaseOrder.COLUMN_DATE_RECEIVED + " like '%" + dateReceived + "%';");
+	}
+	
+	public void getReceivedPurchaseOrders(String[] keys){
+		Database.getInstance().query(keys, 
+				"select * from " + PurchaseOrder.TABLE +
+				" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 0;");
+	}
+	
+	public void searchReceivedPurchaseOrdersByOrderID(String[] keys, int orderID){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 0 and " + PurchaseOrder.COLUMN_ORDER_ID + " = " + orderID + ";");
+	}
+	
+	public void searchReceivedgPurchaseOrdersBySupplierCode(String[] keys, String supplierCode){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 0 and " + PurchaseOrder.COLUMN_SUPPLIER_CODE + " like '%" + supplierCode + "%';");
+	}
+	
+	public void searchReceivedPurchaseOrdersByTotalPrice(String[] keys, BigDecimal totalPrice){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 0 and " + PurchaseOrder.COLUMN_TOTAL_PRICE + " = " + totalPrice.toString() + ";");
+	}
+	
+	public void searchReceivedPurchaseOrdersByDateOrdered(String[] keys, String dateOrdered){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 0 and " + PurchaseOrder.COLUMN_DATE_ORDERED + " like '%" + dateOrdered + "%';");
+	}
+	
+	public void searchReceivedPurchaseOrdersByDateReceived(String[] keys, String dateReceived){
+		Database.getInstance().query(keys,
+			"select * from " + PurchaseOrder.TABLE +
+			" where " + PurchaseOrder.COLUMN_IS_PENDING + " = 0 and " + PurchaseOrder.COLUMN_DATE_RECEIVED + " like '%" + dateReceived + "%';");
 	}
 	
 }

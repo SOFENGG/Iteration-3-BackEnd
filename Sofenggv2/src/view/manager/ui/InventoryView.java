@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 import model.Database;
 import view.View;
+import view.cashier.AlertBoxPopup;
 
 public class InventoryView extends MainView implements View {
 	public static final String KEY = "managerinventoryviewkey";
@@ -44,7 +46,39 @@ public class InventoryView extends MainView implements View {
 	
 	public void initHandler(){
 		searchButton.setOnAction(e -> {
-			mvc.searchItem(new String[]{KEY}, searchField.getText());
+			try {
+				switch (searchColumns.getSelectionModel().getSelectedIndex()) {
+				case 0:
+					//transaction #
+					mvc.searchCurrentTransactionsByTransactionID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+					break;
+				case 1:
+					//user id
+					mvc.searchCurrentTransactionsByUserID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+					break;
+				case 2:
+					//transaction type
+					mvc.searchCurrentTransactionsByTransactionType(new String[] {KEY}, searchField.getText());
+					break;
+				case 3:
+					//is loan
+					mvc.searchCurrentTransactionsByIsLoan(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+					break;
+				case 4:
+					//date sold
+					mvc.searchCurrentTransactionsByDateSold(new String[] {KEY}, searchField.getText());
+					break;
+				case 5:
+					//total cost
+					mvc.searchCurrentTransactionsByTotalPrice(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+					break;
+				}
+			} catch (NumberFormatException nfe) {
+				if (searchField.getText().equals(""))
+ 					mvc.getCurrentTransactions(new String[] {KEY});
+ 				else
+ 					new AlertBoxPopup("Input Error", "Enter a number.");
+			}
 		});
 	}
 	

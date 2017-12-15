@@ -235,7 +235,7 @@ public class CashierViewController {
 				", "+ItemLog.COLUMN_TYPE+
 				", "+ItemLog.COLUMN_TRANSACTION_ID+
 				", "+ItemLog.COLUMN_QUANTITY_SOLD+
-				", "+ItemLog.COLUMN_ORIGINAL_SOLD+
+				", "+ItemLog.COLUMN_ORIGINAL_PRICE+
 				", "+ItemLog.COLUMN_PRICE_SOLD+") values (?, ?, ?, ?, ?, ?)";
 		
 		try {
@@ -428,7 +428,7 @@ public class CashierViewController {
 															", "+ItemLog.COLUMN_TYPE+
 															", "+ItemLog.COLUMN_TRANSACTION_ID+
 															", "+ItemLog.COLUMN_QUANTITY_SOLD+
-															", "+ItemLog.COLUMN_ORIGINAL_SOLD+
+															", "+ItemLog.COLUMN_ORIGINAL_PRICE+
 															", "+ItemLog.COLUMN_PRICE_SOLD+") values (?, ?, ?, ?, ?, ?)";
 		
 		String service_log = "insert into " + ServiceLog.TABLE + " ("+ServiceLog.COLUMN_SERVICE_ID+

@@ -1,6 +1,7 @@
 package view.manager.ui;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 
 import controller.ManagerViewController;
 import javafx.geometry.Insets;
@@ -43,29 +44,40 @@ public class InventoryBanner extends Banner{
 	
 	public void initHandler(){
 		editConfirmBtn.setOnAction(e -> {
-			String itemCode = itemCodeField.getText();
-			String supplierCode = supplierField.getText();
-			String description = ItemDescriptionField.getText();
-			BigDecimal unitPrice;
+			if(!itemCodeField.getText().equals("") && !nameField.getText().equals("") && !ItemDescriptionField.getText().equals("") &&
+			   !categoryField.getText().equals("") && !manufacturerField.getText().equals("") && !supplierField.getText().equals("") &&
+			   !stockField.getText().equals("") && datePurchasedField.getValue() != null && !unitPriceSupField.getText().equals("") && !unitPriceCustField.getText().equals("")){
+				String itemCode = itemCodeField.getText();
+				String name = nameField.getText();
+				String description = ItemDescriptionField.getText();
+				String category = categoryField.getText();
+				String manufacturer = manufacturerField.getText();
+				String supplierCode = supplierField.getText();
+				int stock = Integer.parseInt(stockField.getText());
+				Date datePurchase = java.sql.Date.valueOf(datePurchasedField.getValue());
+				BigDecimal priceSupplier = BigDecimal.valueOf(Double.parseDouble(unitPriceSupField.getText()));
+				BigDecimal priceCustomer = BigDecimal.valueOf(Double.parseDouble(unitPriceCustField.getText()));
 			
-			try{
-				//XXX
-				//unitPrice = BigDecimal.valueOf(Double.parseDouble(unitPriceField.getText()));
-				
-				if(!itemCode.equals("") && !supplierCode.equals("") && !description.equals("")){
-					//mvc.editItem(itemCode, description, supplierCode, unitPrice);
+				try{
+					mvc.editItem(itemCode, name, description, category, manufacturer, supplierCode, stock, datePurchase, priceSupplier, priceCustomer);
 					new AlertBoxPopup("Success", "Item updated.");
 					itemCodeField.setText("");
-					supplierField.setText("");
+					nameField.setText("");
 					ItemDescriptionField.setText("");
-					//unitPriceField.setText("");
-				}else{
-					new AlertBoxPopup("Input Error", "Some fields are left blank.");
+					categoryField.setText("");
+					manufacturerField.setText("");
+					supplierField.setText("");
+					stockField.setText("");
+					datePurchasedField.getEditor().clear();
+					datePurchasedField.setValue(null);
+					unitPriceSupField.setText("");
+					unitPriceCustField.setText("");
+				}catch(NumberFormatException nfe){
+					new AlertBoxPopup("Input Error", "Enter a valid number.");
 				}
-				
-			}catch(NumberFormatException nfe){
-				new AlertBoxPopup("Input Error", "Enter a valid number.");
-			}
+			} else
+				new AlertBoxPopup("Input Error", "Some fields are left blank.");
+			mvc.getAllItems(new String[] {InventoryView.KEY});
 	
 		});
 	}
@@ -128,7 +140,7 @@ public class InventoryBanner extends Banner{
 		rightCombos[3] = new VBox();
 		datePurchasedField = new DatePicker();
 		rightCombos[3].getChildren().addAll(new Label("Date Purchased:"), datePurchasedField);
-		
+		datePurchasedField.setValue(null);
 		
 		/*Price selling Combination*/
 		rightCombos[4] = new VBox();
@@ -145,6 +157,7 @@ public class InventoryBanner extends Banner{
 		bottom.getChildren().addAll(editConfirmBtn);
 	}
 	
+	@SuppressWarnings("unused")
 	private void setPositions() {
 		setAlignment(editConfirmBtn, Pos.CENTER_RIGHT);
 		setMargin(editConfirmBtn, new Insets(0, 20, 20, 0));

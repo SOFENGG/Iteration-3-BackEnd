@@ -2,6 +2,7 @@ package model;
 
 public class ItemOrder {
 	public static final String TABLE = "items_orders";
+	public static final String COLUMN_ITEM_ORDER_ID = "item_order_id";
 	public static final String COLUMN_ORDER_ID = "order_id";
 	public static final String COLUMN_ITEM_CODE = "item_code";
 	public static final String COLUMN_QUANTITY = "quantity";

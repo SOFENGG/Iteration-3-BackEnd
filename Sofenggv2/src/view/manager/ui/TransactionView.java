@@ -58,7 +58,7 @@ public class TransactionView extends MainView implements View{
 		searchButton.setOnAction(e -> {
 			try {
 				if (isToday) {
-					 					//monitor tab
+					//monitor tab
  					switch (searchColumns.getSelectionModel().getSelectedIndex()) {
  					case 0:
  						//transaction #
