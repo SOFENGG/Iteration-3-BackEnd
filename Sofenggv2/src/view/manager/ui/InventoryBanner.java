@@ -6,6 +6,7 @@ import controller.ManagerViewController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -17,12 +18,17 @@ public class InventoryBanner extends Banner{
 
 	/* Left Section */
 	private TextField itemCodeField;
+	private TextField categoryField;
 	private TextField supplierField;
-	private TextField requisitionerField;
+	private TextField stockField;
+	private TextField unitPriceSupField;
 	
 	/* Right Section */	
+	private TextField nameField;
 	private TextField ItemDescriptionField;
-	private TextField unitPriceField;
+	private TextField manufacturerField;
+	private DatePicker datePurchasedField;
+	private TextField unitPriceCustField;
 	
 	/* Bottom Buttons */
 	private Button editConfirmBtn;
@@ -43,15 +49,16 @@ public class InventoryBanner extends Banner{
 			BigDecimal unitPrice;
 			
 			try{
-				unitPrice = BigDecimal.valueOf(Double.parseDouble(unitPriceField.getText()));
+				//XXX
+				//unitPrice = BigDecimal.valueOf(Double.parseDouble(unitPriceField.getText()));
 				
 				if(!itemCode.equals("") && !supplierCode.equals("") && !description.equals("")){
-					mvc.editItem(itemCode, description, supplierCode, unitPrice);
+					//mvc.editItem(itemCode, description, supplierCode, unitPrice);
 					new AlertBoxPopup("Success", "Item updated.");
 					itemCodeField.setText("");
 					supplierField.setText("");
 					ItemDescriptionField.setText("");
-					unitPriceField.setText("");
+					//unitPriceField.setText("");
 				}else{
 					new AlertBoxPopup("Input Error", "Some fields are left blank.");
 				}
@@ -71,43 +78,70 @@ public class InventoryBanner extends Banner{
 
 	private void initInventoryEdit() {	
 		/*Contains the label and textfield combinations for left box*/
-		VBox[] leftCombos = new VBox[3];
+		VBox[] leftCombos = new VBox[5];
 		
 		/*item Code Combination*/
 		leftCombos[0] = new VBox();
 		itemCodeField = new TextField();
 		leftCombos[0].getChildren().addAll(new Label("Item Code:"), itemCodeField);
-
 		
-		/*item descritption Combination*/
+		/*item category Combination*/
 		leftCombos[1] = new VBox();
-		supplierField = new TextField();
-		leftCombos[1].getChildren().addAll(new Label("Supplier:"), supplierField);
+		categoryField = new TextField();
+		leftCombos[1].getChildren().addAll(new Label("Category:"), categoryField);
 		
+		/*item supplier Combination*/
 		leftCombos[2] = new VBox();
-		requisitionerField = new TextField();
-		leftCombos[2].getChildren().addAll(new Label("Requisitioner:"), requisitionerField);
+		supplierField = new TextField();
+		leftCombos[2].getChildren().addAll(new Label("Supplier Code:"), supplierField);
+		
+		/*item stock Combination*/
+		leftCombos[3] = new VBox();
+		stockField = new TextField();
+		leftCombos[3].getChildren().addAll(new Label("Stock:"), stockField);
+		
+		/*item price bought Combination*/
+		leftCombos[4] = new VBox();
+		unitPriceSupField = new TextField();
+		leftCombos[4].getChildren().addAll(new Label("Price Bought:"), unitPriceSupField);
 		
 		
 		/*Contains the label and textfield combinations for right box*/
-		VBox[] rightCombos = new VBox[2];
+		VBox[] rightCombos = new VBox[5];
 		
+		/*item name Combination*/
 		rightCombos[0] = new VBox();
-		ItemDescriptionField = new TextField();
-		rightCombos[0].getChildren().addAll(new Label("Item Description:"), ItemDescriptionField);
+		nameField = new TextField();
+		rightCombos[0].getChildren().addAll(new Label("Name:"), nameField);
 		
-		/*Requisitioner Combination*/
+		/*Descriptions Combination*/
 		rightCombos[1] = new VBox();
-		unitPriceField = new TextField();
-		rightCombos[1].getChildren().addAll(new Label("Unit Price:"), unitPriceField);
+		ItemDescriptionField = new TextField();
+		rightCombos[1].getChildren().addAll(new Label("Description:"), ItemDescriptionField);
+		
+		/*Manufacturer Combination*/
+		rightCombos[2] = new VBox();
+		manufacturerField = new TextField();
+		rightCombos[2].getChildren().addAll(new Label("Manufacturer:"), manufacturerField);
+		
+		/*Date Purchased Combination*/
+		rightCombos[3] = new VBox();
+		datePurchasedField = new DatePicker();
+		rightCombos[3].getChildren().addAll(new Label("Date Purchased:"), datePurchasedField);
+		
+		
+		/*Price selling Combination*/
+		rightCombos[4] = new VBox();
+		unitPriceCustField = new TextField();
+		rightCombos[4].getChildren().addAll(new Label("Price To Customer:"), unitPriceCustField);
 		
 		/*Edit Button initialization*/
 		editConfirmBtn = new Button("Confirm Edit");
 		
 		
 		/* Assembly */
-		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
-		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1]);
+		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2] , leftCombos[3] , leftCombos[4]);
+		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1], rightCombos[2], rightCombos[3], rightCombos[4]);
 		bottom.getChildren().addAll(editConfirmBtn);
 	}
 	
