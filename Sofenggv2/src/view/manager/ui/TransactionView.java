@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,23 +56,81 @@ public class TransactionView extends MainView implements View{
 	
 	public void initHandler(){
 		searchButton.setOnAction(e -> {
-			try{
-				if (isToday) //monitor tab
-					mvc.searchCurrentTransactionsByNumber(new String[] {KEY}, Integer.parseInt(searchField.getText()));
-				else //history tab
-					mvc.searchFilteredTransactionsByNumber(new String[] {KEY}, Integer.parseInt(searchField.getText()));
-			}catch(NumberFormatException nfe){
-				new AlertBoxPopup("Input Error", "Enter a number.");
+			try {
+				if (isToday) {
+					 					//monitor tab
+ 					switch (searchColumns.getSelectionModel().getSelectedIndex()) {
+ 					case 0:
+ 						//transaction #
+ 						mvc.searchCurrentTransactionsByTransactionID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+ 						break;
+ 					case 1:
+ 						//user id
+ 						mvc.searchCurrentTransactionsByUserID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+ 						break;
+ 					case 2:
+ 						//transaction type
+ 						mvc.searchCurrentTransactionsByTransactionType(new String[] {KEY}, searchField.getText());
+ 						break;
+ 					case 3:
+ 						//is loan
+ 						mvc.searchCurrentTransactionsByIsLoan(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+ 						break;
+ 					case 4:
+ 						//date sold
+ 						mvc.searchCurrentTransactionsByDateSold(new String[] {KEY}, searchField.getText());
+ 						break;
+ 					case 5:
+ 						//total cost
+ 						mvc.searchCurrentTransactionsByTotalPrice(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+ 						break;
+ 					}
+ 				}
+ 				else {
+ 					//history tab
+ 					switch (searchColumns.getSelectionModel().getSelectedIndex()) {
+ 					case 0:
+ 						//transaction #
+ 						mvc.searchFilteredTransactionsByTransactionID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+ 						break;
+ 					case 1:
+ 						//user id
+ 						mvc.searchFilteredTransactionsByUserID(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+ 						break;
+ 					case 2:
+ 						//transaction type
+ 						mvc.searchFilteredTransactionsByTransactionType(new String[] {KEY}, searchField.getText());
+ 						break;
+ 					case 3:
+ 						//is loan
+ 						mvc.searchFilteredTransactionsByIsLoan(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+ 						break;
+ 					case 4:
+ 						//date sold
+ 						mvc.searchFilteredTransactionsByDateSold(new String[] {KEY}, searchField.getText());
+ 						break;
+ 					case 5:
+ 						//total cost
+ 						mvc.searchFilteredTransactionsByTotalPrice(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+ 						break;
+ 					}
+ 				}
+			} catch (NumberFormatException nfe) {
+				if (searchField.getText().equals("")) {
+ 					if (isToday)
+ 						mvc.getCurrentTransactions(new String[] {KEY});
+ 					else
+ 						mvc.getFilteredTransactions(new String[] {KEY});
+ 				} else
+ 					new AlertBoxPopup("Input Error", "Enter a number.");
 			}
-		});
+ 		});
 		
 		//double click event to launch transaction details popup
 		tableView.setOnMousePressed(new EventHandler<MouseEvent>() {
 		    @SuppressWarnings("unchecked")
 			public void handle(MouseEvent event) {
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-		            System.out.println(tableView.getSelectionModel().getSelectedItem());
-		            System.out.println(Integer.parseInt(((ObservableList<String>)tableView.getSelectionModel().getSelectedItem()).get(0)));
 		            TransactionDetailsPopupView tdPopup = new TransactionDetailsPopupView("Transaction Details", mvc, Integer.parseInt(((ObservableList<String>)tableView.getSelectionModel().getSelectedItem()).get(0)));
                     tdPopup.show();
 		        }
@@ -148,14 +207,22 @@ public class TransactionView extends MainView implements View{
 	private void setUniqueToViewTableAndFilter() {
 		searchColumns.setItems(fillComboBox());
 		//tableView.getColumns().setAll(fillColumns());
+		searchColumns.getSelectionModel().selectFirst();
 	}
 	
 	/* This function is for the Back End Developers */
 	private ObservableList<String> fillComboBox() {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		
-		/* Test Cases */
-			list.addAll("Item Code", "Description");
+		//indeces are as follows:
+		 		//0 = transaction #, 1 = user id, 2 = transaction type
+		 		//3 = is loan, 4 = date sold, 5 = total price
+		 		list.addAll("Transaction ID",
+		 					"User ID",
+		 					"Transaction Type", 
+		 					"Is Loan",
+		 					"Date Sold",
+		 					"Total Price");
 		
 		return list;
 	}

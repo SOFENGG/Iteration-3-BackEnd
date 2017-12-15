@@ -302,7 +302,6 @@ public class FilterPopup extends Popup {
 			}
 			
 			//run sql filter parser -> ManagerViewController
-			System.out.println(filters.size() - 1);
 			mvc.setFilter(filters);
 			mvc.getFilteredTransactions(new String[] {TransactionView.KEY});
 			
