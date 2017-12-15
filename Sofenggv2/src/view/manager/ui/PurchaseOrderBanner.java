@@ -3,6 +3,7 @@ package view.manager.ui;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -18,6 +19,7 @@ public class PurchaseOrderBanner extends Banner {
 	/* Right Section */
 	private Button suppliersBtn;
 	private TextField documentTitleField;
+	private DatePicker receiveDatePicker;
 	
 	/* Bottom Buttons */
 	private Button receiveOrderBtn;
@@ -75,6 +77,10 @@ public class PurchaseOrderBanner extends Banner {
 		documentTitleField = new TextField();
 		rightCombos[0].getChildren().addAll(new Label("Document Title:"), documentTitleField);
 		
+		rightCombos[1] = new VBox();
+		receiveDatePicker = new DatePicker();
+		rightCombos[1].getChildren().addAll(new Label("Date To Receive"), receiveDatePicker);
+		
 		/*Edit Button initialization*/
 		suppliersBtn = new Button("Suppliers");
 
@@ -88,7 +94,7 @@ public class PurchaseOrderBanner extends Banner {
 		
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
-		rightColumn.getChildren().addAll(suppliersBtn, rightCombos[0]);
+		rightColumn.getChildren().addAll(suppliersBtn, rightCombos[0], rightCombos[1]);
 		bottomButtons.getChildren().addAll(receiveOrderBtn, confirmOrderBtn);
 	}
 	
