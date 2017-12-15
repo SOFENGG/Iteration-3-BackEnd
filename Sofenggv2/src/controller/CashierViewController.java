@@ -93,6 +93,7 @@ public class CashierViewController {
 	 
 	public void setUser(User cashier){
 		this.cashier = cashier;
+		cv.changeCashierName();
 		System.out.println("Welcome Cashier " + cashier.getName());
 	}
 	

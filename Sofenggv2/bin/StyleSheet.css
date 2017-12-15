@@ -19,6 +19,12 @@
 	-fx-text-fill: #4C6167;
 }
 
+#LabelWhite {
+	-fx-font-size: 16px;
+	-fx-font-family: "Source Sans Pro", sans-serif;
+	-fx-text-fill: #ffffff;
+}
+
 #Border {
 	-fx-border-color: black;
 }
@@ -45,6 +51,7 @@
 
 #CashierHBox {
 	-fx-background-color: #8D99A5;
+	-fx-padding: 10;
 }
 
 #LogoBox {

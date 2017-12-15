@@ -44,8 +44,11 @@ public class CashierView extends BorderPane implements View{
 			private Button logout;
 			private VBox cashierVBox;
 				private HBox cashierHBox;
-					private Label cashierNameLabel;
-					private Label cashierLabel;
+					private Image usernameImage;
+					private ImageView usernameView;
+					private VBox cashierNameVBox;
+						private Label cashierNameLabel;
+						private Label cashierLabel;
 	
 	private VBox centerVBox;
 		private HBox centerTopHBox;
@@ -93,7 +96,7 @@ public class CashierView extends BorderPane implements View{
 		initRight();
 		
 		setTop(topHBox);
-		setLeft(leftVBox);
+		//setLeft(leftVBox);
 		setCenter(centerVBox);
 		setRight(rightVBox);
 	}
@@ -110,7 +113,7 @@ public class CashierView extends BorderPane implements View{
 			menuButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 			menuButton.getStyleClass().add("MenuButton");
 			menuButton.setMinSize(50, 50);
-			menuButton.setSelected(true);
+			menuButton.setSelected(false);
 			
 		menuHBox.getChildren().addAll(menuButton);
 		
@@ -167,20 +170,31 @@ public class CashierView extends BorderPane implements View{
 				cashierVBox = new VBox ();
 				cashierVBox.setAlignment(Pos.BOTTOM_CENTER);
 				
-					cashierHBox = new HBox ();
+					cashierHBox = new HBox (10);
 					cashierHBox.setId("CashierHBox");
+					cashierHBox.setAlignment(Pos.CENTER_LEFT);
 					
-					cashierNameLabel = new Label ();
-					cashierNameLabel.setId("DefaultLabel");
+						usernameImage = new Image(("username.png"));
+						usernameView = new ImageView(); 
+						usernameView.setImage(usernameImage);
+						usernameView.setFitHeight(50);
+						usernameView.setPreserveRatio(true);
 					
-					cashierLabel = new Label ("Cashier");
-					cashierLabel.setId("DefaultLabel");
+						cashierNameVBox = new VBox ();
+						
+							cashierNameLabel = new Label ();
+							cashierNameLabel.setId("LabelWhite");
+							
+							cashierLabel = new Label ("Cashier");
+							cashierLabel.setId("LabelWhite");
+						
+						cashierNameVBox.getChildren().addAll(cashierNameLabel, cashierLabel);
 					
-					cashierHBox.getChildren().addAll(cashierNameLabel, cashierLabel);
+					cashierHBox.getChildren().addAll(usernameView, cashierNameVBox);
 				
 				cashierVBox.getChildren().addAll(cashierHBox);
 				
-		leftVBox.getChildren().addAll(returnItem, serviceWorker, endOfDay, logout);
+		leftVBox.getChildren().addAll(returnItem, serviceWorker, endOfDay, logout, cashierVBox);
 		
 		VBox.setVgrow(cashierVBox, Priority.ALWAYS);
 		VBox.setVgrow (leftVBox, Priority.ALWAYS);
@@ -317,8 +331,11 @@ public class CashierView extends BorderPane implements View{
 	
 	private void initHandlers () {
 		menuButton.setOnAction(e -> {
-			if (menuButton.isSelected())
+			if (menuButton.isSelected()) {
 				setLeft (leftVBox);
+				if (!cvc.getMainStage().isMaximized())
+					cvc.getMainStage().sizeToScene();
+			}
 			else
 				setLeft(null);
 		});
@@ -583,7 +600,11 @@ public class CashierView extends BorderPane implements View{
 			wholeSaleButton.setSelected(true);
 		}
 		
-		cvc.getMainStage().sizeToScene();
+		if (!cvc.getMainStage().isMaximized())
+			cvc.getMainStage().sizeToScene();
 	}
 	
+	public void changeCashierName() {
+		cashierNameLabel.setText(cvc.getCashier().getName());
+	}
 }
