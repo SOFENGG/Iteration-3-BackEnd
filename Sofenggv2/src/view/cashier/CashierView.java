@@ -412,15 +412,19 @@ public class CashierView extends BorderPane implements View{
 		
 		//right
 		retailButton.setOnAction(e -> {
-			retailButton.setSelected(true);
-			transaction = "retail";
-			cvc.switchCart();
+			if(!retailButton.isSelected()){
+				retailButton.setSelected(true);
+				transaction = "retail";
+				cvc.switchCart();
+			}
 		});
 		
 		wholeSaleButton.setOnAction(e -> {
-			wholeSaleButton.setSelected(true);
-			transaction = "wholesale";
-			cvc.switchCart();
+			if(!wholeSaleButton.isSelected()){
+				wholeSaleButton.setSelected(true);
+				transaction = "wholesale";
+				cvc.switchCart();
+			}
 		});
 		
 		clearItemButton.setOnAction(e -> {
