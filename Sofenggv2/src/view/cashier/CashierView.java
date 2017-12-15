@@ -24,7 +24,7 @@ import view.View;
 
 public class CashierView extends BorderPane implements View{
 	public static final String KEY = "cashierview";
-	public static String transaction = "";
+	public static String transaction = "retail";
 	
 	private CashierViewController cvc;
 	
@@ -429,19 +429,21 @@ public class CashierView extends BorderPane implements View{
 		
 		//right
 		retailButton.setOnAction(e -> {
-			if(!retailButton.isSelected()){
-				retailButton.setSelected(true);
-				transaction = "retail";
+			if(!transaction.equals("retail")){
 				cvc.switchCart();
 			}
+			retailButton.setSelected(true);
+			wholeSaleButton.setSelected(false);
+			transaction = "retail";
 		});
 		
 		wholeSaleButton.setOnAction(e -> {
-			if(!wholeSaleButton.isSelected()){
-				wholeSaleButton.setSelected(true);
-				transaction = "wholesale";
+			if(!transaction.equals("wholesale")){
 				cvc.switchCart();
 			}
+			wholeSaleButton.setSelected(true);
+			retailButton.setSelected(false);
+			transaction = "wholesale";
 		});
 		
 		clearItemButton.setOnAction(e -> {
@@ -596,8 +598,10 @@ public class CashierView extends BorderPane implements View{
 		
 		if(cvc.getCart().getTransactionType().equals("retail")){
 			retailButton.setSelected(true);
-		}else{
+			transaction = "retail";
+		}else if (cvc.getCart().getTransactionType().equals("wholesale")){
 			wholeSaleButton.setSelected(true);
+			transaction = "wholesale";
 		}
 		
 		if (!cvc.getMainStage().isMaximized())
