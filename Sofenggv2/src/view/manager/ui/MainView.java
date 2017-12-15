@@ -70,13 +70,17 @@ public abstract class MainView extends BorderPane{
 		
 		/* Search Columns Initialization */
 		searchColumns = new ComboBox<String>();
+		searchColumns.setId("Popup");
 		
 		/* Search Field Initialization */
 		searchField = new TextField();
 		searchField.setMinWidth(Values.SEARCH_FIELD_WIDTH);
+		searchField.setId("TextField");
 		
 		/* Search Button Initialization */
-		searchButton = new Button("SEARCH"); // To be replaced with the magnifying Icon
+		searchButton = new Button(); // To be replaced with the magnifying Icon
+		searchButton.getStyleClass().add("SearchButton");
+		searchButton.setMinSize(40,  40);
 		
 		/* Filter Button Initialization */
 		filterButton = new Button("O " + "Filter"); // the O character to be replaced with the filter icon
