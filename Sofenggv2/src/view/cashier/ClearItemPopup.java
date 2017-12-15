@@ -93,9 +93,13 @@ public class ClearItemPopup extends Popup{
 					cvc.removeCartItem(item.getItemCode(),quantity);
 					closePopup();
 				}else{
+					int temp = quantity;
 					quantity = 0;
 					closePopup();
-					new AlertBoxPopup("Failed", "Failed");
+					if(temp < 0)
+						new AlertBoxPopup("Input Error", "Enter a positive number.");
+					else
+						new AlertBoxPopup("Input Error", "Clear item is more than the quantity.");
 				}
 			}catch(NumberFormatException nfe){
 				new AlertBoxPopup("Input Error", "Enter a number.");
