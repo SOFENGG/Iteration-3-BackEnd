@@ -67,9 +67,13 @@ public class TransactionView extends MainView implements View{
 		
 		//double click event to launch transaction details popup
 		tableView.setOnMousePressed(new EventHandler<MouseEvent>() {
-		    public void handle(MouseEvent event) {
+		    @SuppressWarnings("unchecked")
+			public void handle(MouseEvent event) {
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-		            System.out.println(tableView.getSelectionModel().getSelectedItem());                   
+		            System.out.println(tableView.getSelectionModel().getSelectedItem());
+		            System.out.println(Integer.parseInt(((ObservableList<String>)tableView.getSelectionModel().getSelectedItem()).get(0)));
+		            TransactionDetailsPopup tdPopup = new TransactionDetailsPopup("Transaction Details", mvc, Integer.parseInt(((ObservableList<String>)tableView.getSelectionModel().getSelectedItem()).get(0)));
+                    tdPopup.show();
 		        }
 		    }
 		});

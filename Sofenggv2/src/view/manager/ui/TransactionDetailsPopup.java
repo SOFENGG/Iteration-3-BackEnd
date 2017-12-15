@@ -24,10 +24,12 @@ public class TransactionDetailsPopup extends Popup {
 	private Table itemTable;
 	
 	private ManagerViewController mvc;
+	private int transactionID;
 
-	public TransactionDetailsPopup(String title, ManagerViewController mvc) {
+	public TransactionDetailsPopup(String title, ManagerViewController mvc, int transactionID) {
 		super(title);
 		this.mvc = mvc;
+		this.transactionID = transactionID;
 		
 		initScene();
 		initHandlers();
