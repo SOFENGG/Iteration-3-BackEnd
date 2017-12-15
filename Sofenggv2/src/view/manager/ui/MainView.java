@@ -89,4 +89,7 @@ public abstract class MainView extends BorderPane{
 		filterOptions.getChildren().add(filterButton);
 	}
 	
+	protected void removeFilterButton() {
+		filterOptions.getChildren().remove(filterButton);
+	}
 }

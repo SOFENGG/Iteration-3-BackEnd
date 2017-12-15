@@ -236,13 +236,63 @@ public class ManagerViewController {
 				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
 	}
 	
-	public void searchCurrentTransactionsByNumber(String[] keys, int transactionID){
+	public void searchCurrentTransactionsByTransactionID(String[] keys, int transactionID){
 		Date now = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		Database.getInstance().query(keys,
 				"select * from " + Transaction.TABLE +
 				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "'" +
+				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
+	}
+	
+	public void searchCurrentTransactionsByUserID(String[] keys, int userID){
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_USER_ID + " like '" + userID + "'" +
+				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
+	}
+	
+	public void searchCurrentTransactionsByTransactionType(String[] keys, String transactionType){
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_TRANSACTION_TYPE + " like '%" + transactionType + "%'" +
+				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
+	}
+	
+	public void searchCurrentTransactionsByIsLoan(String[] keys, int isLoan){
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_IS_LOAN + " like '" + isLoan + "'" +
+				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
+	}
+	
+	public void searchCurrentTransactionsByDateSold(String[] keys, String dateSold){
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_DATE_SOLD + " like '%" + dateSold + "%'" +
+				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
+	}
+	
+	public void searchCurrentTransactionsByTotalPrice(String[] keys, BigDecimal totalPrice){
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '" + sdf.format(now) + "' and " + Transaction.COLUMN_TOTAL_PRICE + " = " + totalPrice.toString() +
 				" order by " + Transaction.COLUMN_TRANSACTION_ID + " ASC;");
 	}
 	
@@ -253,13 +303,11 @@ public class ManagerViewController {
 		//parse where clause
 		//parse whether preset or custom is selected
 		//0 = preset, 1 = custom
-		System.out.println(i + " preset/custom");
 		if ((Integer) filters.get(i) == 0) {
 			i++;
 			//preset selected
 			//get index of selected time frame
 			//0 = 7 days, 1 = 5 days, 2 = 3 months, 3 = 6 months, 4 = 1 year
-			System.out.println(i + " preset -> time frame");
 			switch ((Integer) filters.get(i)) {
 			case 0:
 				sb.append("" + Transaction.COLUMN_DATE_SOLD + " > date_add(curdate(), interval -7 day)");
@@ -285,12 +333,10 @@ public class ManagerViewController {
 			i++;
 			//custom selected
 			//get start and end date - using prefix increment - then set as bounds for inclusive between
-			System.out.println(i + " start date / " + (i + 1) + " end date");
 			sb.append("" + Transaction.COLUMN_DATE_SOLD + " between '" + filters.get(i) + "' and '" + filters.get(++i) + "'");
 			i++;
 			//parse whether all week or select days is selected
 			//0 = all week, 1 = select days
-			System.out.println(i + " all week/select days");
 			if ((Integer) filters.get(i) == 0) {
 				//all week selected
 				//do nothing, since all days are included
@@ -301,7 +347,6 @@ public class ManagerViewController {
 				@SuppressWarnings("unchecked")
 				ArrayList<Integer> selectedDays = (ArrayList<Integer>) filters.get(i);
 				sb.append(" and dayofweek(" + Transaction.COLUMN_DATE_SOLD + ") in (");
-				System.out.println(i + " select days");
 				for (int j = 0; j < selectedDays.size(); j++) {
 					sb.append(selectedDays.get(j));
 					if ((j + 1) != selectedDays.size())
@@ -361,21 +406,47 @@ public class ManagerViewController {
 		}
 		
 		filter = sb.toString();
-		System.out.println(filter);
 	}
 	
 	public void getFilteredTransactions(String[] keys){
-		System.out.println(filter);
 		Database.getInstance().query(keys, 
 				"select * from " + Transaction.TABLE +
 				" where " + filter);
 	}
 	
-	public void searchFilteredTransactionsByNumber(String[] keys, int transactionID){
-		System.out.println(filter);
-		Database.getInstance().query(keys,
+	public void searchFilteredTransactionsByTransactionID(String[] keys, int transactionID){Database.getInstance().query(keys,
 				"select * from " + Transaction.TABLE +
 				" where " + Transaction.COLUMN_TRANSACTION_ID + " like '" + transactionID + "' and " + filter);
+	}
+	
+	public void searchFilteredTransactionsByUserID(String[] keys, int userID){
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_USER_ID + " like '" + userID + "' and " + filter);
+	}
+	
+	public void searchFilteredTransactionsByTransactionType(String[] keys, String transactionType){
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_TRANSACTION_TYPE + " like '%" + transactionType + "' and " + filter);
+	}
+	
+	public void searchFilteredTransactionsByIsLoan(String[] keys, int isLoan){
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_IS_LOAN + " like '" + isLoan + "' and " + filter);
+	}
+	
+	public void searchFilteredTransactionsByDateSold(String[] keys, String dateSold){
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_DATE_SOLD + " like '%" + dateSold + "' and " + filter);
+	}
+	
+	public void searchFilteredTransactionsByTotalPrice(String[] keys, BigDecimal totalPrice){
+		Database.getInstance().query(keys,
+				"select * from " + Transaction.TABLE +
+				" where " + Transaction.COLUMN_TOTAL_PRICE + " = " + totalPrice.toString() + " and " + filter);
 	}
 	
 	public void getTransactionDetails(String[] keys, int transactionID) {
