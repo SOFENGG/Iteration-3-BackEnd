@@ -70,7 +70,7 @@ public abstract class MainView extends BorderPane{
 		
 		/* Search Columns Initialization */
 		searchColumns = new ComboBox<String>();
-		searchColumns.setId("Popup");
+		searchColumns.getStyleClass().add("ComboBox");
 		
 		/* Search Field Initialization */
 		searchField = new TextField();

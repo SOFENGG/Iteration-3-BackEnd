@@ -35,6 +35,7 @@ public class PurchaseOrderBanner extends Banner {
 		bannerTitle.setText(Values.BANNER_PURCHASE_ORDER);
 		initPurchaseOrders();
 		initHandlers();
+		setGreenButton();
 		//setPositions();
 	}
 	

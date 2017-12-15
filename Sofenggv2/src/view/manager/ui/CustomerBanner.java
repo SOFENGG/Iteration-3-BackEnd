@@ -106,6 +106,7 @@ public class CustomerBanner extends Banner {
 		
 		/* Bottom Buttons */
 		addCustomerBtn = new Button("Add Customer");
+		addCustomerBtn.getStyleClass().add("GreenButton");
 		
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], addCustomerBtn);
@@ -144,6 +145,7 @@ public class CustomerBanner extends Banner {
 		
 		
 		editCustomerBtn = new Button("Edit Customer");
+		editCustomerBtn.getStyleClass().add("GreenButton");
 		
 		BottomLeftColumn.getChildren().addAll(BottomLeftCombos[0], BottomLeftCombos[1], BottomLeftCombos[2], editCustomerBtn);
 		BottomRightColumn.getChildren().addAll(BottomRightCombos[0], BottomRightCombos[1], BottomRightCombos[2]);

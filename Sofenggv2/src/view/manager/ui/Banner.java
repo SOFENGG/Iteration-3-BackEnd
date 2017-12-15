@@ -2,6 +2,7 @@ package view.manager.ui;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -56,6 +57,13 @@ public abstract class Banner extends BorderPane {
 	private void setPositions() {
 		setAlignment(bottom, Pos.BOTTOM_RIGHT);
 		setMargin(bottom, new Insets(0, 0, 20, 20));
+	}
+	
+	protected void setGreenButton() {
+		bottom.getChildren().forEach(node -> {
+			Button button = (Button) node;
+			button.getStyleClass().add("GreenButton");
+		});
 	}
 	
 	

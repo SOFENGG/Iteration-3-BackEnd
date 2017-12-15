@@ -40,6 +40,7 @@ public class InventoryBanner extends Banner{
 		updateToInventoryBanner();
 		//setPositions();
 		initHandler();
+		setGreenButton();
 	}
 	
 	public void initHandler(){

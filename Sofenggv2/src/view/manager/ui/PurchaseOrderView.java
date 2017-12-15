@@ -156,12 +156,16 @@ public class PurchaseOrderView extends MainView implements View{
 		
 		/* Button Initialization */
 		addItemBtn = new Button("Add Item");
+		addItemBtn.getStyleClass().add("GreenButton");
 		
 		removeItemBtn = new Button("Remove Item");
+		removeItemBtn.getStyleClass().add("RedButton");
 		
 		clearAllBtn = new Button("Clear All");
+		clearAllBtn.getStyleClass().add("RedButton");
 		
 		receiveOrderBtn = new Button("Receive Order");
+		receiveOrderBtn.getStyleClass().add("GreenButton");
 		
 		/* Assembly */
 		actionButtons.getChildren().addAll(addItemBtn, removeItemBtn, clearAllBtn);

@@ -19,16 +19,16 @@ public class NavMenuPane extends BorderPane{
 		
 	public NavMenuPane() {
 		setId("NavMenu");
-		setPrefWidth(225);
+		setPrefWidth(180);
 		initNavMenu();
 		//setWidth(500);
 	}
 	
 	public void initNavMenu(){
 		/* Nav Menu Initialization */
-		navMenu = new VBox(Values.NAV_MENU_ITEM_SPACING);
-		navMenu.setPrefWidth(Values.NAV_MENU_PREF_WIDTH);
-		navMenu.setPadding(new Insets(Values.NAV_MENU_TOP_PADDING, Values.NAV_MENU_RIGHT_PADDING, Values.NAV_MENU_BOTTOM_PADDING, Values.NAV_MENU_LEFT_PADDING));
+		navMenu = new VBox();
+		//navMenu.setPrefWidth(Values.NAV_MENU_PREF_WIDTH);
+		//navMenu.setPadding(new Insets(Values.NAV_MENU_TOP_PADDING, Values.NAV_MENU_RIGHT_PADDING, Values.NAV_MENU_BOTTOM_PADDING, Values.NAV_MENU_LEFT_PADDING));
 		
 		/* Button Initialization */
 		transactionBtn = new Button("Transactions");
@@ -44,6 +44,8 @@ public class NavMenuPane extends BorderPane{
 		navMenu.getChildren().forEach(node -> {
 			Button button = (Button) node;
 			button.setPrefWidth(navMenu.getPrefWidth());
+			button.getStyleClass().add("LeftButton");
+			button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		});
 		
 		setCenter(navMenu);

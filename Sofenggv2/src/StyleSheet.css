@@ -538,9 +538,11 @@
 }
 
 #NavMenu {
-    -fx-border-color: #000000;
+    -fx-background-color: #6C7A89;
 }
 
 #HeaderPane {
-    -fx-border-color: #000000;
+    -fx-border-color: #6C7A89;
+	-fx-background-color: #BDC3C7;
+	-fx-padding: 10;
 }

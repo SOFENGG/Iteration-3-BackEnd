@@ -15,6 +15,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TableColumn;
@@ -55,15 +56,20 @@ public class AddItemPopupView extends Popup implements View{
 			private Label qty;
 			private Spinner<Integer> qtySpinner;
 			private Button addButton;
-		private VBox newItemVBox;
-			private Label itemCodeLabel;
-			private TextField itemCodeTextField;
-			private Label descriptionLabel;
-			private TextField descriptionTextField;
-			private Label uomLabel;
-			private TextField uomTextField;
-			private Label unitPriceLabel;
-			private TextField unitPriceTextField;
+		private HBox newItemHBox;
+			protected VBox leftColumn;
+				private TextField itemCodeField;
+				private TextField categoryField;
+				private TextField supplierField;
+				private TextField stockField;
+				private TextField unitPriceSupField;
+			protected VBox rightColumn;
+				private TextField nameField;
+				private TextField ItemDescriptionField;
+				private TextField manufacturerField;
+				private DatePicker datePurchasedField;
+				private TextField unitPriceCustField;
+			
 		@SuppressWarnings("rawtypes")
 		private TableView itemTable;
 	
@@ -150,17 +156,74 @@ public class AddItemPopupView extends Popup implements View{
 			itemTable = new Table();
 		
 			// new item
-			newItemVBox = new VBox(20);
-				itemCodeLabel = new Label("Item Code:");
-				itemCodeTextField = new TextField();
-				descriptionLabel = new Label("Description");
-				descriptionTextField = new TextField();
-				uomLabel = new Label("UOM:");
-				uomTextField = new TextField();
-				unitPriceLabel = new Label("Unit Price:");
-				unitPriceTextField = new TextField();
+			newItemHBox = new HBox(10);
+			newItemHBox.setAlignment(Pos.CENTER);
 			
-			newItemVBox.getChildren().addAll(itemCodeLabel, itemCodeTextField, descriptionLabel, descriptionTextField, uomLabel, uomTextField, unitPriceLabel, unitPriceTextField);
+			leftColumn = new VBox(10);
+			rightColumn = new VBox(10);
+				/*Contains the label and textfield combinations for left box*/
+				VBox[] leftCombos = new VBox[5];
+				
+				/*item Code Combination*/
+				leftCombos[0] = new VBox();
+				itemCodeField = new TextField();
+				leftCombos[0].getChildren().addAll(new Label("Item Code:"), itemCodeField);
+				
+				/*item category Combination*/
+				leftCombos[1] = new VBox();
+				categoryField = new TextField();
+				leftCombos[1].getChildren().addAll(new Label("Category:"), categoryField);
+				
+				/*item supplier Combination*/
+				leftCombos[2] = new VBox();
+				supplierField = new TextField();
+				leftCombos[2].getChildren().addAll(new Label("Supplier Code:"), supplierField);
+				
+				/*item stock Combination*/
+				leftCombos[3] = new VBox();
+				stockField = new TextField();
+				leftCombos[3].getChildren().addAll(new Label("Stock:"), stockField);
+				
+				/*item price bought Combination*/
+				leftCombos[4] = new VBox();
+				unitPriceSupField = new TextField();
+				leftCombos[4].getChildren().addAll(new Label("Price Bought:"), unitPriceSupField);
+				
+				
+				/*Contains the label and textfield combinations for right box*/
+				VBox[] rightCombos = new VBox[5];
+				
+				/*item name Combination*/
+				rightCombos[0] = new VBox();
+				nameField = new TextField();
+				rightCombos[0].getChildren().addAll(new Label("Name:"), nameField);
+				
+				/*Descriptions Combination*/
+				rightCombos[1] = new VBox();
+				ItemDescriptionField = new TextField();
+				rightCombos[1].getChildren().addAll(new Label("Description:"), ItemDescriptionField);
+				
+				/*Manufacturer Combination*/
+				rightCombos[2] = new VBox();
+				manufacturerField = new TextField();
+				rightCombos[2].getChildren().addAll(new Label("Manufacturer:"), manufacturerField);
+				
+				/*Date Purchased Combination*/
+				rightCombos[3] = new VBox();
+				datePurchasedField = new DatePicker();
+				rightCombos[3].getChildren().addAll(new Label("Date Purchased:"), datePurchasedField);
+				datePurchasedField.setValue(null);
+				
+				/*Price selling Combination*/
+				rightCombos[4] = new VBox();
+				unitPriceCustField = new TextField();
+				rightCombos[4].getChildren().addAll(new Label("Price To Customer:"), unitPriceCustField);
+			
+			leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2] , leftCombos[3] , leftCombos[4]);
+			rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1], rightCombos[2], rightCombos[3], rightCombos[4]);
+			
+			
+			newItemHBox.getChildren().addAll(leftColumn, rightColumn);
 			
 			
 		layout.getChildren().addAll(itemTypeHBox, searchHBox, itemTable, buttonsHBox);
@@ -189,7 +252,7 @@ public class AddItemPopupView extends Popup implements View{
 			if (!layout.getChildren().isEmpty())
 				layout.getChildren().removeAll(layout.getChildren());
 			
-			layout.getChildren().addAll(itemTypeHBox, newItemVBox, buttonsHBox);
+			layout.getChildren().addAll(itemTypeHBox, newItemHBox, buttonsHBox);
 		});
 	}
 

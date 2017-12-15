@@ -33,6 +33,7 @@ public class SupplierBanner extends Banner{
 		updateToSupplierBanner();
 		//setPositions();
 		initHandler();
+		setGreenButton();
 	}
 	
 	public void initHandler(){
