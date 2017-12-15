@@ -21,14 +21,14 @@ public class Item {
 	private String description;
 	private String category;
 	private String manufacturer;
-	private int supplierCode;
+	private String supplierCode;
 	private int stock;
-	private Date datePurchaser;
+	private Date datePurchase;
 	private BigDecimal priceSupplier;
 	private BigDecimal priceCustomer;
 	
-	public Item(String itemCode, String name, String description, String category, String manufacturer, int supplierCode,
-			int stock, Date datePurchaser, BigDecimal priceSupplier, BigDecimal priceCustomer) {
+	public Item(String itemCode, String name, String description, String category, String manufacturer, String supplierCode,
+			int stock, Date datePurchase, BigDecimal priceSupplier, BigDecimal priceCustomer) {
 		this.itemCode = itemCode;
 		this.name = name;
 		this.description = description;
@@ -36,7 +36,7 @@ public class Item {
 		this.manufacturer = manufacturer;
 		this.supplierCode = supplierCode;
 		this.stock = stock;
-		this.datePurchaser = datePurchaser;
+		this.datePurchase = datePurchase;
 		this.priceSupplier = priceSupplier;
 		this.priceCustomer = priceCustomer;
 	}
@@ -45,7 +45,7 @@ public class Item {
 	public String toString() {
 		return "Item [itemCode=" + itemCode + ", name=" + name + ", description=" + description + ", category="
 				+ category + ", manufacturer=" + manufacturer + ", supplierCode=" + supplierCode + ", stock=" + stock
-				+ ", datePurchaser=" + datePurchaser + ", priceSupplier=" + priceSupplier + ", priceCustomer="
+				+ ", datePurchaser=" + datePurchase + ", priceSupplier=" + priceSupplier + ", priceCustomer="
 				+ priceCustomer + "]";
 	}
 
@@ -69,7 +69,7 @@ public class Item {
 		return manufacturer;
 	}
 
-	public int getSupplierCode() {
+	public String getSupplierCode() {
 		return supplierCode;
 	}
 
@@ -77,8 +77,8 @@ public class Item {
 		return stock;
 	}
 
-	public Date getDatePurchaser() {
-		return datePurchaser;
+	public Date getDatePurchase() {
+		return datePurchase;
 	}
 
 	public BigDecimal getPriceSupplier() {
