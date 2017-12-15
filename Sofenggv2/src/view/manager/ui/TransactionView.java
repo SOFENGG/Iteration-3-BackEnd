@@ -12,10 +12,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import model.Database;
 import view.View;
@@ -40,6 +42,7 @@ public class TransactionView extends MainView implements View{
 	public TransactionView(ManagerViewController mvc) {
 		super(mvc);
 		init();
+		initHandler();
 		addUniqueToViewNodes();
 		setUniqueToViewTableAndFilter();
 	}
@@ -53,10 +56,22 @@ public class TransactionView extends MainView implements View{
 	public void initHandler(){
 		searchButton.setOnAction(e -> {
 			try{
-				mvc.searchCurrentTransactionsByNumber(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+				if (isToday) //monitor tab
+					mvc.searchCurrentTransactionsByNumber(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+				else //history tab
+					mvc.searchFilteredTransactionsByNumber(new String[] {KEY}, Integer.parseInt(searchField.getText()));
 			}catch(NumberFormatException nfe){
 				new AlertBoxPopup("Input Error", "Enter a number.");
 			}
+		});
+		
+		//double click event to launch transaction details popup
+		tableView.setOnMousePressed(new EventHandler<MouseEvent>() {
+		    public void handle(MouseEvent event) {
+		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+		            System.out.println(tableView.getSelectionModel().getSelectedItem());                   
+		        }
+		    }
 		});
 	}
 	
@@ -199,7 +214,6 @@ public class TransactionView extends MainView implements View{
 						}
 						row.add (s);
 					}
-					
 					data.add(row);
 				}
 				tableView.setItems(data);

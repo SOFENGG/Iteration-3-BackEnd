@@ -305,6 +305,9 @@ public class FilterPopup extends Popup {
 			System.out.println(filters.size() - 1);
 			mvc.setFilter(filters);
 			mvc.getFilteredTransactions(new String[] {TransactionView.KEY});
+			
+			//close popup
+			this.closePopup();
 		});
 	}
 

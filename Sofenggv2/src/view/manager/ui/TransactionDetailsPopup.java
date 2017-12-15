@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import controller.ManagerViewController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -21,9 +22,12 @@ public class TransactionDetailsPopup extends Popup {
 		private Label totalQtyLabel;
 		private Label totalCostLabel;
 	private Table itemTable;
+	
+	private ManagerViewController mvc;
 
-	public TransactionDetailsPopup(String title) {
+	public TransactionDetailsPopup(String title, ManagerViewController mvc) {
 		super(title);
+		this.mvc = mvc;
 		
 		initScene();
 		initHandlers();
