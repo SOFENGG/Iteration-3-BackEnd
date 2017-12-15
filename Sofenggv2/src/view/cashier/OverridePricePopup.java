@@ -98,11 +98,14 @@ public class OverridePricePopup extends Popup{
 			try{
 				double inputPrice = Double.parseDouble(priceTextField.getText());
 				BigDecimal newPrice = BigDecimal.valueOf(inputPrice);
-				cvc.overridePrice(item.getItemCode(),
-						newPrice);
-				closePopup();
+				if(newPrice.doubleValue() >= 0){
+					cvc.overridePrice(item.getItemCode(),
+							newPrice);
+					closePopup();
+				}else{
+					new AlertBoxPopup("Error", "Enter a positive number.");
+				}
 			}catch(NumberFormatException ex){
-				closePopup();
 				new AlertBoxPopup("Error", "Enter a valid number.");
 			}
 			

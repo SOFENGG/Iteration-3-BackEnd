@@ -42,7 +42,8 @@ public class CashierViewController {
 	private User cashier;
 	
 	private Cart activeCart;
-	//private ArrayList<CartItem> cartItems;
+	private Cart sideCart;
+	
 	private ArrayList<Cart> cartBuffer;
 	
 	public CashierViewController (MainController mc) {
@@ -51,6 +52,8 @@ public class CashierViewController {
 		
 		//cartItems = new ArrayList<CartItem>();
 		activeCart = new Cart("", new ArrayList<CartItem>(), "");
+		sideCart = new Cart("", new ArrayList<CartItem>(), "");
+		
 		cartBuffer = new ArrayList<Cart>();
 	}
 	
@@ -101,6 +104,13 @@ public class CashierViewController {
 	
 	public Cart getCart(){
 		return activeCart;
+	}
+	
+	public void switchCart(){
+		Cart tempCart = activeCart;
+		activeCart = sideCart;
+		sideCart = tempCart;
+		Database.getInstance().notifyViews(new String[]{CartView.KEY, CashierView.KEY});
 	}
 	
 	//cashier view services

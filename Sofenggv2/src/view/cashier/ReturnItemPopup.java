@@ -3,6 +3,7 @@ package view.cashier;
 import java.math.BigDecimal;
 
 import controller.CashierViewController;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -91,27 +92,28 @@ public class ReturnItemPopup extends Popup{
 		cvc.getAllItems(new String[]{SPECIAL_INVENTORY_KEY});
 		
 		searchButton.setOnAction(e -> {
-			/*switch(filterComboBox.getValue()){
-				case "Item Code": cvc.searchItemByCode(new String[]{SPECIAL_INVENTORY_KEY}, searchTextField.getText());
-					break;
-				case "Description": cvc.searchItem(new String[]{SPECIAL_INVENTORY_KEY}, searchTextField.getText());
-					break;
-			}*/
 			cvc.searchItem(new String[]{SPECIAL_INVENTORY_KEY}, searchTextField.getText());
 		});
 		
 		stockButton.setOnAction(e -> {
-			//tim pls
+			ObservableList<String> row = iv.getSelectedItem();
+			
 			Database.getInstance().detach(SPECIAL_INVENTORY_KEY);
+			if(row != null){
 			try{
-				cvc.returnItem(iv.getSelectedItem().get(InventoryView.ITEM_CODE), Integer.parseInt(stockTextField.getText()), BigDecimal.valueOf(Double.parseDouble(iv.getSelectedItem().get(InventoryView.PRICE))));
-				mainInventory.addStock(iv.getSelectedItem().get(InventoryView.ITEM_CODE), Integer.parseInt(stockTextField.getText()));
-				closePopup();
+				if(Integer.parseInt(stockTextField.getText()) >= 0){
+					cvc.returnItem(row.get(InventoryView.ITEM_CODE), Integer.parseInt(stockTextField.getText()), BigDecimal.valueOf(Double.parseDouble(iv.getSelectedItem().get(InventoryView.PRICE))));
+					mainInventory.addStock(iv.getSelectedItem().get(InventoryView.ITEM_CODE), Integer.parseInt(stockTextField.getText()));
+					closePopup();
+				}else{
+					new AlertBoxPopup("Error", "Enter a positive number.");
+				}
 			}catch(NumberFormatException exp){
-				closePopup();
 				new AlertBoxPopup("Error", "Enter a number.");
 			}
-			
+			}else{
+				new AlertBoxPopup("Error", "No item selected.");
+			}
 		});
 	}
 

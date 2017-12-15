@@ -431,11 +431,13 @@ public class CashierView extends BorderPane implements View{
 		retailButton.setOnAction(e -> {
 			retailButton.setSelected(true);
 			transaction = "retail";
+			cvc.switchCart();
 		});
 		
 		wholeSaleButton.setOnAction(e -> {
 			wholeSaleButton.setSelected(true);
 			transaction = "wholesale";
+			cvc.switchCart();
 		});
 		
 		clearItemButton.setOnAction(e -> {
@@ -503,6 +505,22 @@ public class CashierView extends BorderPane implements View{
 			ObservableList<String> row = cvtp.getHoldView().getSelectedItem();
 			
 			if(row != null){
+				if(row.get(HoldView.TRANSACTION).equals("retail")){
+					//check if active cart is retail
+					if(!retailButton.isSelected()){
+						cvc.switchCart();
+					}
+				}else{
+					//check if active cart is wholesale
+					if(!wholeSaleButton.isSelected()){
+						cvc.switchCart();
+					}
+				}
+				//before restoring return the quantity back to the inventory
+				for(CartItem item : cvc.getCart().getCartItems())
+					if(item.getType() == CartItemType.ITEM)
+						ivtp.getInventoryView().addStock(item.getItemCode(), item.getQuantity());
+				
 				cvc.restoreCart(Integer.parseInt(row.get(HoldView.NUMBER)) - 1);
 				new AlertBoxPopup("Success", "Cart was resumed.");
 			}else{
@@ -514,6 +532,9 @@ public class CashierView extends BorderPane implements View{
 			ObservableList<String> row = cvtp.getHoldView().getSelectedItem();
 			
 			if(row != null){
+				for(CartItem item : cvc.getCartBuffer().get(Integer.parseInt(row.get(HoldView.NUMBER)) - 1).getCartItems())
+					if(item.getType() == CartItemType.ITEM)
+						ivtp.getInventoryView().addStock(item.getItemCode(), item.getQuantity());
 				cvc.removeHeldCart(Integer.parseInt(row.get(HoldView.NUMBER)) - 1);
 				new AlertBoxPopup("Success", "Cart was removed.");
 			}else{

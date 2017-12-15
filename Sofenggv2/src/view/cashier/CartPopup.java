@@ -158,7 +158,7 @@ public class CartPopup extends Popup{
 					totalLabel = new Label ("Total Price:");
 					totalLabel.setId("LabelGray");
 					
-					total = new Label ("PHP 0");
+					total = new Label ("PHP " + price);
 					total.setId("DefaultLabel");
 				
 				totalHBox.getChildren().addAll(totalLabel, total);
