@@ -22,17 +22,15 @@ public class PurchaseOrderBanner extends Banner {
 	private TextField orderIdField;
 	private TextField totalPriceField;
 	private DatePicker dateOrderedField;
+	private Button addItemBtn;
 	
 	/* Right Section */
 	//private Button suppliersBtn;
 	private TextField supplierCodeField;
 	private TextField isPendingField;
 	private DatePicker receiveDatePicker;
+	private Button confirmOrderBtn; 
 	
-	/* Bottom Buttons */
-		private Button addItemBtn;
-		private Button confirmOrderBtn; 
-		
 	private ManagerViewController mvc;
 	
 	public PurchaseOrderBanner(ManagerViewController mvc) {
@@ -135,11 +133,14 @@ public class PurchaseOrderBanner extends Banner {
 		
 		/* Bottom Buttons */
 		addItemBtn = new Button("Add Item");
+		addItemBtn.getStyleClass().add("GreenButton");
+		
 		confirmOrderBtn = new Button("Confirm Order");
+		confirmOrderBtn.getStyleClass().add("GreenButton");
 		
 		/* Assembly */
-		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
-		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1],  rightCombos[2]);
+		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2], addItemBtn);
+		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1],  rightCombos[2], confirmOrderBtn);
 		bottom.getChildren().addAll(addItemBtn, confirmOrderBtn);
 	}
 	
