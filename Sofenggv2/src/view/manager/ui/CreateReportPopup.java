@@ -2,6 +2,7 @@ package view.manager.ui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -46,9 +47,8 @@ public class CreateReportPopup extends Popup {
 	}
 	
 	public void initScene() {
-		layout = new VBox(20);
-		layout.setId("Popup");
-		
+		layout = new VBox(10);
+		layout.setId("Popup");		
 		// Type Box Initialization
 		
 			//
@@ -82,12 +82,15 @@ public class CreateReportPopup extends Popup {
 		
 		// Weekly
 		datePickerHBox = new HBox(20);
-		
+			VBox startCombo = new VBox();
 			startDatePicker = new DatePicker();
+			startCombo.getChildren().addAll(new Label("Start Date:"), startDatePicker);
 			
+			VBox endCombo = new VBox();
 			endDatePicker = new DatePicker();
+			endCombo.getChildren().addAll(new Label("End Date:"), endDatePicker);
 		
-		datePickerHBox.getChildren().addAll(startDatePicker, endDatePicker);
+		datePickerHBox.getChildren().addAll(startCombo, endCombo);
 		
 		// Monthly
 		monthBox = new ComboBox<String>();
@@ -108,6 +111,8 @@ public class CreateReportPopup extends Popup {
 		layout.getChildren().addAll(typeHBox, optionsLbl, optionsHBox, createBtn);
 		VBox.setVgrow(layout, Priority.ALWAYS);
 		
+		resizeScene();
+		
 	}
 	
 	public void initHandlers() {
@@ -121,15 +126,17 @@ public class CreateReportPopup extends Popup {
 			optionsLbl.setText("Select Date:");
 			optionsHBox.getChildren().removeAll(datePickerHBox, monthBox, yearBox);
 			optionsHBox.getChildren().addAll(dayPicker);
-			
+			resizeScene();
 		});
 		
 		weeklyRadio.setOnAction(e -> {
 			weeklyRadio.setSelected(true);
 			
+			
 			optionsLbl.setText("Select Start and End Date of the Week:");
 			optionsHBox.getChildren().removeAll(dayPicker, monthBox, yearBox);
 			optionsHBox.getChildren().addAll(datePickerHBox);
+			resizeScene();
 		});
 		
 		monthlyRadio.setOnAction(e -> {
@@ -138,6 +145,7 @@ public class CreateReportPopup extends Popup {
 			optionsLbl.setText("Select Month and Year:");
 			optionsHBox.getChildren().removeAll(dayPicker, datePickerHBox, yearBox);
 			optionsHBox.getChildren().addAll(monthBox, yearBox);
+			resizeScene();
 		});
 		
 		yearlyRadio.setOnAction(e -> {
@@ -146,6 +154,7 @@ public class CreateReportPopup extends Popup {
 			optionsLbl.setText("Select Year:");
 			optionsHBox.getChildren().removeAll(dayPicker, datePickerHBox, monthBox, yearBox);
 			optionsHBox.getChildren().addAll(yearBox);
+			resizeScene();
 		});
 	}
 
