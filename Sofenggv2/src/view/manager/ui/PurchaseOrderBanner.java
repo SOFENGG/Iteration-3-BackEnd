@@ -1,5 +1,9 @@
 package view.manager.ui;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+
+import controller.ManagerViewController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -7,6 +11,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import model.PurchaseOrder;
+import model.Supplier;
+import view.cashier.AlertBoxPopup;
 import view.manager.final_values.Values;
 
 public class PurchaseOrderBanner extends Banner {
@@ -25,10 +32,14 @@ public class PurchaseOrderBanner extends Banner {
 	/* Bottom Buttons */
 		private Button addItemBtn;
 		private Button confirmOrderBtn; 
+		
+	private ManagerViewController mvc;
 	
-	public PurchaseOrderBanner() {
+	public PurchaseOrderBanner(ManagerViewController mvc) {
 		super();
+		this.mvc = mvc;
 		updateToPurchaseOrders();
+		mvc.getCurrentPurchaseOrderItems(new String[] {PurchaseOrderView.KEY}, -1);
 	}
 
 	private void updateToPurchaseOrders() {
@@ -41,15 +52,40 @@ public class PurchaseOrderBanner extends Banner {
 	}
 	
 	private void initHandlers() {
-		/*
-		suppliersBtn.setOnMouseClicked(e -> {
-			SupplierPopup sp = new SupplierPopup(Values.SUPPLIER_POPUP_TITLE);
-			sp.show();
-		});
-		*/
 		addItemBtn.setOnMouseClicked(e -> {
-			//AddItemPopupView ap = new AddItemPopupView(Values.ADD_ITEM_POPUP_TITLE, mvc, 0, "supplierCode");
-			//ap.show();
+			if (orderIdField.getText().equals(""))
+				new AlertBoxPopup("Input Error", "No Order ID specified.");
+			if (supplierCodeField.getText().equals(""))
+				new AlertBoxPopup("Input Error", "No Supplier Code specified.");
+			if (!orderIdField.getText().equals("") && !supplierCodeField.getText().equals("")) {
+				AddItemPopupView ap = new AddItemPopupView(Values.ADD_ITEM_POPUP_TITLE, mvc, Integer.parseInt(orderIdField.getText()), supplierCodeField.getText());
+				ap.show();
+			}
+		});
+		
+		confirmOrderBtn.setOnAction(e -> {
+			if(!orderIdField.getText().equals("") && !supplierCodeField.getText().equals("") && !totalPriceField.getText().equals("") &&
+					dateOrderedField.getValue() != null && receiveDatePicker.getValue() != null){
+				int orderID = Integer.parseInt(orderIdField.getText());
+				String supplierCode = supplierCodeField.getText();
+				BigDecimal totalPrice = BigDecimal.valueOf(Double.parseDouble(totalPriceField.getText()));
+				Date dateOrdered = Date.valueOf(dateOrderedField.getValue());
+				Date dateReceived = Date.valueOf(receiveDatePicker.getValue());
+					
+				mvc.addPendingPurchaseOrder(new PurchaseOrder(orderID, supplierCode, totalPrice, dateOrdered, 1, dateReceived));
+				mvc.getCurrentPurchaseOrderItems(new String[] {PurchaseOrderView.KEY}, -1);
+					
+				new AlertBoxPopup("Success", "Supplier added.");
+				orderIdField.setText("");
+				supplierCodeField.setText("");
+				totalPriceField.setText("");
+				dateOrderedField.getEditor().clear();
+				dateOrderedField.setValue(null);
+				receiveDatePicker.getEditor().clear();
+				receiveDatePicker.setValue(null);
+			}else{
+				new AlertBoxPopup("Input Error", "Some fields are left blank.");
+			}		
 		});
 		
 	}
@@ -113,3 +149,4 @@ public class PurchaseOrderBanner extends Banner {
 	}
 
 }
+

@@ -634,6 +634,12 @@ public class ManagerViewController {
 	}
 	
 	//purchase orders
+	public void getCurrentPurchaseOrderItems(String[] keys, int orderID) {
+		Database.getInstance().query(keys, 
+				"select * from " + ItemOrder.TABLE +
+				" where " + ItemOrder.COLUMN_ORDER_ID + " = " + orderID + ";");
+	}
+	
 	public void addPendingPurchaseOrder(PurchaseOrder purchaseOrder){
 		String sql = "insert into " + PurchaseOrder.TABLE + " ("+PurchaseOrder.COLUMN_ORDER_ID+
 				", "+PurchaseOrder.COLUMN_SUPPLIER_CODE+
@@ -663,7 +669,7 @@ public class ManagerViewController {
 	}
 	
 	public void addItemOrder(ItemOrder itemOrder) {
-		String sql = "insert into " + PurchaseOrder.TABLE + " ("+ItemOrder.COLUMN_ORDER_ID+
+		String sql = "insert into " + ItemOrder.TABLE + " ("+ItemOrder.COLUMN_ORDER_ID+
 				", "+ItemOrder.COLUMN_ITEM_CODE+
 				", "+ItemOrder.COLUMN_QUANTITY+") values (?, ?, ?)";
 		

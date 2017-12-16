@@ -43,6 +43,8 @@ public class PurchaseOrderView extends MainView implements View{
 			private Button receiveOrderBtn;
 		private Tab receivedTab;
 	
+	private int orderID;
+		
 	public PurchaseOrderView(ManagerViewController mvc) {
 		super(mvc);
 		addUniqueToViewNodes();
@@ -59,6 +61,19 @@ public class PurchaseOrderView extends MainView implements View{
 	
 	@SuppressWarnings("unchecked")
 	private void initHandlers() {
+		removeItemBtn.setOnAction(e -> {
+			if (!tableView.getSelectionModel().getSelectedItems().isEmpty())
+				mvc.removeItemOrder(new String[] {KEY}, Integer.parseInt(((ObservableList<String>)tableView.getSelectionModel().getSelectedItem()).get(0)));
+			else
+				new AlertBoxPopup("Input Error", "There is nothing selected.");
+			
+		});
+		clearAllBtn.setOnAction(e -> {
+			if (!tableView.getItems().isEmpty())
+				mvc.clearPurchaseOrder(new String[] {KEY}, Integer.parseInt(((ObservableList<String>)tableView.getItems()).get(0)));
+			else
+				new AlertBoxPopup("Input Error", "There is nothing to clear.");
+		});
 		receiveOrderBtn.setOnAction(e -> {
 			mvc.receivePurchaseOrder(new String[] {KEY}, Integer.parseInt(((ObservableList<String>)tableView.getSelectionModel().getSelectedItem()).get(0)));
 		});

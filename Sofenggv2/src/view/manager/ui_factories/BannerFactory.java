@@ -34,7 +34,7 @@ public class BannerFactory {
 		case BANNER_SUPPLIER_CODE:
 			return new SupplierBanner(mvc);
 		case BANNER_PURCHASE_ORDER_CODE:
-			return new PurchaseOrderBanner();
+			return new PurchaseOrderBanner(mvc);
 		case BANNER_SALES_REPORT_CODE:
 			return new SalesReportBanner();
 		default:

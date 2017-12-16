@@ -1,5 +1,6 @@
 package view.manager.ui;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import model.Database;
+import model.Item;
+import model.ItemOrder;
 import view.View;
+import view.cashier.AlertBoxPopup;
 
 public class AddItemPopupView extends Popup implements View{
 	
@@ -49,8 +53,8 @@ public class AddItemPopupView extends Popup implements View{
 			private ToggleButton newItemToggleButton;
 			private ToggleGroup itemGroup;
 		private HBox searchHBox;
-			private ComboBox<String> filterComboBox;
-			private TextField searchTextField;
+			private ComboBox<String> searchColumns;
+			private TextField searchField;
 			private Button searchButton;
 		private HBox buttonsHBox;
 			private Label qty;
@@ -71,15 +75,17 @@ public class AddItemPopupView extends Popup implements View{
 				private TextField unitPriceCustField;
 			
 		@SuppressWarnings("rawtypes")
-		private TableView itemTable;
+		private TableView tableView;
 	
 	private ManagerViewController mvc;
 	private int orderID;
+	private String supplierCode;
 	
 	public AddItemPopupView(String title, ManagerViewController mvc, int orderID, String supplierCode) {
 		super(title);
 		this.mvc = mvc;
 		this.orderID = orderID;
+		this.supplierCode = supplierCode;
 		
 		init();
 		initScene();
@@ -125,21 +131,30 @@ public class AddItemPopupView extends Popup implements View{
 			searchHBox = new HBox (20);
 			searchHBox.setAlignment(Pos.CENTER);
 			
-				filterComboBox = new ComboBox<String> ();
-				filterComboBox.getStyleClass().add("ComboBox");
-				filterComboBox.getItems().add("ID");
-				filterComboBox.getItems().add("Name");
+				searchColumns = new ComboBox<String> ();
+				searchColumns.getStyleClass().add("ComboBox");
+				searchColumns.getItems().addAll(
+						"Item Code",
+						"Name",
+						"Description",
+						"Category",
+						"Manufacturer",
+						"Supplier Code",
+						"Stock",
+						"Date Purchased",
+						"Price Supplier",
+						"Price Customer");
 				
-				filterComboBox.getSelectionModel ().selectFirst ();
+				searchColumns.getSelectionModel().selectFirst();
 				
-				searchTextField = new TextField ();
-				searchTextField.setId ("TextField");
+				searchField = new TextField ();
+				searchField.setId ("TextField");
 				
 				searchButton = new Button ();
 				searchButton.getStyleClass ().add("SearchButton");
 				searchButton.setMinSize(40, 40);	
 				
-			searchHBox.getChildren().addAll(filterComboBox, searchTextField, searchButton);
+			searchHBox.getChildren().addAll(searchColumns, searchField, searchButton);
 			
 			buttonsHBox = new HBox (20);
 			buttonsHBox.setAlignment(Pos.CENTER);
@@ -150,10 +165,11 @@ public class AddItemPopupView extends Popup implements View{
 				qtySpinner.setEditable(true);
 				
 				addButton = new Button("Add Item");
+				addButton.getStyleClass().add("GreenButton");
 				
 			buttonsHBox.getChildren().addAll(qty, qtySpinner, addButton);
 			
-			itemTable = new Table();
+			tableView = new Table();
 		
 			// new item
 			newItemHBox = new HBox(10);
@@ -226,7 +242,7 @@ public class AddItemPopupView extends Popup implements View{
 			newItemHBox.getChildren().addAll(leftColumn, rightColumn);
 			
 			
-		layout.getChildren().addAll(itemTypeHBox, searchHBox, itemTable, buttonsHBox);
+		layout.getChildren().addAll(itemTypeHBox, searchHBox, tableView, buttonsHBox);
 			
 		VBox.setVgrow (layout, Priority.ALWAYS);	
 		
@@ -234,6 +250,7 @@ public class AddItemPopupView extends Popup implements View{
 	}
 	
 	// BACKEND STUFF
+	@SuppressWarnings("unchecked")
 	private void initHandlers() {
 		oldItemToggleButton.setOnAction(e -> {
 			oldItemToggleButton.setSelected(true);
@@ -241,7 +258,7 @@ public class AddItemPopupView extends Popup implements View{
 			if (!layout.getChildren().isEmpty())
 				layout.getChildren().removeAll(layout.getChildren());
 			
-			layout.getChildren().addAll(itemTypeHBox, searchHBox, itemTable, buttonsHBox);
+			layout.getChildren().addAll(itemTypeHBox, searchHBox, tableView, buttonsHBox);
 			
 			resizeScene();
 		});
@@ -254,6 +271,100 @@ public class AddItemPopupView extends Popup implements View{
 			
 			layout.getChildren().addAll(itemTypeHBox, newItemHBox, buttonsHBox);
 		});
+		searchButton.setOnAction(e -> {
+			try{
+				switch(searchColumns.getValue()){
+					case "Item Code":
+						mvc.searchItemsByItemCode(new String[] {KEY}, searchField.getText());
+						break;
+					case "Name":
+						mvc.searchItemsByName(new String[] {KEY}, searchField.getText());
+						break;
+					case "Description":
+						mvc.searchItemsByDescription(new String[] {KEY}, searchField.getText());
+						break;
+					case "Category":
+						mvc.searchItemsByCategory(new String[] {KEY}, searchField.getText());
+						break;
+					case "Manufacturer":
+						mvc.searchItemsByManufacturer(new String[] {KEY}, searchField.getText());
+						break;
+					case "Supplier Code":
+						mvc.searchItemsBySupplierCode(new String[] {KEY}, searchField.getText());
+						break;
+					case "Stock":
+						mvc.searchItemsByStock(new String[] {KEY}, Integer.parseInt(searchField.getText()));
+						break;
+					case "Date Purchased":
+						mvc.searchItemsByDatePurchase(new String[] {KEY}, searchField.getText());
+						break;
+					case "Price Supplier":
+						mvc.searchItemsByPriceSupplier(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+						break;
+					case "Price Customer":
+						mvc.searchItemsByPriceCustomer(new String[] {KEY}, BigDecimal.valueOf(Double.parseDouble(searchField.getText())));
+						break;
+				}
+			}catch(NumberFormatException nfe){
+				if (searchField.getText().equals(""))
+					mvc.getSupplierItems(new String[]{KEY}, supplierCode);
+ 				else
+ 					new AlertBoxPopup("Input Error", "Enter a number.");
+			}
+		});
+		addButton.setOnAction(e -> {
+			if (oldItemToggleButton.isSelected()) {
+				if (!tableView.getSelectionModel().getSelectedItems().isEmpty() && qtySpinner.getValue() > 0) {
+					mvc.addItemOrder(new ItemOrder(orderID, ((ObservableList<String>)tableView.getSelectionModel().getSelectedItem()).get(0), qtySpinner.getValue()));
+					new AlertBoxPopup("Success", "Item order made.");
+				}
+				if (tableView.getSelectionModel().getSelectedItems().isEmpty())
+					new AlertBoxPopup("Input Error", "There is nothing selected.");
+				if (qtySpinner.getValue() <= 0)
+					new AlertBoxPopup("Input Error", "Invalid quantity.");
+			} else {
+				if(!itemCodeField.getText().equals("") && !nameField.getText().equals("") && !ItemDescriptionField.getText().equals("") &&
+						!categoryField.getText().equals("") && !manufacturerField.getText().equals("") && !supplierField.getText().equals("") &&
+						!stockField.getText().equals("") && datePurchasedField.getValue() != null && !unitPriceSupField.getText().equals("") && !unitPriceCustField.getText().equals("") &&
+						qtySpinner.getValue() != 0){
+					String itemCode = itemCodeField.getText();
+					String name = nameField.getText();
+					String description = ItemDescriptionField.getText();
+					String category = categoryField.getText();
+					String manufacturer = manufacturerField.getText();
+					String supplierCode = supplierField.getText();
+					int stock = Integer.parseInt(stockField.getText());
+					Date datePurchase = java.sql.Date.valueOf(datePurchasedField.getValue());
+					BigDecimal priceSupplier = BigDecimal.valueOf(Double.parseDouble(unitPriceSupField.getText()));
+					BigDecimal priceCustomer = BigDecimal.valueOf(Double.parseDouble(unitPriceCustField.getText()));
+					
+					int quantity = qtySpinner.getValue();
+						
+					try{
+						mvc.addItem(new Item(itemCode, name, description, category, manufacturer, supplierCode, stock, datePurchase, priceSupplier, priceCustomer));
+						new AlertBoxPopup("Success", "Item added to inventory list, item order made.");
+						mvc.addItemOrder(new ItemOrder(orderID, itemCode, quantity));
+						
+						itemCodeField.setText("");
+						nameField.setText("");
+						ItemDescriptionField.setText("");
+						categoryField.setText("");
+						manufacturerField.setText("");
+						supplierField.setText("");
+						stockField.setText("");
+						datePurchasedField.getEditor().clear();
+						datePurchasedField.setValue(null);
+						unitPriceSupField.setText("");
+						unitPriceCustField.setText("");
+					}catch(NumberFormatException nfe){
+						new AlertBoxPopup("Input Error", "Enter a valid number.");
+					}
+				} else
+					new AlertBoxPopup("Input Error", "Some fields are left blank.");
+			}
+			mvc.getCurrentPurchaseOrderItems(new String[] {PurchaseOrderView.KEY}, orderID);
+			this.closePopup();
+		});
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -264,15 +375,15 @@ public class AddItemPopupView extends Popup implements View{
 			if (rs == null)
 				return;
 			
-			if (!itemTable.getColumns ().isEmpty ()){
+			if (!tableView.getColumns ().isEmpty ()){
 				for(int i = 0; i < col.size(); i++){
-					itemTable.getColumns ().removeAll (col.get(i));
+					tableView.getColumns ().removeAll (col.get(i));
 				}
 				col.clear();
 			}
 			
-			if (!itemTable.getItems ().isEmpty ()){
-				itemTable.getItems ().removeAll (row);
+			if (!tableView.getItems ().isEmpty ()){
+				tableView.getItems ().removeAll (row);
 				data.clear();
 			}
 			
@@ -287,7 +398,7 @@ public class AddItemPopupView extends Popup implements View{
 					});
 					
 					col.add(c);
-					itemTable.getColumns ().addAll (c);
+					tableView.getColumns ().addAll (c);
 					
 				}
 				
@@ -313,7 +424,7 @@ public class AddItemPopupView extends Popup implements View{
 					}
 					data.add(row);
 				}
-				itemTable.setItems(data);
+				tableView.setItems(data);
 				
 			} catch (SQLException e) {
 				e.printStackTrace();

@@ -45,10 +45,10 @@ public class SupplierBanner extends Banner{
 			String contactNumber = contactNumberField.getText();
 			
 			if(!supplierCode.equals("") 
-					&& !contactPerson.equals("")
-					&& !taxId.equals("")
-					&& !supplierName.equals("")
-					&& !contactNumber.equals("")){
+				&& !contactPerson.equals("")
+				&& !taxId.equals("")
+				&& !supplierName.equals("")
+				&& !contactNumber.equals("")){
 				
 				mvc.addSupplier(new Supplier(supplierCode, supplierName, contactPerson, contactNumber, taxId));
 				
