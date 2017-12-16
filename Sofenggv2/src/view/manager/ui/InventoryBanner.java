@@ -150,12 +150,12 @@ public class InventoryBanner extends Banner{
 		
 		/*Edit Button initialization*/
 		editConfirmBtn = new Button("Confirm Edit");
-		
+		editConfirmBtn.getStyleClass().add("GreenButton");
 		
 		/* Assembly */
-		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2] , leftCombos[3] , leftCombos[4]);
+		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2] , leftCombos[3] , leftCombos[4], editConfirmBtn);
 		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1], rightCombos[2], rightCombos[3], rightCombos[4]);
-		bottom.getChildren().addAll(editConfirmBtn);
+		//bottom.getChildren().addAll(editConfirmBtn);
 	}
 	
 	@SuppressWarnings("unused")

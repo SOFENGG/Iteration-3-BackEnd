@@ -18,6 +18,7 @@ public class SupplierBanner extends Banner{
 	private TextField supplierCodeField;
 	private TextField contactPersonField;
 	private TextField taxIdField;
+	private Button addConfirmBtn;
 	
 	/* Right Section */
 	private TextField supplierNameField;
@@ -25,7 +26,7 @@ public class SupplierBanner extends Banner{
 
 	
 	/* Bottom Buttons */
-	private Button addConfirmBtn;
+
 				
 	public SupplierBanner(ManagerViewController mvc){
 		super();
@@ -33,7 +34,7 @@ public class SupplierBanner extends Banner{
 		updateToSupplierBanner();
 		//setPositions();
 		initHandler();
-		setGreenButton();
+		//setGreenButton();
 	}
 	
 	public void initHandler(){
@@ -104,11 +105,12 @@ public class SupplierBanner extends Banner{
 		
 		/*Edit Button initialization*/
 		addConfirmBtn = new Button("Add Supplier");
+		addConfirmBtn.getStyleClass().add("GreenButton");
 		
 		/* Assembly */
-		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2]);
+		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2], addConfirmBtn);
 		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1]);
-		bottom.getChildren().addAll(addConfirmBtn);
+		//bottom.getChildren().addAll(addConfirmBtn);
 	}
 	
 	private void setPositions() {
