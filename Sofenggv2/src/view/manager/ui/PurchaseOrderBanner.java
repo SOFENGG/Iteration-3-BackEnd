@@ -141,7 +141,7 @@ public class PurchaseOrderBanner extends Banner {
 		/* Assembly */
 		leftColumn.getChildren().addAll(leftCombos[0], leftCombos[1], leftCombos[2], addItemBtn);
 		rightColumn.getChildren().addAll(rightCombos[0], rightCombos[1],  rightCombos[2], confirmOrderBtn);
-		bottom.getChildren().addAll(addItemBtn, confirmOrderBtn);
+		//bottom.getChildren().addAll(addItemBtn, confirmOrderBtn);
 	}
 	
 	private void setPositions() {

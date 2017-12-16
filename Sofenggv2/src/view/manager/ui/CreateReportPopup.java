@@ -101,7 +101,8 @@ public class CreateReportPopup extends Popup {
 		yearBox.setItems(fillYearlyComboBox());
 		
 		createBtn = new Button("Create Report");
-		createBtn.setAlignment(Pos.CENTER);
+		createBtn.getStyleClass().add("GreenButton");
+		createBtn.setAlignment(Pos.CENTER_RIGHT);
 		
 		optionsHBox.getChildren().addAll(dayPicker);
 		

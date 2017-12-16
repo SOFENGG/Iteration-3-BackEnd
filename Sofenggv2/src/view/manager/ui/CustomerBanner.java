@@ -3,11 +3,14 @@ package view.manager.ui;
 import java.math.BigDecimal;
 
 import controller.ManagerViewController;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import view.cashier.AlertBoxPopup;
@@ -74,6 +77,34 @@ public class CustomerBanner extends Banner {
 				new AlertBoxPopup("Input Error", "Enter a valid number.");
 			}
 		});
+		
+		editCustomerBtn.setOnAction(e -> {
+			int accountID = Integer.parseInt(accountIDField.getText());
+			String name = bCustNameField.getText();
+			String address = bCustAddressField.getText();
+			String contactInfo = contactInfoField.getText();
+			BigDecimal debt;
+			BigDecimal debtLimit;
+			
+			try {
+				debtLimit = BigDecimal.valueOf(Double.parseDouble(bDebtLimitField.getText()));
+				debt = BigDecimal.valueOf(Double.parseDouble(debtField.getText()));
+				if (accountID != 0 && !name.equals("") && !address.equals("") && !contactInfo.equals("")) {
+					mvc.editCustomer(accountID, name, address, contactInfo, debt, debtLimit);
+					new AlertBoxPopup("Success", "Customer editted.");
+					accountIDField.setText("");
+					bCustNameField.setText("");
+					bCustAddressField.setText("");
+					contactInfoField.setText("");
+					bDebtLimitField.setText("");
+					debtField.getText();
+				}
+			} catch (NumberFormatException nfe) {
+				new AlertBoxPopup("Input Error", "Some fields are left blank");
+				
+			}
+		});
+		
 	}
 	
 	private void updateToCustomerDebts() {

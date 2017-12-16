@@ -356,6 +356,9 @@ public class AddItemPopupView extends Popup implements View{
 						datePurchasedField.setValue(null);
 						unitPriceSupField.setText("");
 						unitPriceCustField.setText("");
+						
+						// Price Customer
+						
 					}catch(NumberFormatException nfe){
 						new AlertBoxPopup("Input Error", "Enter a valid number.");
 					}
